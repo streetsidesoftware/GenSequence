@@ -9,18 +9,22 @@ the convenient [...genFn()] notation.  GenSequence is useful for cases where you
 
 ## Installation
 
-`npm install -S gensequence`
+```
+npm install -S gensequence
+```
 
 ## Usage
 
 ### Javascript
-`import GenSequence from "GenSequence";`
+```
+import GenSequence from "GenSequence";
+```
 or
-`import { GenSequence } from "GenSequence";`
+```import { GenSequence } from "GenSequence";```
 
 
 ### Typescript
-`import {GenSequence} from 'GenSequence';`
+```import {GenSequence} from 'GenSequence';```
 
 ## Examples
 
@@ -77,15 +81,15 @@ function matchWords(text: string) {
     return GenSequence(match(/\w+/g, text));
 }
 
-export function toSetOfWords(text: string) {
+function toSetOfWords(text: string) {
     // GenSequence can be used directly with a Set or Match
     return new Set(matchWords(text));
 }
 
-export const text = 'Some long bit of text with many words, duplicate words...';
-export const setOfWords = toSetOfWords(text);
+const text = 'Some long bit of text with many words, duplicate words...';
+const setOfWords = toSetOfWords(text);
 // Walk through the set of words and pull out the 4 letter one.
-export const setOf4LetterWords = new Set(GenSequence(setOfWords).filter(a => a.length === 4));
+const setOf4LetterWords = new Set(GenSequence(setOfWords).filter(a => a.length === 4));
 
 ```
 
