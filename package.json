@@ -1,0 +1,42 @@
+{
+  "name": "gensequence",
+  "version": "0.1.0",
+  "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
+  "main": "lib/index.js",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@types/chai": "^3.4.34",
+    "@types/mocha": "^2.2.33",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "rimraf": "^2.5.4",
+    "typescript": "^2.1.4"
+  },
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "mocha lib/**/*.test.js",
+    "build": "tsc -p .",
+    "watch": "tsc -w -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jason3S/GenSequence.git"
+  },
+  "keywords": [
+    "generators",
+    "generator",
+    "iterator",
+    "iterators",
+    "iterable",
+    "functional",
+    "map",
+    "reduce"
+  ],
+  "author": "Jason Dent",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Jason3S/GenSequence/issues"
+  },
+  "homepage": "https://github.com/Jason3S/GenSequence#readme"
+}
