@@ -4,8 +4,11 @@ Small library to simplify working with Generators and Iterators in Javascript / 
 Javascript [Iterators and Generators](https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators)
 are very exciting and provide some powerful new ways to solve programming problems.
 
-The purpose of this library is to make using the result of a generator easier to use.  It is not intended as a replacement for array and
-the convenient [...genFn()] notation.  GenSequence is useful for cases where you might not was an array of all possible values.
+The purpose of this library is to make using the results of a generator function easier.  
+It is not intended as a replacement for arrays and the convenient [...genFn()] notation.  
+GenSequence is useful for cases where you might not want an array of all possible values.  
+GenSequence deals effeciently with large sequences because only one element at a time is evaluated.  
+Intermediate arrays are not created, saving memory and cpu cycles.
 
 ## Installation
 
@@ -64,7 +67,7 @@ let fib5th = fibonacci()
 
 ### RegEx Match
 
-Regular expressions are wonderfully powerful.  Yes, working with the results can sometimes be a bit of a pain.
+Regular expressions are wonderfully powerful.  Yet, working with the results can sometimes be a bit of a pain.
 
 ```javascript
 function* execRegEx(reg: RegExp, text: string) {
@@ -75,16 +78,19 @@ function* execRegEx(reg: RegExp, text: string) {
     }
 }
 
+/* return a sequence of matched text */
 function match(reg: RegExp, text: string) {
     return GenSequence(execRegEx(reg, text))
         // extract the full match
         .map(a => a[0]);
 }
 
+/* extract words out of a string of text */
 function matchWords(text: string) {
     return GenSequence(match(/\w+/g, text));
 }
 
+/* convert some text into a set of unique words */
 function toSetOfWords(text: string) {
     // GenSequence can be used directly with a Set or Match
     return new Set(matchWords(text));
