@@ -1,10 +1,9 @@
 {
   "name": "gensequence",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
   "main": "lib/index.js",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.33",
