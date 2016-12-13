@@ -1,7 +1,8 @@
 # GenSequence
 Small library to simplify working with Generators and Iterators in Javascript / Typescript
 
-Javascript (generators)[https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Generator], (Iterators and Generators)[https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators]
+Javascript [generators](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Generator),
+[Iterators and Generators](https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators)
 are very exciting and provide some powerful new ways to solve programming problems.
 
 The purpose of this library is to make using the result of a generator easier to use.  It is not intended as a replacement for array and
