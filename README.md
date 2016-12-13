@@ -17,14 +17,18 @@ npm install -S gensequence
 
 ### Javascript
 ```
-import GenSequence from "GenSequence";
+import GenSequence from "gensequence";
 ```
 or
-```import { GenSequence } from "GenSequence";```
+```
+import { GenSequence } from "gensequence";
+```
 
 
 ### Typescript
-```import {GenSequence} from 'GenSequence';```
+```
+import {GenSequence} from 'gensequence';
+```
 
 ## Examples
 
