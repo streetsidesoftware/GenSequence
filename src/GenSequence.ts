@@ -25,6 +25,11 @@ export interface GenIterable<T> {
     [Symbol.iterator](): IterableIterator<T>;
 }
 
+export interface SequenceCreator<T> {
+    (i: GenIterable<T>): Sequence<T>;
+    fromObject: <U>(u: U) => Sequence<KeyValuePair<U>>;
+}
+
 export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
     return {
         [Symbol.iterator]: () => i[Symbol.iterator](),
@@ -226,6 +231,10 @@ export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
             yield [k, t[k]] as KeyValuePair<T>;
         }
     }
+}
+
+export function objectToSequence<T>(t: T): Sequence<KeyValuePair<T>> {
+    return genSequence(objectIterator(t));
 }
 
 export default genSequence;

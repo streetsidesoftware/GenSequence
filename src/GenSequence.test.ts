@@ -1,4 +1,4 @@
-import { genSequence, objectIterator } from './GenSequence';
+import { genSequence, objectToSequence } from './GenSequence';
 import { expect } from 'chai';
 
 describe('GenSequence Tests', function() {
@@ -115,11 +115,38 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).first(a => a > 3.5)).to.be.equal(4);
     });
 
-    it('tests object to iterator', () => {
+    it('tests object to sequence', () => {
         const person = {
             name: 'Bob',
             age: 22,
+            height: 185,
+            weight: 87,
         }
-        const i = objectIterator(person);
+        const i = objectToSequence(person);
+        expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(Object.keys(person).sort());
+        const j = objectToSequence(person);
+        expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map(k => person[k]).sort());
+    });
+
+    it('tests that a sequence is empty once it has been used', () => {
+        const person = {
+            name: 'Bob',
+            age: 22,
+            height: 185,
+            weight: 87,
+        }
+        const i = objectToSequence(person);
+        const j = genSequence(i);
+        const values0 = j.toArray();
+        const values1 = i.toArray();
+        expect(values0).to.not.be.empty;
+        expect(values1).to.be.empty;
+        expect(values0).to.not.be.deep.equal(values1);
+    });
+
+    it('tests that a sequence can be reused if it is based upon an array', () => {
+        const values = [1,2,3,4,5];
+        const i = genSequence(values);
+        expect(i.toArray()).to.be.deep.equal(i.toArray());
     });
 });
