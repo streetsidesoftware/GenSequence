@@ -1,4 +1,4 @@
-import { GenSequence } from '../src/GenSequence';
+import { genSequence, Sequence } from '../src/GenSequence';
 
 export function fibonacci() {
     function* fib() {
@@ -8,7 +8,7 @@ export function fibonacci() {
             [a, b] = [b, a + b];
         }
     }
-    return GenSequence(fib());
+    return genSequence(fib());
 }
 
 

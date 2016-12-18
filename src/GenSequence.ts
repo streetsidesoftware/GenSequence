@@ -1,21 +1,21 @@
 
 export type Maybe<T> = T | undefined;
 
-export interface GenSequence<T> extends IterableIterator<T> {
+export interface Sequence<T> extends IterableIterator<T> {
     /** map values from type T to type U */
-    map<U>(fnMap: (t: T) => U): GenSequence<U>;
+    map<U>(fnMap: (t: T) => U): Sequence<U>;
     /** keep values where the fnFilter(t) returns true */
-    filter(fnFilter: (t: T) => boolean): GenSequence<T>;
+    filter(fnFilter: (t: T) => boolean): Sequence<T>;
     /** reduce function see Array.reduce */
     reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Maybe<T>;
     reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Maybe<U>;
-    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): GenSequence<T>;
-    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): GenSequence<U>;
-    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): GenSequence<V>;
-    concat(j: Iterable<T>): GenSequence<T>;
-    concatMap<U>(fn: (t: T) => Iterable<U>): GenSequence<U>;
-    skip(n: number): GenSequence<T>;
-    take(n: number): GenSequence<T>;
+    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
+    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
+    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
+    concat(j: Iterable<T>): Sequence<T>;
+    concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
+    skip(n: number): Sequence<T>;
+    take(n: number): Sequence<T>;
     first(fnFilter?: (t: T)=> boolean): Maybe<T>;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
@@ -25,45 +25,48 @@ export interface GenIterable<T> {
     [Symbol.iterator](): IterableIterator<T>;
 }
 
-export function GenSequence<T>(i: GenIterable<T>): GenSequence<T> {
+export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
     return {
         [Symbol.iterator]: () => i[Symbol.iterator](),
         next: () => i[Symbol.iterator]().next(),   // late binding is intentional here.
-        map: <U>(fn: (t: T) => U) => GenSequence(map(fn, i)),
-        filter: (fnFilter: (t: T) => boolean) => GenSequence(filter(fnFilter, i)),
+        map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
+        filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
         reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U) => {
             return reduce<T, U>(fnReduce, initValue, i);
         },
         scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
-            return GenSequence(scan(i, fnReduce, initValue));
+            return genSequence(scan(i, fnReduce, initValue));
         },
         combine: <U, V>(fn: (t: T, u: U) => V, j: Iterable<U>) =>  {
-            return GenSequence(combine(fn, i, j));
+            return genSequence(combine(fn, i, j));
         },
         concat: (j: Iterable<T>) => {
-            return GenSequence(concat(i, j));
+            return genSequence(concat(i, j));
         },
         concatMap: <U>(fn: (t: T) => Iterable<U>) => {
-            return GenSequence(concatMap(fn, i));
+            return genSequence(concatMap(fn, i));
         },
         skip: (n: number) => {
-            return GenSequence(skip(n, i));
+            return genSequence(skip(n, i));
         },
         take: (n: number) => {
-            return GenSequence(take(n, i));
+            return genSequence(take(n, i));
         },
         first: (fnFilter?: (t: T) => boolean) => {
             return first(fnFilter, i);
         },
         toArray: () => [...i[Symbol.iterator]()],
         toIterable: () => {
-            return iterate(i);
+            return toIterator(i);
         },
     };
 }
 
+// Naming Compatibility
+export const GenSequence = genSequence;
+
 export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
-    for (let v of i) {
+    for (const v of i) {
         if (fnFilter(v)) {
             yield v;
         }
@@ -79,7 +82,7 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
         initialValue = r.value;
     }
     let prevValue = initialValue;
-    for (let t of i) {
+    for (const t of i) {
         const nextValue = fnReduce(prevValue, t, index);
         prevValue = nextValue;
         index += 1;
@@ -99,7 +102,7 @@ export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, c
         }
     }
     let prevValue = initValue;
-    for (let t of i) {
+    for (const t of i) {
         const nextValue = fnReduce(prevValue, t, index);
         yield nextValue;
         prevValue = nextValue;
@@ -114,7 +117,7 @@ export function map<T, U>(fnMap: (t: T) => U): (i: Iterable<T>) => IterableItera
 export function map<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U>;
 export function map<T, U>(fnMap: (t: T) => U, i?: Iterable<T>): IterableIterator<U> | ((i: Iterable<T>) => IterableIterator<U>) {
     function* fn<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U> {
-        for (let v of i) {
+        for (const v of i) {
             yield fnMap(v);
         }
     }
@@ -133,7 +136,7 @@ export function map<T, U>(fnMap: (t: T) => U, i?: Iterable<T>): IterableIterator
  */
 export function* combine<T, U, V>(fnMap: (t: T, u?: U) => V, i: Iterable<T>, j: Iterable<U>): IterableIterator<V> {
     const jit = j[Symbol.iterator]();
-    for (let r of i) {
+    for (const r of i) {
         const s = jit.next().value;
         yield fnMap(r, s);
     }
@@ -168,7 +171,7 @@ export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T
 
 export function* skip<T>(n: number, i: Iterable<T>): IterableIterator<T> {
     let a = 0;
-    for (let t of i) {
+    for (const t of i) {
         if (a >= n) {
             yield t;
         }
@@ -180,7 +183,7 @@ export function* skip<T>(n: number, i: Iterable<T>): IterableIterator<T> {
 export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
     let a = 0;
     if (n) {
-        for (let t of i) {
+        for (const t of i) {
             if (a >= n) {
                 break;
             }
@@ -192,8 +195,8 @@ export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
 
 
 export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
-    for (let t of i) {
-        for (let u of fn(t)) {
+    for (const t of i) {
+        for (const u of fn(t)) {
             yield u;
         }
     }
@@ -201,7 +204,7 @@ export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): Ite
 
 export function first<T>(fn: Maybe<(t: T) => boolean>, i: Iterable<T>): Maybe<T> {
     fn = fn || (t => true);
-    for (let t of i) {
+    for (const t of i) {
         if (fn(t)) {
             return t;
         }
@@ -209,8 +212,20 @@ export function first<T>(fn: Maybe<(t: T) => boolean>, i: Iterable<T>): Maybe<T>
     return undefined;
 }
 
-export function* iterate<T>(i: Iterable<T>) {
+export function* toIterator<T>(i: Iterable<T>) {
     yield* i;
 }
 
-export default GenSequence;
+
+export type KeyValuePair<T> = [keyof T, T[keyof T]];
+
+export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
+    const keys = new Set(Object.keys(t));
+    for (const k in t) {
+        if (keys.has(k)) {
+            yield [k, t[k]] as KeyValuePair<T>;
+        }
+    }
+}
+
+export default genSequence;

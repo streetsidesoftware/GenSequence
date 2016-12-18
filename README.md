@@ -4,10 +4,10 @@ Small library to simplify working with Generators and Iterators in Javascript / 
 Javascript [Iterators and Generators](https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators)
 are very exciting and provide some powerful new ways to solve programming problems.
 
-The purpose of this library is to make using the results of a generator function easier.  
-It is not intended as a replacement for arrays and the convenient [...genFn()] notation.  
-GenSequence is useful for cases where you might not want an array of all possible values.  
-GenSequence deals effeciently with large sequences because only one element at a time is evaluated.  
+The purpose of this library is to make using the results of a generator function easier.
+It is not intended as a replacement for arrays and the convenient [...genFn()] notation.
+GenSequence is useful for cases where you might not want an array of all possible values.
+GenSequence deals effeciently with large sequences because only one element at a time is evaluated.
 Intermediate arrays are not created, saving memory and cpu cycles.
 
 ## Installation
@@ -20,17 +20,17 @@ npm install -S gensequence
 
 ### Javascript
 ```
-import GenSequence from "gensequence";
+import genSequence from "gensequence";
 ```
 or
 ```
-import { GenSequence } from "gensequence";
+import {genSequence} from "gensequence";
 ```
 
 
 ### Typescript
 ```
-import {GenSequence} from 'gensequence';
+import {genSequence} from 'gensequence';
 ```
 
 ## Examples
@@ -49,7 +49,7 @@ function fibonacci() {
         }
     }
     // Wrapper the Iterator result from calling the generator.
-    return GenSequence(fib());
+    return genSequence(fib());
 }
 
 let fib5 = fibonacci()
@@ -80,33 +80,33 @@ function* execRegEx(reg: RegExp, text: string) {
 
 /* return a sequence of matched text */
 function match(reg: RegExp, text: string) {
-    return GenSequence(execRegEx(reg, text))
+    return genSequence(execRegEx(reg, text))
         // extract the full match
         .map(a => a[0]);
 }
 
 /* extract words out of a string of text */
 function matchWords(text: string) {
-    return GenSequence(match(/\w+/g, text));
+    return genSequence(match(/\w+/g, text));
 }
 
 /* convert some text into a set of unique words */
 function toSetOfWords(text: string) {
-    // GenSequence can be used directly with a Set or Match
+    // Sequence can be used directly with a Set or Match
     return new Set(matchWords(text));
 }
 
 const text = 'Some long bit of text with many words, duplicate words...';
 const setOfWords = toSetOfWords(text);
 // Walk through the set of words and pull out the 4 letter one.
-const setOf4LetterWords = new Set(GenSequence(setOfWords).filter(a => a.length === 4));
+const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length === 4));
 
 ```
 
 
 ## Reference
 
-- `GenSequence(Iterable|Array)` -- decorate an Iterable or Array with the following functions.
+- `genSequence(Iterable|Array)` -- generate a new Iterable from an Iterable or Array with the following functions.
 - `.toArray()` -- convert the sequence into an array.  This is the same as [...iterator].
 - `.map(fn)` -- just like array.map, allows you to convert the values in a sequence.
 - `.filter(fn)` -- just like array.filter, filters the sequence
@@ -121,4 +121,4 @@ const setOf4LetterWords = new Set(GenSequence(setOfWords).filter(a => a.length =
 - `.first(fn)` -- return the next value in the sequence where *fn(value)* return true.
 
 ### Misc
-- `toIterable()` -- Casts a GenSequence into an IterableIterator - used in cases where type checking is too strict.
+- `toIterable()` -- Casts a Sequence into an IterableIterator - used in cases where type checking is too strict.

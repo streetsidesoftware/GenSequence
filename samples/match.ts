@@ -1,5 +1,5 @@
 
-import { GenSequence } from '../src/GenSequence';
+import { genSequence } from '../src/GenSequence';
 
 function* execRegEx(reg: RegExp, text: string) {
     const regLocal = new RegExp(reg);
@@ -10,13 +10,13 @@ function* execRegEx(reg: RegExp, text: string) {
 }
 
 function match(reg: RegExp, text: string) {
-    return GenSequence(execRegEx(reg, text))
+    return genSequence(execRegEx(reg, text))
         // extract the full match
         .map(a => a[0]);
 }
 
 function matchWords(text: string) {
-    return GenSequence(match(/\w+/g, text));
+    return genSequence(match(/\w+/g, text));
 }
 
 export function toSetOfWords(text: string) {
@@ -26,4 +26,4 @@ export function toSetOfWords(text: string) {
 export const text = 'Some long bit of text with many words, duplicate words...';
 export const setOfWords = toSetOfWords(text);
 // Walk through the set of words and pull out the 4 letter one.
-export const setOf4LetterWords = new Set(GenSequence(setOfWords).filter(a => a.length === 4));
+export const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length === 4));
