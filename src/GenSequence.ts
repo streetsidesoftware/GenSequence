@@ -9,6 +9,7 @@ export interface Sequence<T> extends IterableIterator<T> {
     /** reduce function see Array.reduce */
     reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
     reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
+    reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
     scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
     scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;

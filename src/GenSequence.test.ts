@@ -58,7 +58,7 @@ describe('GenSequence Tests', function() {
     it('tests reducing a sequence to a Set to a sequence', () => {
         const values = [1, 2, 3, 3, 4, 5, 5];
         const gs = genSequence(values);
-        const result = gs.reduceToSequence<number>((a: Set<number>, v) => a.add(v), new Set<number>());
+        const result = gs.reduceToSequence<number, Set<number>>((a, v) => a.add(v), new Set<number>());
         expect(result.toArray()).to.deep.equal([1, 2, 3, 4, 5]);
     });
 
