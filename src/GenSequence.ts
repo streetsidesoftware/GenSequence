@@ -7,8 +7,8 @@ export interface Sequence<T> extends IterableIterator<T> {
     /** keep values where the fnFilter(t) returns true */
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
     /** reduce function see Array.reduce */
-    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Maybe<T>;
-    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Maybe<U>;
+    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T): Maybe<T>;
+    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
     scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
     scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
     combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
@@ -36,8 +36,8 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         next: () => i[Symbol.iterator]().next(),   // late binding is intentional here.
         map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
         filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
-        reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U) => {
-            return reduce<T, U>(fnReduce, initValue, i);
+        reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
+            return reduce<T, U>(fnReduce, initValue!, i);
         },
         scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
             return genSequence(scan(i, fnReduce, initValue));
@@ -78,7 +78,7 @@ export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
     }
 }
 
-export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: Iterable<T>): Maybe<U>;
+export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: Iterable<T>): U;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
     let index = 0;
     if (initialValue === undefined) {

@@ -41,6 +41,13 @@ describe('GenSequence Tests', function() {
         expect(result).to.deep.equal(values.reduce((a, v) => a + v, 0));
     });
 
+    it('tests reducing a sequence with init to a different type', () => {
+        const values = [1, 2, 3, 4, 5];
+        const gs = genSequence(values);
+        const result = gs.reduce<number[]>((a, v) => [...a, v], []);
+        expect(result).to.deep.equal(values);
+    });
+
     it('tests combine', () => {
         const a = [1, 2, 3];
         const b = ['a', 'b', 'c', 'd'];
