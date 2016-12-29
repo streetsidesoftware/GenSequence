@@ -7,8 +7,9 @@ export interface Sequence<T> extends IterableIterator<T> {
     /** keep values where the fnFilter(t) returns true */
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
     /** reduce function see Array.reduce */
-    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T): Maybe<T>;
-    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
+    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
+    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
+    reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
     scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
     scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
     combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
@@ -38,6 +39,9 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
         reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
             return reduce<T, U>(fnReduce, initValue!, i);
+        },
+        reduceToSequence: <U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U> => {
+            return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, i));
         },
         scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
             return genSequence(scan(i, fnReduce, initValue));
