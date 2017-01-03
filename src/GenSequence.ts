@@ -18,7 +18,8 @@ export interface Sequence<T> extends IterableIterator<T> {
     concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
     skip(n: number): Sequence<T>;
     take(n: number): Sequence<T>;
-    first(fnFilter?: (t: T)=> boolean): Maybe<T>;
+    first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
+    first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -62,8 +63,8 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         take: (n: number) => {
             return genSequence(take(n, i));
         },
-        first: (fnFilter?: (t: T) => boolean) => {
-            return first(fnFilter, i);
+        first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
+            return first(fnFilter, defaultValue, i) as T;
         },
         toArray: () => [...i[Symbol.iterator]()],
         toIterable: () => {
@@ -72,8 +73,12 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
     };
 }
 
-// Naming Compatibility
-export const GenSequence = genSequence;
+// Collection of entry points into GenSequence
+export const GenSequence = {
+    genSequence,
+    sequenceFromRegExpMatch,
+    sequenceFromObject,
+};
 
 export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
     for (const v of i) {
@@ -212,14 +217,15 @@ export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): Ite
     }
 }
 
-export function first<T>(fn: Maybe<(t: T) => boolean>, i: Iterable<T>): Maybe<T> {
+export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
+export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>): T {
     fn = fn || (t => true);
     for (const t of i) {
         if (fn(t)) {
             return t;
         }
     }
-    return undefined;
+    return defaultValue;
 }
 
 export function* toIterator<T>(i: Iterable<T>) {
@@ -239,7 +245,30 @@ export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
 }
 
 export function objectToSequence<T>(t: T): Sequence<KeyValuePair<T>> {
+    return sequenceFromObject<T>(t);
+}
+
+
+export function sequenceFromObject<T>(t: T): Sequence<KeyValuePair<T>> {
     return genSequence(objectIterator(t));
+}
+
+export function sequenceFromRegExpMatch(pattern: RegExp, text: string): Sequence<RegExpExecArray> {
+    function* doMatch() {
+        const regex = new RegExp(pattern);
+        let match: RegExpExecArray | null;
+        let lastIndex: number | undefined = undefined;
+        while ( match = regex.exec(text) ) {
+            // Make sure it stops if the index does not move forward.
+            if (match.index === lastIndex) {
+                break;
+            }
+            lastIndex = match.index;
+            yield match;
+        }
+    }
+
+    return genSequence(doMatch());
 }
 
 export default genSequence;

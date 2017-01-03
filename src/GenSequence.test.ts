@@ -1,4 +1,4 @@
-import { genSequence, objectToSequence } from './GenSequence';
+import { genSequence, sequenceFromObject, sequenceFromRegExpMatch } from './GenSequence';
 import { expect } from 'chai';
 
 describe('GenSequence Tests', function() {
@@ -134,6 +134,8 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).first()).to.be.equal(1);
         expect(genSequence(values).skip(2).first()).to.be.equal(3);
         expect(genSequence(values).first(a => a > 3.5)).to.be.equal(4);
+        expect(genSequence(values).first(a => a > 100)).to.be.undefined;
+        expect(genSequence(values).first(a => a > 100, -1)).to.be.equal(-1);
     });
 
     it('tests object to sequence', () => {
@@ -143,9 +145,9 @@ describe('GenSequence Tests', function() {
             height: 185,
             weight: 87,
         }
-        const i = objectToSequence(person);
+        const i = sequenceFromObject(person);
         expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(Object.keys(person).sort());
-        const j = objectToSequence(person);
+        const j = sequenceFromObject(person);
         expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map(k => person[k]).sort());
     });
 
@@ -156,7 +158,7 @@ describe('GenSequence Tests', function() {
             height: 185,
             weight: 87,
         }
-        const i = objectToSequence(person);
+        const i = sequenceFromObject(person);
         const j = genSequence(i);
         const values0 = j.toArray();
         const values1 = i.toArray();
@@ -169,5 +171,21 @@ describe('GenSequence Tests', function() {
         const values = [1,2,3,4,5];
         const i = genSequence(values);
         expect(i.toArray()).to.be.deep.equal(i.toArray());
+    });
+
+    it('tests sequenceFromRegExpMatch', () => {
+        const tests: [RegExp, string, string[]][] = [
+            [/a/, 'aaaa', ['a']],
+            [/a/g, 'aaaa', ['a', 'a', 'a', 'a']],
+            [/a/g, 'AAAA', []],
+            [/a/gi, 'AAAA', ['A', 'A', 'A', 'A']],
+            [/a/gi, 'AB\nA\nCA\nDA\n', ['A', 'A', 'A', 'A']],
+            [/^.?a.?$/gim, 'AB\nA\nCA\nDA\n', ['AB', 'A', 'CA', 'DA']],
+        ]
+        tests.forEach(test => {
+            const [reg, str, expected] = test;
+            const result = sequenceFromRegExpMatch(reg, str).map(a => a[0]).toArray();
+            expect(result, test.toString()).to.deep.equal(expected);
+        });
     });
 });
