@@ -219,7 +219,7 @@ export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): Ite
 
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
 export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>): T {
-    fn = fn || (t => true);
+    fn = fn || (() => true);
     for (const t of i) {
         if (fn(t)) {
             return t;

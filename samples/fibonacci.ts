@@ -1,6 +1,6 @@
 import { genSequence, Sequence } from '../src/GenSequence';
 
-export function fibonacci() {
+export function fibonacci(): Sequence<number> {
     function* fib() {
         let [a, b] = [0, 1];
         while (true) {
@@ -18,4 +18,4 @@ export function fib(n: number) {
         .toArray();         // Convert it into an array
 }
 
-const fib5 = fib(5); // [1, 1, 2, 3, 5]
+export const fib5 = fib(5); // [1, 1, 2, 3, 5]

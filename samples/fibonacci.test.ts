@@ -1,5 +1,5 @@
 
-import {fib, fibonacci} from './fibonacci';
+import {fib} from './fibonacci';
 import {expect} from 'chai';
 
 describe('validate fibonacci example', () => {
