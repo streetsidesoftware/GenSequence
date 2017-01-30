@@ -1,4 +1,7 @@
 # GenSequence
+
+[![Build Status](https://travis-ci.org/Jason3S/GenSequence.svg?branch=master)](https://travis-ci.org/Jason3S/GenSequence)
+
 Small library to simplify working with Generators and Iterators in Javascript / Typescript
 
 Javascript [Iterators and Generators](https://developer.mozilla.org/en/docs/Web/JavaScript/Guide/Iterators_and_Generators)
