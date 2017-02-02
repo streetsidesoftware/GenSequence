@@ -38,3 +38,4 @@ jspm_packages
 
 # ignore the output directory
 lib
+coverage

@@ -1,4 +1,5 @@
 import { genSequence, sequenceFromObject, sequenceFromRegExpMatch } from './GenSequence';
+import * as GS from './GenSequence';
 import { expect } from 'chai';
 
 describe('GenSequence Tests', function() {
@@ -149,6 +150,7 @@ describe('GenSequence Tests', function() {
         expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(Object.keys(person).sort());
         const j = sequenceFromObject(person);
         expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map(k => person[k]).sort());
+        expect([...GS.objectToSequence(person)]).to.be.deep.equal([...sequenceFromObject(person)]);
     });
 
     it('tests that a sequence is empty once it has been used', () => {
@@ -187,5 +189,62 @@ describe('GenSequence Tests', function() {
             const result = sequenceFromRegExpMatch(reg, str).map(a => a[0]).toArray();
             expect(result, test.toString()).to.deep.equal(expected);
         });
+    });
+
+    it('test toIterator', () => {
+        const seq = genSequence([1, 2, 3]);
+        const result = [...seq.toIterable()];
+        expect(result).to.deep.equal([1, 2, 3]);
+    });
+
+    it('tests scan', () => {
+        // let only the first occurrence of a value through.
+        const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
+            .scan((acc, value) => {
+                const duplicate = acc.s.has(value);
+                acc.s.add(value);
+                return {value, duplicate, s: acc.s};
+            }, {value: 0, s: new Set<number>(), duplicate: true})
+            .filter(acc => !acc.duplicate)
+            .map(acc => acc.value);
+        const result = seq.toArray();
+        expect(result).to.be.deep.equal([1, 2, 3]);
+    });
+
+    it('tests scan -- running sum', () => {
+        // let only the first occurrence of a value through.
+        const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
+            .scan((acc, value) => acc + value);
+        const result = seq.toArray();
+        expect(result).to.be.deep.equal([1, 3, 4, 7, 9, 10, 13]);
+    });
+
+    it('tests scanMap -- running sum', () => {
+        // let only the first occurrence of a value through.
+        const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
+        .map(GS.scanMap<number>((acc, value) => acc + value));
+        const result = seq.toArray();
+        expect(result).to.be.deep.equal([1, 3, 4, 7, 9, 10, 13]);
+    });
+
+    it('tests scan with no values', () => {
+        // let only the first occurrence of a value through.
+        const values: number[] = [];
+        const seq = genSequence(values)
+            .scan((acc, value) => acc + value);
+        const result = seq.toArray();
+        expect(result).to.be.deep.equal([]);
+    });
+
+    it('test the curring part of GS.map', () => {
+        const fnMap = GS.map((a: number) => 2 * a);
+        expect(fnMap).to.be.instanceof(Function);
+        expect([...fnMap([1, 2, 3])]).deep.equal([2, 4, 6]);
+    });
+
+    it('test getting the iterator from a sequence', () => {
+        const values = [1, 2, 3, 4];
+        expect([...GS.makeIterable(genSequence(values)[Symbol.iterator]())]).to.be.deep.equal(values);
+        expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
     });
 });

@@ -1,7 +1,12 @@
 
 export type Maybe<T> = T | undefined;
 
-export interface Sequence<T> extends IterableIterator<T> {
+export interface IterableLike<T> {
+    [Symbol.iterator](): Iterator<T> | IterableIterator<T>;
+}
+
+export interface Sequence<T> extends IterableLike<T> {
+    next(): IteratorResult<T>;
     /** map values from type T to type U */
     map<U>(fnMap: (t: T) => U): Sequence<U>;
     /** keep values where the fnFilter(t) returns true */
@@ -24,9 +29,7 @@ export interface Sequence<T> extends IterableIterator<T> {
     toIterable(): IterableIterator<T>;
 }
 
-export interface GenIterable<T> {
-    [Symbol.iterator](): IterableIterator<T>;
-}
+export interface GenIterable<T> extends IterableLike<T> {}
 
 export interface SequenceCreator<T> {
     (i: GenIterable<T>): Sequence<T>;
@@ -34,9 +37,19 @@ export interface SequenceCreator<T> {
 }
 
 export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
-    return {
+    function fnNext() {
+        let iter: Iterator<T>;
+        return () => {
+            if(!iter) {
+                iter = i[Symbol.iterator]();
+            }
+            return iter.next();
+        };
+    }
+
+    const seq = {
         [Symbol.iterator]: () => i[Symbol.iterator](),
-        next: () => i[Symbol.iterator]().next(),   // late binding is intentional here.
+        next: fnNext(),   // late binding is intentional here.
         map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
         filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
         reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
@@ -66,11 +79,12 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
         },
-        toArray: () => [...i[Symbol.iterator]()],
+        toArray: () => [...i],
         toIterable: () => {
             return toIterator(i);
         },
     };
+    return seq;
 }
 
 // Collection of entry points into GenSequence
@@ -105,16 +119,29 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
     return prevValue;
 }
 
+/**
+ * Convert an Iterator into an IterableIterator
+ */
+export function makeIterable<T>(i: Iterator<T>) {
+    function* iterate() {
+        for (let r = i.next(); ! r.done; r = i.next()) {
+            yield r.value;
+        }
+    }
+    return iterate();
+}
+
 export function scan<T, U>(i: Iterable<T>, fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): IterableIterator<U>;
 export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue?: T): IterableIterator<T> {
     let index = 0;
     if (initValue === undefined) {
+        // We need to create a new iterable to prevent for...of from restarting an array.
         index = 1;
-        const r = i[Symbol.iterator]().next();
+        const iter = i[Symbol.iterator]();
+        let r = iter.next();
+        if (!r.done) yield r.value;
         initValue = r.value;
-        if (! r.done) {
-            yield r.value;
-        }
+        i = makeIterable(iter);
     }
     let prevValue = initValue;
     for (const t of i) {
@@ -168,6 +195,7 @@ export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> 
 /**
  * Creates a scan function that can be used in a map function.
  */
+export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T);
 export function scanMap<T, U>(accFn: (acc: U, value: T) => U, init: U): ((value: T) => U);
 export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T) {
     let acc = init;

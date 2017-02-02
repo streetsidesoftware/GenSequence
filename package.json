@@ -1,6 +1,6 @@
 {
   "name": "gensequence",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -9,15 +9,25 @@
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.33",
     "chai": "^3.5.0",
+    "coveralls": "^2.11.15",
     "mocha": "^3.2.0",
+    "nyc": "^10.1.2",
     "rimraf": "^2.5.4",
-    "typescript": "^2.1.4"
+    "ts-node": "^2.0.0",
+    "typescript": "^2.1.5"
   },
   "scripts": {
+    "prepublish": "npm run clean-build && npm test",
+    "clean-build": "npm run clean && npm run build",
     "clean": "rimraf lib",
     "test": "mocha lib/**/*.test.js",
     "build": "tsc -p .",
-    "watch": "tsc -w -p ."
+    "watch": "tsc -w -p .",
+    "coverage": "npm run generate-code-coverage",
+    "generate-code-coverage": "NODE_ENV=test nyc npm run test-ts",
+    "test-ts": "NODE_ENV=test mocha --compilers ts:ts-node/register --recursive \"src/**/*.test.ts\"",
+    "coverage-coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "travis-coverage": "npm run generate-code-coverage && npm run coverage-coveralls"
   },
   "repository": {
     "type": "git",
@@ -37,6 +47,22 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Jason3S/GenSequence/issues"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "json",
+      "html"
+    ]
   },
   "homepage": "https://github.com/Jason3S/GenSequence#readme"
 }

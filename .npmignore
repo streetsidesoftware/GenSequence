@@ -1,2 +1,5 @@
 # ignore test files
 **/*.test.js
+samples/**
+coverage/**
+lib/samples/**
