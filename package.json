@@ -8,6 +8,7 @@
   "devDependencies": {
     "@types/chai": "^3.4.34",
     "@types/mocha": "^2.2.33",
+    "@types/node": "^7.0.5",
     "chai": "^3.5.0",
     "coveralls": "^2.11.15",
     "mocha": "^3.2.0",
@@ -21,6 +22,7 @@
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf lib",
     "test": "mocha lib/**/*.test.js",
+    "perf": "mocha lib/**/*.perf.js",
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
     "coverage": "npm run generate-code-coverage",
