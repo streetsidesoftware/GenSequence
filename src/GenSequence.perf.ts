@@ -1,8 +1,8 @@
 import * as GS from './GenSequence';
 import { expect } from 'chai';
-import {IContextDefinition} from 'mocha';
+import {ISuiteCallbackContext} from 'mocha';
 
-describe('Performance Test', function(this: IContextDefinition) {
+describe('Performance Test', function(this: ISuiteCallbackContext) {
     this.timeout(100000);
     it('Simple Generator to an array', () => {
         const fnBase = () => {

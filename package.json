@@ -7,15 +7,15 @@
   "dependencies": {},
   "devDependencies": {
     "@types/chai": "^3.4.34",
-    "@types/mocha": "^2.2.33",
+    "@types/mocha": "^2.2.39",
     "@types/node": "^7.0.5",
     "chai": "^3.5.0",
-    "coveralls": "^2.11.15",
+    "coveralls": "^2.11.16",
     "mocha": "^3.2.0",
     "nyc": "^10.1.2",
     "rimraf": "^2.5.4",
-    "ts-node": "^2.0.0",
-    "typescript": "^2.1.5"
+    "ts-node": "^2.1.0",
+    "typescript": "^2.1.6"
   },
   "scripts": {
     "prepublish": "npm run clean-build && npm test",
