@@ -179,7 +179,7 @@ function* range(start: number, stop: number, step?: number) {
 
 interface Measurement<T> {
     result: T | undefined;
-    avg: number | undefined;
+    avg: number;
     min: number | undefined;
     max: number | undefined;
     count: number;

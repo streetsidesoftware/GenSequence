@@ -247,4 +247,54 @@ describe('GenSequence Tests', function() {
         expect([...GS.makeIterable(genSequence(values)[Symbol.iterator]())]).to.be.deep.equal(values);
         expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
     });
+
+    it('test any with match', () => {
+        const values = [1, 2, 3, 4];
+        expect(genSequence(values).any(a => a > 3)).to.be.true;
+    });
+
+    it('test any with no match', () => {
+        const values = [0, 1, 2, 3];
+        expect(genSequence(values).any(a => a > 3)).to.be.false;
+    });
+
+    it('test any with empty set', () => {
+        const values = [];
+        expect(genSequence(values).any(a => a > 3)).to.be.false;
+    });
+
+    it('test any exits early', () => {
+        const values = [1, 2, 3, 4];
+        let count: number = 0;
+        genSequence(values).any(a => {
+            count++;
+            return a == 3;
+        });
+        expect(count).to.be.equal(3);
+    });
+
+    it('test all where all values match', () => {
+        const values = [1, 2, 3, 4];
+        expect(genSequence(values).all(a => a >= 0)).to.be.true;
+    });
+
+    it('test all with one value that does not match', () => {
+        const values = [0, 1];
+        expect(genSequence(values).all(a => a != 1)).to.be.false;
+    });
+
+    it('test all with empty set', () => {
+        const values = [];
+        expect(genSequence(values).all(a => a > 3)).to.be.true;
+    });
+
+    it('test all exits early', () => {
+        const values = [1, 2, 3, 4];
+        let count: number = 0;
+        genSequence(values).all(a => {
+            count++;
+            return a < 3;
+        });
+        expect(count).to.be.equal(3);
+    });
 });
