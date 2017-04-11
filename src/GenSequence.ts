@@ -23,6 +23,8 @@ export interface Sequence<T> extends IterableLike<T> {
     concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
     skip(n: number): Sequence<T>;
     take(n: number): Sequence<T>;
+    all(fnFilter: (t: T)=> boolean): boolean;
+    any(fnFilter: (t: T)=> boolean): boolean;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
     toArray(): T[];
@@ -75,6 +77,12 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         },
         take: (n: number) => {
             return genSequence(take(n, i));
+        },
+        all: (fnFilter: (t: T) => boolean): boolean => {
+            return all(fnFilter, i);
+        },
+        any: (fnFilter: (t: T) => boolean): boolean => {
+            return any(fnFilter, i);
         },
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
@@ -243,6 +251,24 @@ export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): Ite
             yield u;
         }
     }
+}
+
+export function any<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
+    for (const t of i) {
+        if (fn(t)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+export function all<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
+    for (const t of i) {
+        if (!fn(t)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;

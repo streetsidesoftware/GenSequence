@@ -121,6 +121,8 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `.concatMap(fnMap)` -- this is used to flatten the result of a map function.
 - `.skip(n)` -- skip *n* entries in the sequence
 - `.take(n)` -- take the next *n* entries in the sequence.
+- `.any()` -- true if any value in the sequence exists where *fn(value)* returns true.
+- `.all()` -- true if all values in the sequence return true for *fn(value)* or the sequence is empty.
 - `.first()` -- return the next value in the sequence.
 - `.first(fn)` -- return the next value in the sequence where *fn(value)* return true.
 
