@@ -1,5 +1,8 @@
 # Release Notes
 
+# 1.1.0
+* Added `all` and `any` - thanks to @sea1jxr
+
 # 1.0.0
 * Added full test coverage
 * Fix an issue with scan and working with arrays.
