@@ -27,7 +27,7 @@ export interface Sequence<T> extends IterableLike<T> {
     any(fnFilter: (t: T)=> boolean): boolean;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
-    max(): T;
+    max(): Maybe<T>;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -88,7 +88,7 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
         },
-        max: (): T =>  {
+        max: (): Maybe<T> =>  {
             return max(i);
         },
         toArray: () => [...i],
@@ -286,28 +286,31 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
     return defaultValue;
 }
 
-export function max<T>(i: Iterable<T>): T {
-    const iter: Iterator<T> = i[Symbol.iterator]();
-    let result: IteratorResult<T> = iter.next();
-    if (result.done) {
-        throw new Error("The sequence contains no elements")
-    }
-    let maxValue: T = result.value;
-    for (result = iter.next(); !result.done; result = iter.next()) {
-        if (isNonValue(result.value)) {
-            continue;
+export function max<T>(i: Iterable<T>): Maybe<T> {
+    let sawValue: boolean = false;
+    const value: Maybe<T> = reduce((p: T, c: T) => {
+        if (!sawValue) {
+            sawValue = true;
+        }
+        
+        if (isNonValue(p) || c > p) {
+            return c;
         }
 
-        if (isNonValue(maxValue) || result.value > maxValue) {
-            maxValue = result.value;
-        }
+        return p;
+    },
+    undefined, 
+    i);
+
+    if (!sawValue) {
+        throw new Error("the sequence is empty.");
+    }
+    
+    if (isNonValue(value)) {
+        return undefined;
     }
 
-    if (isNonValue(maxValue)) {
-        return (<any>undefined) as T;
-    }
-
-    return maxValue;
+    return value;
 }
 
 export function* toIterator<T>(i: Iterable<T>) {
