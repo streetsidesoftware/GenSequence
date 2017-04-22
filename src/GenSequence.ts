@@ -27,7 +27,8 @@ export interface Sequence<T> extends IterableLike<T> {
     any(fnFilter: (t: T)=> boolean): boolean;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
-    max(): Maybe<T>;
+    max(fnSelector?: (t: T) => T): Maybe<T>;
+    max<U>(fnSelector: (t: T) => U): Maybe<T>;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -88,8 +89,8 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
         },
-        max: (): Maybe<T> =>  {
-            return max(i);
+        max: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
+            return max<T, U>(fnSelector, i);
         },
         toArray: () => [...i],
         toIterable: () => {
@@ -286,37 +287,15 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
     return defaultValue;
 }
 
-export function max<T>(i: Iterable<T>): Maybe<T> {
-    let sawValue: boolean = false;
-    const value: Maybe<T> = reduce((p: T, c: T) => {
-        if (!sawValue) {
-            sawValue = true;
-        }
-        
-        if (isNonValue(p) || c > p) {
-            return c;
-        }
-
-        return p;
-    },
-    undefined, 
-    i);
-
-    if (!sawValue) {
-        throw new Error("the sequence is empty.");
-    }
-    
-    if (isNonValue(value)) {
-        return undefined;
-    }
-
-    return value;
+export function max<T, U>(fn: (t: T) => U, i: Iterable<T>): Maybe<T>;
+export function max<T>(fn: Maybe<(t: T) => T>, i: Iterable<T>): Maybe<T> {
+    const selector = fn || ((v) => v);
+    return reduce((p: T, c: T) => selector(c) > selector(p) ? c : p, undefined, i);
 }
 
 export function* toIterator<T>(i: Iterable<T>) {
     yield* i;
 }
-
 
 export type KeyValuePair<T> = [keyof T, T[keyof T]];
 
@@ -354,11 +333,6 @@ export function sequenceFromRegExpMatch(pattern: RegExp, text: string): Sequence
     }
 
     return genSequence(doMatch());
-}
-
-// undefined, null or NaN
-function isNonValue<T>(v: T): boolean {
-    return v == null || v !== v;
 }
 
 export default genSequence;

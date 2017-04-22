@@ -318,9 +318,9 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).max()).to.equal(4);
     });
 
-    it('test max throws on empty set', () => {
+    it('test max on empty set returns undefined', () => {
         const values = [];
-        expect(() => genSequence(values).max()).to.throw(Error);
+        expect(genSequence(values).max()).to.be.undefined
     });
 
     it('test max on string values', () => {
@@ -339,8 +339,13 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).max()).to.equal(bigger);
     });
 
+    it('test max starts with undefined always undefined', () => {
+        const values = [undefined, 1, undefined, 2];
+        expect(genSequence(values).max()).to.be.undefined;
+    });
+
     it('test max undefined value', () => {
-        const values = [undefined, 1, undefined, 2, undefined];
+        const values = [1, undefined, 2, undefined];
         expect(genSequence(values).max()).to.equal(2);
     });
 
@@ -349,23 +354,42 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).max()).to.equal(2);
     });
 
-    it('test max NaN value', () => {
+    it('test max starts with NaN always NaN', () => {
         const values = [NaN, 1, NaN, 2];
+        expect(genSequence(values).max()).to.be.NaN;
+    });
+
+    it('test max NaN value', () => {
+        const values = [1, NaN, 2];
         expect(genSequence(values).max()).to.equal(2);
     });
 
     it('test max all undefined value', () => {
         const values = [undefined, undefined];
-        expect(genSequence(values).max()).to.equal(undefined);
+        expect(genSequence(values).max()).to.be.undefined;
     });
 
     it('test max all null value', () => {
         const values = [null, null];
-        expect(genSequence(values).max()).to.equal(undefined);
+        expect(genSequence(values).max()).to.be.null;
     });
 
     it('test max all NaN value', () => {
         const values = [NaN, NaN];
-        expect(genSequence(values).max()).to.equal(undefined);
+        expect(genSequence(values).max()).to.be.NaN;
+    });
+
+    it('test max with selector', () => {
+        const one: any = {
+            age: 1,
+            animal: "zebra"
+        };
+        const two: any = {
+            age: 2,
+            animal: "alligator"
+        };
+        const values = [one, two];
+        expect(genSequence(values).max((v) => v.age)).to.equal(two);
+        expect(genSequence(values).max((v) => v.animal)).to.equal(one);
     });
 });
