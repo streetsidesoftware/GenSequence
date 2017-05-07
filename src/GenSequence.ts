@@ -287,9 +287,8 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
     return defaultValue;
 }
 
-export function max<T, U>(fn: (t: T) => U, i: Iterable<T>): Maybe<T>;
-export function max<T>(fn: Maybe<(t: T) => T>, i: Iterable<T>): Maybe<T> {
-    const selector = fn || ((v) => v);
+export function max<T, U>(selector: (t: T) => U, i: Iterable<T>): Maybe<T>;
+export function max<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<T> {
     return reduce((p: T, c: T) => selector(c) > selector(p) ? c : p, undefined, i);
 }
 
