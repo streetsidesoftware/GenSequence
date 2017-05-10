@@ -1,5 +1,8 @@
 # Release Notes
 
+# 1.2.0
+* Added `min` and `max` - thanks to @sea1jxr
+
 # 1.1.0
 * Added `all` and `any` - thanks to @sea1jxr
 
