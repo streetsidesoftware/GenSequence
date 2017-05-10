@@ -27,6 +27,8 @@ export interface Sequence<T> extends IterableLike<T> {
     any(fnFilter: (t: T)=> boolean): boolean;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
+    max(fnSelector?: (t: T) => T): Maybe<T>;
+    max<U>(fnSelector: (t: T) => U): Maybe<T>;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -86,6 +88,9 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         },
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
+        },
+        max: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
+            return max<T, U>(fnSelector, i);
         },
         toArray: () => [...i],
         toIterable: () => {
@@ -282,10 +287,14 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
     return defaultValue;
 }
 
+export function max<T, U>(selector: (t: T) => U, i: Iterable<T>): Maybe<T>;
+export function max<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<T> {
+    return reduce((p: T, c: T) => selector(c) > selector(p) ? c : p, undefined, i);
+}
+
 export function* toIterator<T>(i: Iterable<T>) {
     yield* i;
 }
-
 
 export type KeyValuePair<T> = [keyof T, T[keyof T]];
 
