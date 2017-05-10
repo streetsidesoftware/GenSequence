@@ -127,6 +127,8 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `.first(fn)` -- return the next value in the sequence where *fn(value)* return true.
 - `.max()` -- return the largest value in the sequence.
 - `.max(fn)` -- return the largest value of *fn(value)* in the sequence.
+- `.min()` -- return the smallest value in the sequence.
+- `.min(fn)` -- return the smallest value of *fn(value)* in the sequence.
 
 ### Misc
 - `toIterable()` -- Casts a Sequence into an IterableIterator - used in cases where type checking is too strict.

@@ -392,4 +392,99 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).max((v) => v.age)).to.equal(two);
         expect(genSequence(values).max((v) => v.animal)).to.equal(one);
     });
+
+    it('test min on single value', () => {
+        const values = [2];
+        expect(genSequence(values).min()).to.equal(2);
+    });
+
+    it('test min returns min on start', () => {
+        const values = [1, 2, 3, 4];
+        expect(genSequence(values).min()).to.equal(1);
+    });
+
+    it('test min returns min in middle', () => {
+        const values = [3, 1, 3];
+        expect(genSequence(values).min()).to.equal(1);
+    });
+
+    it('test min returns min on end', () => {
+        const values = [4, 3, 2, 1];
+        expect(genSequence(values).min()).to.equal(1);
+    });
+
+    it('test min on empty set returns undefined', () => {
+        const values = [];
+        expect(genSequence(values).min()).to.be.undefined
+    });
+
+    it('test min on string values', () => {
+        const values = ["one", "two"];
+        expect(genSequence(values).min()).to.equal("one");
+    });
+
+    it('test min on object values', () => {
+        const smaller: any = {
+            valueOf: function() { return 1; }
+        };
+        const bigger: any = {
+            valueOf: function() { return 2; }
+        };
+        const values = [smaller, bigger];
+        expect(genSequence(values).min()).to.equal(smaller);
+    });
+
+    it('test min starts with undefined always undefined', () => {
+        const values = [undefined, 1, undefined, 2];
+        expect(genSequence(values).min()).to.be.undefined;
+    });
+
+    it('test min undefined value', () => {
+        const values = [2, undefined, 1, undefined];
+        expect(genSequence(values).min()).to.equal(1);
+    });
+
+    it('test min null value', () => {
+        const values = [null, 1, null, 2];
+        expect(genSequence(values).min()).to.be.null;
+    });
+
+    it('test min starts with NaN always NaN', () => {
+        const values = [NaN, 1, NaN, 2];
+        expect(genSequence(values).min()).to.be.NaN;
+    });
+
+    it('test min NaN value', () => {
+        const values = [1, NaN, 2];
+        expect(genSequence(values).min()).to.equal(1);
+    });
+
+    it('test min all undefined value', () => {
+        const values = [undefined, undefined];
+        expect(genSequence(values).min()).to.be.undefined;
+    });
+
+    it('test min all null value', () => {
+        const values = [null, null];
+        expect(genSequence(values).min()).to.be.null;
+    });
+
+    it('test min all NaN value', () => {
+        const values = [NaN, NaN];
+        expect(genSequence(values).min()).to.be.NaN;
+    });
+
+    it('test min with selector', () => {
+        const one: any = {
+            age: 1,
+            animal: "zebra"
+        };
+        const two: any = {
+            age: 2,
+            animal: "alligator"
+        };
+        const values = [one, two];
+        expect(genSequence(values).min((v) => v.age)).to.equal(one);
+        expect(genSequence(values).min((v) => v.animal)).to.equal(two);
+    });
 });

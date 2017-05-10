@@ -29,6 +29,8 @@ export interface Sequence<T> extends IterableLike<T> {
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
     max(fnSelector?: (t: T) => T): Maybe<T>;
     max<U>(fnSelector: (t: T) => U): Maybe<T>;
+    min(fnSelector?: (t: T) => T): Maybe<T>;
+    min<U>(fnSelector: (t: T) => U): Maybe<T>;
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -91,6 +93,9 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         },
         max: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
             return max<T, U>(fnSelector, i);
+        },
+        min: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
+            return min<T, U>(fnSelector, i);
         },
         toArray: () => [...i],
         toIterable: () => {
@@ -290,6 +295,11 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
 export function max<T, U>(selector: (t: T) => U, i: Iterable<T>): Maybe<T>;
 export function max<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<T> {
     return reduce((p: T, c: T) => selector(c) > selector(p) ? c : p, undefined, i);
+}
+
+export function min<T, U>(selector: (t: T) => U, i: Iterable<T>): Maybe<T>;
+export function min<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<T> {
+    return reduce((p: T, c: T) => selector(c) < selector(p) ? c : p, undefined, i);
 }
 
 export function* toIterator<T>(i: Iterable<T>) {
