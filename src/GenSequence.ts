@@ -10,11 +10,13 @@ export interface Sequence<T> extends IterableLike<T> {
 
     //// Filters
     /** keep values where the fnFilter(t) returns true */
-    concat(j: Iterable<T>): Sequence<T>;
-    concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
     skip(n: number): Sequence<T>;
     take(n: number): Sequence<T>;
+
+    //// Extenders
+    concat(j: Iterable<T>): Sequence<T>;
+    concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
 
     //// Mappers
     /** map values from type T to type U */
@@ -66,18 +68,20 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         next: fnNext(),   // late binding is intentional here.
 
         //// Filters
-        concat: (j: Iterable<T>) => {
-            return genSequence(concat(i, j));
-        },
-        concatMap: <U>(fn: (t: T) => Iterable<U>) => {
-            return genSequence(concatMap(fn, i));
-        },
         filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
         skip: (n: number) => {
             return genSequence(skip(n, i));
         },
         take: (n: number) => {
             return genSequence(take(n, i));
+        },
+
+        //// Extenders
+        concat: (j: Iterable<T>) => {
+            return genSequence(concat(i, j));
+        },
+        concatMap: <U>(fn: (t: T) => Iterable<U>) => {
+            return genSequence(concatMap(fn, i));
         },
 
         //// Mappers
@@ -132,19 +136,6 @@ export const GenSequence = {
 /**
  * Concat two iterables together
  */
-export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
-    yield *i;
-    yield *j;
-}
-
-export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
-    for (const t of i) {
-        for (const u of fn(t)) {
-            yield u;
-        }
-    }
-}
-
 export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
     for (const v of i) {
         if (fnFilter(v)) {
@@ -173,6 +164,20 @@ export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
             }
             yield t;
             a += 1;
+        }
+    }
+}
+
+//// Extenders
+export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
+    yield *i;
+    yield *j;
+}
+
+export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
+    for (const t of i) {
+        for (const u of fn(t)) {
+            yield u;
         }
     }
 }

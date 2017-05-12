@@ -112,11 +112,13 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `genSequence(Iterable|Array)` -- generate a new Iterable from an Iterable or Array with the following functions.
 
 ### Filters
-- `.concat(iterable)` -- this will extend the current sequence with the values from *iterable*
-- `.concatMap(fnMap)` -- this is used to flatten the result of a map function.
 - `.filter(fn)` -- just like array.filter, filters the sequence
 - `.skip(n)` -- skip *n* entries in the sequence
 - `.take(n)` -- take the next *n* entries in the sequence.
+
+### Extenders
+- `.concat(iterable)` -- this will extend the current sequence with the values from *iterable*
+- `.concatMap(fnMap)` -- this is used to flatten the result of a map function.
 
 ### Mappers
 - `.combine(fnCombiner, iterable)` -- is used to combine values from two different lists.
@@ -133,6 +135,7 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `.min()` -- return the smallest value in the sequence.
 - `.min(fn)` -- return the smallest value of *fn(value)* in the sequence.
 - `.reduce(fn, init?)` -- just like array.reduce, reduces the sequence into a single result.
+- `.reduceToSequence(fn, init)` -- return a sequence of values that *fn* creates from looking at all the values and the initial sequence.
 
 ### Cast
 - `.toArray()` -- convert the sequence into an array.  This is the same as [...iterator].
