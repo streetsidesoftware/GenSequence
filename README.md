@@ -109,18 +109,23 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 
 
 ## Reference
-
 - `genSequence(Iterable|Array)` -- generate a new Iterable from an Iterable or Array with the following functions.
-- `.toArray()` -- convert the sequence into an array.  This is the same as [...iterator].
-- `.map(fn)` -- just like array.map, allows you to convert the values in a sequence.
+
+### Filters
 - `.filter(fn)` -- just like array.filter, filters the sequence
-- `.reduce(fn, init?)` -- just like array.reduce, reduces the sequence into a single result.
-- `.scan(fn, init?)` -- similar to reduce, but returns a sequence of all the results of fn.
-- `.combine(fnCombiner, iterable)` -- is used to combine values from two different lists.
-- `.concat(iterable)` -- this will extend the current sequence with the values from *iterable*
-- `.concatMap(fnMap)` -- this is used to flatten the result of a map function.
 - `.skip(n)` -- skip *n* entries in the sequence
 - `.take(n)` -- take the next *n* entries in the sequence.
+
+### Extenders
+- `.concat(iterable)` -- this will extend the current sequence with the values from *iterable*
+- `.concatMap(fnMap)` -- this is used to flatten the result of a map function.
+
+### Mappers
+- `.combine(fnCombiner, iterable)` -- is used to combine values from two different lists.
+- `.map(fn)` -- just like array.map, allows you to convert the values in a sequence.
+- `.scan(fn, init?)` -- similar to reduce, but returns a sequence of all the results of fn.
+
+### Reducers
 - `.all()` -- true if all values in the sequence return true for *fn(value)* or the sequence is empty.
 - `.any()` -- true if any value in the sequence exists where *fn(value)* returns true.
 - `.first()` -- return the next value in the sequence.
@@ -129,6 +134,9 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `.max(fn)` -- return the largest value of *fn(value)* in the sequence.
 - `.min()` -- return the smallest value in the sequence.
 - `.min(fn)` -- return the smallest value of *fn(value)* in the sequence.
+- `.reduce(fn, init?)` -- just like array.reduce, reduces the sequence into a single result.
+- `.reduceToSequence(fn, init)` -- return a sequence of values that *fn* creates from looking at all the values and the initial sequence.
 
-### Misc
+### Cast
+- `.toArray()` -- convert the sequence into an array.  This is the same as [...iterator].
 - `toIterable()` -- Casts a Sequence into an IterableIterator - used in cases where type checking is too strict.

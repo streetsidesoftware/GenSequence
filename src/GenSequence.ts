@@ -7,22 +7,25 @@ export interface IterableLike<T> {
 
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
-    /** map values from type T to type U */
-    map<U>(fnMap: (t: T) => U): Sequence<U>;
+
+    //// Filters
     /** keep values where the fnFilter(t) returns true */
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
-    /** reduce function see Array.reduce */
-    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
-    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
-    reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
-    reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
-    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
-    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
-    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
-    concat(j: Iterable<T>): Sequence<T>;
-    concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
     skip(n: number): Sequence<T>;
     take(n: number): Sequence<T>;
+
+    //// Extenders
+    concat(j: Iterable<T>): Sequence<T>;
+    concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
+
+    //// Mappers
+    /** map values from type T to type U */
+    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
+    map<U>(fnMap: (t: T) => U): Sequence<U>;
+    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
+    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
+
+    //// Reducers
     all(fnFilter: (t: T)=> boolean): boolean;
     any(fnFilter: (t: T)=> boolean): boolean;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
@@ -31,6 +34,13 @@ export interface Sequence<T> extends IterableLike<T> {
     max<U>(fnSelector: (t: T) => U): Maybe<T>;
     min(fnSelector?: (t: T) => T): Maybe<T>;
     min<U>(fnSelector: (t: T) => U): Maybe<T>;
+    /** reduce function see Array.reduce */
+    reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
+    reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
+    reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
+    reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
+
+    //// Cast 
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -56,32 +66,34 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
     const seq = {
         [Symbol.iterator]: () => i[Symbol.iterator](),
         next: fnNext(),   // late binding is intentional here.
-        map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
+
+        //// Filters
         filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
-        reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
-            return reduce<T, U>(fnReduce, initValue!, i);
-        },
-        reduceToSequence: <U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U> => {
-            return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, i));
-        },
-        scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
-            return genSequence(scan(i, fnReduce, initValue));
-        },
-        combine: <U, V>(fn: (t: T, u: U) => V, j: Iterable<U>) =>  {
-            return genSequence(combine(fn, i, j));
-        },
-        concat: (j: Iterable<T>) => {
-            return genSequence(concat(i, j));
-        },
-        concatMap: <U>(fn: (t: T) => Iterable<U>) => {
-            return genSequence(concatMap(fn, i));
-        },
         skip: (n: number) => {
             return genSequence(skip(n, i));
         },
         take: (n: number) => {
             return genSequence(take(n, i));
         },
+
+        //// Extenders
+        concat: (j: Iterable<T>) => {
+            return genSequence(concat(i, j));
+        },
+        concatMap: <U>(fn: (t: T) => Iterable<U>) => {
+            return genSequence(concatMap(fn, i));
+        },
+
+        //// Mappers
+        combine: <U, V>(fn: (t: T, u: U) => V, j: Iterable<U>) =>  {
+            return genSequence(combine(fn, i, j));
+        },
+        map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
+        scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
+            return genSequence(scan(i, fnReduce, initValue));
+        },
+
+        // Reducers
         all: (fnFilter: (t: T) => boolean): boolean => {
             return all(fnFilter, i);
         },
@@ -97,6 +109,14 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         min: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
             return min<T, U>(fnSelector, i);
         },
+        reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
+            return reduce<T, U>(fnReduce, initValue!, i);
+        },
+        reduceToSequence: <U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U> => {
+            return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, i));
+        },
+
+        //// Cast
         toArray: () => [...i],
         toIterable: () => {
             return toIterator(i);
@@ -112,6 +132,10 @@ export const GenSequence = {
     sequenceFromObject,
 };
 
+//// Filters
+/**
+ * Concat two iterables together
+ */
 export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
     for (const v of i) {
         if (fnFilter(v)) {
@@ -119,116 +143,6 @@ export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
         }
     }
 }
-
-export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: Iterable<T>): U;
-export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
-    let index = 0;
-    if (initialValue === undefined) {
-        index = 1;
-        const r = i[Symbol.iterator]().next();
-        initialValue = r.value;
-    }
-    let prevValue = initialValue;
-    for (const t of i) {
-        const nextValue = fnReduce(prevValue, t, index);
-        prevValue = nextValue;
-        index += 1;
-    }
-    return prevValue;
-}
-
-/**
- * Convert an Iterator into an IterableIterator
- */
-export function makeIterable<T>(i: Iterator<T>) {
-    function* iterate() {
-        for (let r = i.next(); ! r.done; r = i.next()) {
-            yield r.value;
-        }
-    }
-    return iterate();
-}
-
-export function scan<T, U>(i: Iterable<T>, fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): IterableIterator<U>;
-export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue?: T): IterableIterator<T> {
-    let index = 0;
-    if (initValue === undefined) {
-        // We need to create a new iterable to prevent for...of from restarting an array.
-        index = 1;
-        const iter = i[Symbol.iterator]();
-        let r = iter.next();
-        if (!r.done) yield r.value;
-        initValue = r.value;
-        i = makeIterable(iter);
-    }
-    let prevValue = initValue;
-    for (const t of i) {
-        const nextValue = fnReduce(prevValue, t, index);
-        yield nextValue;
-        prevValue = nextValue;
-        index += 1;
-    }
-}
-
-/**
- * apply a mapping function to an Iterable.
- */
-export function map<T, U>(fnMap: (t: T) => U): (i: Iterable<T>) => IterableIterator<U>;
-export function map<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U>;
-export function map<T, U>(fnMap: (t: T) => U, i?: Iterable<T>): IterableIterator<U> | ((i: Iterable<T>) => IterableIterator<U>) {
-    function* fn<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U> {
-        for (const v of i) {
-            yield fnMap(v);
-        }
-    }
-
-    if (i !== undefined) {
-        return fn(fnMap, i);
-    }
-
-    return function(i: Iterable<T>) {
-        return fn(fnMap, i);
-    };
-}
-
-/**
- * Combine two iterables together using fnMap function.
- */
-export function* combine<T, U, V>(fnMap: (t: T, u?: U) => V, i: Iterable<T>, j: Iterable<U>): IterableIterator<V> {
-    const jit = j[Symbol.iterator]();
-    for (const r of i) {
-        const s = jit.next().value;
-        yield fnMap(r, s);
-    }
-}
-
-/**
- * Concat two iterables together
- */
-export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
-    yield *i;
-    yield *j;
-}
-
-/**
- * Creates a scan function that can be used in a map function.
- */
-export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T);
-export function scanMap<T, U>(accFn: (acc: U, value: T) => U, init: U): ((value: T) => U);
-export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T) {
-    let acc = init;
-    let first = true;
-    return function(value: T): T {
-        if (first && acc === undefined) {
-            first = false;
-            acc = value;
-            return acc;
-        }
-        acc = accFn(acc as T, value);
-        return acc;
-    };
-}
-
 
 export function* skip<T>(n: number, i: Iterable<T>): IterableIterator<T> {
     let a = 0;
@@ -254,6 +168,11 @@ export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
     }
 }
 
+//// Extenders
+export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
+    yield *i;
+    yield *j;
+}
 
 export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
     for (const t of i) {
@@ -263,15 +182,61 @@ export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): Ite
     }
 }
 
-export function any<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
-    for (const t of i) {
-        if (fn(t)) {
-            return true;
-        }
+//// Mappers
+/**
+ * Combine two iterables together using fnMap function.
+ */
+export function* combine<T, U, V>(fnMap: (t: T, u?: U) => V, i: Iterable<T>, j: Iterable<U>): IterableIterator<V> {
+    const jit = j[Symbol.iterator]();
+    for (const r of i) {
+        const s = jit.next().value;
+        yield fnMap(r, s);
     }
-    return false;
 }
 
+/**
+ * apply a mapping function to an Iterable.
+ */
+export function map<T, U>(fnMap: (t: T) => U): (i: Iterable<T>) => IterableIterator<U>;
+export function map<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U>;
+export function map<T, U>(fnMap: (t: T) => U, i?: Iterable<T>): IterableIterator<U> | ((i: Iterable<T>) => IterableIterator<U>) {
+    function* fn<T, U>(fnMap: (t: T) => U, i: Iterable<T>): IterableIterator<U> {
+        for (const v of i) {
+            yield fnMap(v);
+        }
+    }
+
+    if (i !== undefined) {
+        return fn(fnMap, i);
+    }
+
+    return function(i: Iterable<T>) {
+        return fn(fnMap, i);
+    };
+}
+
+export function scan<T, U>(i: Iterable<T>, fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): IterableIterator<U>;
+export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue?: T): IterableIterator<T> {
+    let index = 0;
+    if (initValue === undefined) {
+        // We need to create a new iterable to prevent for...of from restarting an array.
+        index = 1;
+        const iter = i[Symbol.iterator]();
+        let r = iter.next();
+        if (!r.done) yield r.value;
+        initValue = r.value;
+        i = makeIterable(iter);
+    }
+    let prevValue = initValue;
+    for (const t of i) {
+        const nextValue = fnReduce(prevValue, t, index);
+        yield nextValue;
+        prevValue = nextValue;
+        index += 1;
+    }
+}
+
+//// Reducers
 export function all<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
     for (const t of i) {
         if (!fn(t)) {
@@ -279,6 +244,15 @@ export function all<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
         }
     }
     return true;
+}
+
+export function any<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
+    for (const t of i) {
+        if (fn(t)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
@@ -302,9 +276,61 @@ export function min<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<
     return reduce((p: T, c: T) => selector(c) < selector(p) ? c : p, undefined, i);
 }
 
+export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: Iterable<T>): U;
+export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
+    let index = 0;
+    if (initialValue === undefined) {
+        index = 1;
+        const r = i[Symbol.iterator]().next();
+        initialValue = r.value;
+    }
+    let prevValue = initialValue;
+    for (const t of i) {
+        const nextValue = fnReduce(prevValue, t, index);
+        prevValue = nextValue;
+        index += 1;
+    }
+    return prevValue;
+}
+
+//// Cast
 export function* toIterator<T>(i: Iterable<T>) {
     yield* i;
 }
+
+//// Utilities
+/**
+ * Convert an Iterator into an IterableIterator
+ */
+export function makeIterable<T>(i: Iterator<T>) {
+    function* iterate() {
+        for (let r = i.next(); ! r.done; r = i.next()) {
+            yield r.value;
+        }
+    }
+    return iterate();
+}
+
+/**
+ * Creates a scan function that can be used in a map function.
+ */
+export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T);
+export function scanMap<T, U>(accFn: (acc: U, value: T) => U, init: U): ((value: T) => U);
+export function scanMap<T>(accFn: (acc: T, value: T) => T, init?: T): ((value: T) => T) {
+    let acc = init;
+    let first = true;
+    return function(value: T): T {
+        if (first && acc === undefined) {
+            first = false;
+            acc = value;
+            return acc;
+        }
+        acc = accFn(acc as T, value);
+        return acc;
+    };
+}
+
+
 
 export type KeyValuePair<T> = [keyof T, T[keyof T]];
 
