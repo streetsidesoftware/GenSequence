@@ -40,7 +40,7 @@ export interface Sequence<T> extends IterableLike<T> {
     reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
 
-    //// Cast 
+    //// Cast
     toArray(): T[];
     toIterable(): IterableIterator<T>;
 }
@@ -112,7 +112,10 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
             return reduce<T, U>(fnReduce, initValue!, i);
         },
-        reduceToSequence: <U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U> => {
+        reduceToSequence: <U>(
+            fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>,
+            initialValue: GenIterable<U>
+        ): Sequence<U> => {
             return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, i));
         },
 
@@ -133,9 +136,6 @@ export const GenSequence = {
 };
 
 //// Filters
-/**
- * Concat two iterables together
- */
 export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
     for (const v of i) {
         if (fnFilter(v)) {
@@ -169,6 +169,9 @@ export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
 }
 
 //// Extenders
+/**
+ * Concat two iterables together
+ */
 export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
     yield *i;
     yield *j;
