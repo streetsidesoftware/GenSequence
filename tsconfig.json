@@ -5,9 +5,10 @@
 		"moduleResolution": "node",
 		"sourceMap": true,
         "declaration": true,
-		"noImplicitAny": false,
+		"noImplicitAny": true,
 		"noImplicitThis": true,
 		"noUnusedLocals": true,
+		"strict": true,
 		"noUnusedParameters": true,
 		"strictNullChecks": true,
 		"outDir": "lib"

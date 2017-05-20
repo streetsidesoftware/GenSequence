@@ -3,6 +3,15 @@ import * as GS from './GenSequence';
 import { expect } from 'chai';
 
 describe('GenSequence Tests', function() {
+
+    interface Person {
+        name: string,
+        age: number,
+        height: number,
+        weight: number,
+    }
+    type PersonKeys = keyof Person;
+
     it('tests constructing GenSequence', () => {
         const values = [1, 2, 3, 4, 5];
         const gs = genSequence(values);
@@ -140,7 +149,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('tests object to sequence', () => {
-        const person = {
+        const person: Person = {
             name: 'Bob',
             age: 22,
             height: 185,
@@ -149,7 +158,7 @@ describe('GenSequence Tests', function() {
         const i = sequenceFromObject(person);
         expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(Object.keys(person).sort());
         const j = sequenceFromObject(person);
-        expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map(k => person[k]).sort());
+        expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map((k: PersonKeys) => person[k]).sort());
         expect([...GS.objectToSequence(person)]).to.be.deep.equal([...sequenceFromObject(person)]);
     });
 
@@ -259,7 +268,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('test any with empty set', () => {
-        const values = [];
+        const values: number[] = [];
         expect(genSequence(values).any(a => a > 3)).to.be.false;
     });
 
@@ -284,7 +293,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('test all with empty set', () => {
-        const values = [];
+        const values: number[] = [];
         expect(genSequence(values).all(a => a > 3)).to.be.true;
     });
 
@@ -319,7 +328,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('test max on empty set returns undefined', () => {
-        const values = [];
+        const values: number[] = [];
         expect(genSequence(values).max()).to.be.undefined
     });
 
@@ -414,7 +423,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('test min on empty set returns undefined', () => {
-        const values = [];
+        const values: number[] = [];
         expect(genSequence(values).min()).to.be.undefined
     });
 
