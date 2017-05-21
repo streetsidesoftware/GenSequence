@@ -496,4 +496,19 @@ describe('GenSequence Tests', function() {
         expect(genSequence(values).min((v) => v.age)).to.equal(one);
         expect(genSequence(values).min((v) => v.animal)).to.equal(two);
     });
+
+    it('test count with no elements', () => {
+        const values: number[] = [];
+        expect(genSequence(values).count()).to.equal(0);
+    });
+
+    it('test count with 1 element', () => {
+        const values: number[] = [1];
+        expect(genSequence(values).count()).to.equal(1);
+    });
+
+    it('test count with 2 elements', () => {
+        const values: number[] = [18, 7];
+        expect(genSequence(values).count()).to.equal(2);
+    });
 });

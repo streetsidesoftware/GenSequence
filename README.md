@@ -128,6 +128,7 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 ### Reducers
 - `.all()` -- true if all values in the sequence return true for *fn(value)* or the sequence is empty.
 - `.any()` -- true if any value in the sequence exists where *fn(value)* returns true.
+- `.count()` -- return the number of values in the sequence.
 - `.first()` -- return the next value in the sequence.
 - `.first(fn)` -- return the next value in the sequence where *fn(value)* return true.
 - `.max()` -- return the largest value in the sequence.

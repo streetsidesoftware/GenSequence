@@ -28,6 +28,7 @@ export interface Sequence<T> extends IterableLike<T> {
     //// Reducers
     all(fnFilter: (t: T)=> boolean): boolean;
     any(fnFilter: (t: T)=> boolean): boolean;
+    count(): number;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
     max(fnSelector?: (t: T) => T): Maybe<T>;
@@ -99,6 +100,9 @@ export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
         },
         any: (fnFilter: (t: T) => boolean): boolean => {
             return any(fnFilter, i);
+        },
+        count: (): number => {
+            return count(i);
         },
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, i) as T;
@@ -256,6 +260,10 @@ export function any<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
         }
     }
     return false;
+}
+
+export function count<T>(i: Iterable<T>): number {
+    return reduce<T, number>(p => p + 1, 0, i);
 }
 
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
