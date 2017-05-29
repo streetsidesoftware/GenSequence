@@ -162,22 +162,6 @@ describe('GenSequence Tests', function() {
         expect([...GS.objectToSequence(person)]).to.be.deep.equal([...sequenceFromObject(person)]);
     });
 
-    it('tests that a sequence is empty once it has been used', () => {
-        const person = {
-            name: 'Bob',
-            age: 22,
-            height: 185,
-            weight: 87,
-        }
-        const i = sequenceFromObject(person);
-        const j = genSequence(i);
-        const values0 = j.toArray();
-        const values1 = i.toArray();
-        expect(values0).to.not.be.empty;
-        expect(values1).to.be.empty;
-        expect(values0).to.not.be.deep.equal(values1);
-    });
-
     it('tests that a sequence can be reused if it is based upon an array', () => {
         const values = [1,2,3,4,5];
         const i = genSequence(values);
@@ -254,7 +238,6 @@ describe('GenSequence Tests', function() {
     it('test getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
         expect([...GS.makeIterable(genSequence(values)[Symbol.iterator]())]).to.be.deep.equal(values);
-        expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
     });
 
     it('test any with match', () => {
@@ -510,5 +493,21 @@ describe('GenSequence Tests', function() {
     it('test count with 2 elements', () => {
         const values: number[] = [18, 7];
         expect(genSequence(values).count()).to.equal(2);
+    });
+
+    it('count twice on same array sequence', () => {
+        const values = [1, 2, 3, 4, 5, 6]
+        const seq = genSequence(values);
+        const firstCount = seq.count();
+        const secondCount = seq.count();
+        expect(firstCount).to.equal(secondCount);
+    });
+
+    it('count twice on same generated sequence', () => {
+        const values = [1, 2, 3, 4, 5, 6]
+        const filteredSequence = genSequence(values).filter(a => !!(a % 2));
+        const firstCount = filteredSequence.count();
+        const secondCount = filteredSequence.count();
+        expect(firstCount).to.equal(secondCount);
     });
 });
