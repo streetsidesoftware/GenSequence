@@ -523,4 +523,22 @@ describe('GenSequence Tests', function() {
         const secondCount = filteredSequence.count();
         expect(firstCount).to.equal(secondCount);
     });
+
+    it('demonstrate that it is not possible to re-use iterators', () => {
+        const iter = fib();
+        const seq = genSequence(iter);
+        const fib5 = seq.skip(5).first();
+        const fib5b = seq.skip(5).first();
+        expect(fib5).to.be.equal(8);
+        // Try reusing the iterator.
+        expect(fib5b).to.be.undefined;
+    });
 });
+
+function* fib() {
+    let [a, b] = [0, 1];
+    while (true) {
+        yield b;
+        [a, b] = [b, a + b];
+    }
+}

@@ -1,5 +1,9 @@
 # Release Notes
 
+## 2.0.1
+* minor update to README.md.
+* added test showing how it is not possible to reuse some iterators.
+
 ## 2.0.0
 * sequences are now reusable as long as the original iterator is reusable.
 * it is not possible to initialize a sequence with a function that returns an iterator

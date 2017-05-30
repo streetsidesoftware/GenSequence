@@ -11,7 +11,7 @@ are very exciting and provide some powerful new ways to solve programming proble
 The purpose of this library is to make using the results of a generator function easier.
 It is not intended as a replacement for arrays and the convenient [...genFn()] notation.
 GenSequence is useful for cases where you might not want an array of all possible values.
-GenSequence deals effeciently with large sequences because only one element at a time is evaluated.
+GenSequence deals efficiently with large sequences because only one element at a time is evaluated.
 Intermediate arrays are not created, saving memory and cpu cycles.
 
 ## Installation
@@ -53,7 +53,7 @@ function fibonacci() {
         }
     }
     // Wrapper the Iterator result from calling the generator.
-    return genSequence(fib());
+    return genSequence(fib);
 }
 
 let fib5 = fibonacci()
