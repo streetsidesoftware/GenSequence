@@ -1,5 +1,12 @@
 # Release Notes
 
+## 2.0.0
+* sequences are now reusable as long as the original iterator is reusable.
+* it is not possible to initialize a sequence with a function that returns an iterator
+  This is very powerful.
+* `.count()` added.
+* special thanks to @sea1jxr for all of the above.
+
 ## 1.3.0
 * Refactor the methods to give them a logical grouping - thanks to @sea1jxr
 
