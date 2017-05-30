@@ -28,6 +28,7 @@ export interface Sequence<T> extends IterableLike<T> {
     //// Reducers
     all(fnFilter: (t: T)=> boolean): boolean;
     any(fnFilter: (t: T)=> boolean): boolean;
+    count(): number;
     first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
     first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
     max(fnSelector?: (t: T) => T): Maybe<T>;
@@ -52,79 +53,98 @@ export interface SequenceCreator<T> {
     fromObject: <U>(u: U) => Sequence<KeyValuePair<U>>;
 }
 
-export function genSequence<T>(i: GenIterable<T>): Sequence<T> {
+export function genSequence<T>(i: () => GenIterable<T>): Sequence<T>;
+export function genSequence<T>(i: GenIterable<T>): Sequence<T>;
+export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequence<T> {
+    let createIterable: () => GenIterable<T>;
+    if (typeof i === "function") {
+        createIterable = i;
+    } else {
+        // this is typeof "object"
+        createIterable = () => i;
+    }
+
     function fnNext() {
-        let iter: Iterator<T>;
+        let iter: Maybe<Iterator<T>>;
         return () => {
             if(!iter) {
-                iter = i[Symbol.iterator]();
+                iter = createIterable()[Symbol.iterator]();
             }
-            return iter.next();
+            const result: IteratorResult<T> = iter.next();
+            if (result.done) {
+                iter = undefined;
+            }
+
+            return result;
         };
     }
 
     const seq = {
-        [Symbol.iterator]: () => i[Symbol.iterator](),
+        [Symbol.iterator]: () => createIterable()[Symbol.iterator](),
         next: fnNext(),   // late binding is intentional here.
-
+        
         //// Filters
-        filter: (fnFilter: (t: T) => boolean) => genSequence(filter(fnFilter, i)),
+        filter: (fnFilter: (t: T) => boolean) => genSequence(() => filter(fnFilter, createIterable())),
         skip: (n: number) => {
-            return genSequence(skip(n, i));
+            return genSequence(() => skip(n, createIterable()));
         },
         take: (n: number) => {
-            return genSequence(take(n, i));
+            return genSequence(() => take(n, createIterable()));
         },
 
         //// Extenders
         concat: (j: Iterable<T>) => {
-            return genSequence(concat(i, j));
+            return genSequence(() => concat(createIterable(), j));
         },
         concatMap: <U>(fn: (t: T) => Iterable<U>) => {
-            return genSequence(concatMap(fn, i));
+            return genSequence(() => concatMap(fn, createIterable()));
         },
 
         //// Mappers
         combine: <U, V>(fn: (t: T, u: U) => V, j: Iterable<U>) =>  {
-            return genSequence(combine(fn, i, j));
+            return genSequence(() => combine(fn, createIterable(), j));
         },
-        map: <U>(fn: (t: T) => U) => genSequence(map(fn, i)),
+        map: <U>(fn: (t: T) => U) => genSequence(() => map(fn, createIterable())),
         scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
-            return genSequence(scan(i, fnReduce, initValue));
+            return genSequence(() => scan(createIterable(), fnReduce, initValue));
         },
 
         // Reducers
         all: (fnFilter: (t: T) => boolean): boolean => {
-            return all(fnFilter, i);
+            return all(fnFilter, createIterable());
         },
         any: (fnFilter: (t: T) => boolean): boolean => {
-            return any(fnFilter, i);
+            return any(fnFilter, createIterable());
+        },
+        count: (): number => {
+            return count(createIterable());
         },
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
-            return first(fnFilter, defaultValue, i) as T;
+            return first(fnFilter, defaultValue, createIterable()) as T;
         },
         max: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
-            return max<T, U>(fnSelector, i);
+            return max<T, U>(fnSelector, createIterable());
         },
         min: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
-            return min<T, U>(fnSelector, i);
+            return min<T, U>(fnSelector, createIterable());
         },
         reduce: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
-            return reduce<T, U>(fnReduce, initValue!, i);
+            return reduce<T, U>(fnReduce, initValue!, createIterable());
         },
         reduceToSequence: <U>(
             fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>,
             initialValue: GenIterable<U>
         ): Sequence<U> => {
-            return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, i));
+            return genSequence<U>(reduce<T, GenIterable<U>>(fnReduce, initialValue!, createIterable()));
         },
 
         //// Cast
-        toArray: () => [...i],
+        toArray: () => [...createIterable()],
         toIterable: () => {
-            return toIterator(i);
+            return toIterator(createIterable());
         },
     };
+    
     return seq;
 }
 
@@ -258,6 +278,10 @@ export function any<T>(fn: (t: T) => boolean, i: Iterable<T>): boolean {
     return false;
 }
 
+export function count<T>(i: Iterable<T>): number {
+    return reduce<T, number>(p => p + 1, 0, i);
+}
+
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
 export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>): T {
     fn = fn || (() => true);
@@ -352,7 +376,7 @@ export function objectToSequence<T>(t: T): Sequence<KeyValuePair<T>> {
 
 
 export function sequenceFromObject<T>(t: T): Sequence<KeyValuePair<T>> {
-    return genSequence(objectIterator(t));
+    return genSequence(() => objectIterator(t));
 }
 
 export function sequenceFromRegExpMatch(pattern: RegExp, text: string): Sequence<RegExpExecArray> {
@@ -370,7 +394,7 @@ export function sequenceFromRegExpMatch(pattern: RegExp, text: string): Sequence
         }
     }
 
-    return genSequence(doMatch());
+    return genSequence(() => doMatch());
 }
 
 export default genSequence;
