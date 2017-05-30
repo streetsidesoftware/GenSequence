@@ -243,7 +243,7 @@ describe('GenSequence Tests', function() {
 
     it('test reusing getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
-        const sequence: GS.Sequence<number> = genSequence(values);
+        const sequence: GS.Sequence<number> = genSequence(values).map(n => n);
         // do it twice as an iterable
         expect([...GS.makeIterable(sequence[Symbol.iterator]())]).to.be.deep.equal(values);
         expect([...GS.makeIterable(sequence[Symbol.iterator]())]).to.be.deep.equal(values);
