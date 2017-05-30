@@ -6,7 +6,9 @@ export interface IterableLike<T> {
 }
 
 export interface Sequence<T> extends IterableLike<T> {
-    //// Filters
+    next(): IteratorResult<T>;
+
+        //// Filters
     /** keep values where the fnFilter(t) returns true */
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
     skip(n: number): Sequence<T>;
@@ -62,9 +64,25 @@ export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequ
         createIterable = () => i;
     }
 
+    function fnNext() {
+        let iter: Maybe<Iterator<T>>;
+        return () => {
+            if(!iter) {
+                iter = createIterable()[Symbol.iterator]();
+            }
+            const result: IteratorResult<T> = iter.next();
+            if (result.done) {
+                iter = undefined;
+            }
+
+            return result;
+        };
+    }
+
     const seq = {
         [Symbol.iterator]: () => createIterable()[Symbol.iterator](),
-
+        next: fnNext(),   // late binding is intentional here.
+        
         //// Filters
         filter: (fnFilter: (t: T) => boolean) => genSequence(() => filter(fnFilter, createIterable())),
         skip: (n: number) => {

@@ -238,6 +238,19 @@ describe('GenSequence Tests', function() {
     it('test getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
         expect([...GS.makeIterable(genSequence(values)[Symbol.iterator]())]).to.be.deep.equal(values);
+        expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
+    });
+
+    it('test reusing getting the iterator from a sequence', () => {
+        const values = [1, 2, 3, 4];
+        const sequence: GS.Sequence<number> = genSequence(values);
+        // do it twice as an iterable
+        expect([...GS.makeIterable(sequence[Symbol.iterator]())]).to.be.deep.equal(values);
+        expect([...GS.makeIterable(sequence[Symbol.iterator]())]).to.be.deep.equal(values);
+
+        // do it twice as an iterator
+        expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
+        expect([...GS.makeIterable(genSequence(values))]).to.be.deep.equal(values);
     });
 
     it('test any with match', () => {
