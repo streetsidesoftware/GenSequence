@@ -8,7 +8,7 @@ export interface IterableLike<T> {
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
 
-        //// Filters
+    //// Filters
     /** keep values where the fnFilter(t) returns true */
     filter(fnFilter: (t: T) => boolean): Sequence<T>;
     skip(n: number): Sequence<T>;
