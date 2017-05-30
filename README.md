@@ -109,7 +109,7 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 
 
 ## Reference
-- `genSequence(Iterable|Array)` -- generate a new Iterable from an Iterable or Array with the following functions.
+- `genSequence(Iterable|Array|()=>Iterable)` -- generate a new Iterable from an Iterable, Array or function with the following functions.
 
 ### Filters
 - `.filter(fn)` -- just like array.filter, filters the sequence
