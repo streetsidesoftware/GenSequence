@@ -1,5 +1,8 @@
 # Release Notes
 
+## latest
+* fix a function signature issue surfaced by typescript 2.4.2
+
 ## 2.0.1
 * minor update to README.md.
 * added test showing how it is not possible to reuse some iterators.
