@@ -15,7 +15,7 @@
     "nyc": "^10.1.2",
     "rimraf": "^2.5.4",
     "ts-node": "^2.1.0",
-    "typescript": "^2.3.2"
+    "typescript": "^2.4.2"
   },
   "scripts": {
     "prepublish": "npm run clean-build && npm test",

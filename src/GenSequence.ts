@@ -22,8 +22,8 @@ export interface Sequence<T> extends IterableLike<T> {
     /** map values from type T to type U */
     combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
     map<U>(fnMap: (t: T) => U): Sequence<U>;
-    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): Sequence<T>;
-    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): Sequence<U>;
+    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T, initialValue?: T): Sequence<T>;
+    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): Sequence<U>;
 
     //// Reducers
     all(fnFilter: (t: T)=> boolean): boolean;
