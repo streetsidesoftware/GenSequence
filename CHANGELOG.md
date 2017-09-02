@@ -1,6 +1,10 @@
 # Release Notes
 
-## latest
+## 2.1.1
+* Update dev packages
+* add `forEach` function
+
+## 2.1.0
 * fix a function signature issue surfaced by typescript 2.4.2
 
 ## 2.0.1
