@@ -509,7 +509,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('count twice on same array sequence', () => {
-        const values = [1, 2, 3, 4, 5, 6]
+        const values = [1, 2, 3, 4, 5, 6];
         const seq = genSequence(values);
         const firstCount = seq.count();
         const secondCount = seq.count();
@@ -517,7 +517,7 @@ describe('GenSequence Tests', function() {
     });
 
     it('count twice on same generated sequence', () => {
-        const values = [1, 2, 3, 4, 5, 6]
+        const values = [1, 2, 3, 4, 5, 6];
         const filteredSequence = genSequence(values).filter(a => !!(a % 2));
         const firstCount = filteredSequence.count();
         const secondCount = filteredSequence.count();
@@ -532,6 +532,15 @@ describe('GenSequence Tests', function() {
         expect(fib5).to.be.equal(8);
         // Try reusing the iterator.
         expect(fib5b).to.be.undefined;
+    });
+
+    it('tests forEach', () => {
+        const values = [1, 2, 3, 4, 5, 60];
+        const seq = genSequence(values)
+        const expected = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 60]];
+        let results: [number, number][] = [];
+        seq.forEach((v, i) => results.push([i, v]))
+        expect(results).to.be.deep.equal(expected);
     });
 });
 

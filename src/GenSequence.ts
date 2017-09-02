@@ -26,11 +26,12 @@ export interface Sequence<T> extends IterableLike<T> {
     scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): Sequence<U>;
 
     //// Reducers
-    all(fnFilter: (t: T)=> boolean): boolean;
-    any(fnFilter: (t: T)=> boolean): boolean;
+    all(fnFilter: (t: T) => boolean): boolean;
+    any(fnFilter: (t: T) => boolean): boolean;
     count(): number;
-    first(fnFilter?: (t: T)=> boolean, defaultValue?: T): Maybe<T>;
-    first(fnFilter: (t: T)=> boolean, defaultValue: T): T;
+    first(fnFilter?: (t: T) => boolean, defaultValue?: T): Maybe<T>;
+    first(fnFilter: (t: T) => boolean, defaultValue: T): T;
+    forEach(fn: (t: T, index: number) => void): void;
     max(fnSelector?: (t: T) => T): Maybe<T>;
     max<U>(fnSelector: (t: T) => U): Maybe<T>;
     min(fnSelector?: (t: T) => T): Maybe<T>;
@@ -82,7 +83,7 @@ export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequ
     const seq = {
         [Symbol.iterator]: () => createIterable()[Symbol.iterator](),
         next: fnNext(),   // late binding is intentional here.
-        
+
         //// Filters
         filter: (fnFilter: (t: T) => boolean) => genSequence(() => filter(fnFilter, createIterable())),
         skip: (n: number) => {
@@ -122,6 +123,9 @@ export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequ
         first: (fnFilter: (t: T) => boolean, defaultValue: T): T => {
             return first(fnFilter, defaultValue, createIterable()) as T;
         },
+        forEach: (fn: (t: T, index: number) => void): void => {
+            return forEach(fn, createIterable());
+        },
         max: <U>(fnSelector: (t: T) => U): Maybe<T> =>  {
             return max<T, U>(fnSelector, createIterable());
         },
@@ -144,7 +148,7 @@ export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequ
             return toIterator(createIterable());
         },
     };
-    
+
     return seq;
 }
 
@@ -291,6 +295,14 @@ export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>)
         }
     }
     return defaultValue;
+}
+
+export function forEach<T>(fn: (t: T, index: number) => void, i: Iterable<T>) {
+    let index = 0;
+    for (const t of i) {
+        fn(t, index);
+        index += 1;
+    }
 }
 
 export function max<T, U>(selector: (t: T) => U, i: Iterable<T>): Maybe<T>;
