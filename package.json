@@ -1,6 +1,6 @@
 {
   "name": "gensequence",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
