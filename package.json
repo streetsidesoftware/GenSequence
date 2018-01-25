@@ -6,16 +6,16 @@
   "typings": "lib/index.d.ts",
   "dependencies": {},
   "devDependencies": {
-    "@types/chai": "^4.0.4",
-    "@types/mocha": "^2.2.42",
-    "@types/node": "^7.0.43",
+    "@types/chai": "^4.1.2",
+    "@types/mocha": "^2.2.47",
+    "@types/node": "^7.0.52",
     "chai": "^4.1.2",
-    "coveralls": "^2.13.1",
-    "mocha": "^3.5.0",
-    "nyc": "^11.1.0",
-    "rimraf": "^2.6.1",
+    "coveralls": "^2.13.3",
+    "mocha": "^3.5.3",
+    "nyc": "^11.4.1",
+    "rimraf": "^2.6.2",
     "ts-node": "^3.3.0",
-    "typescript": "^2.5.2"
+    "typescript": "^2.6.2"
   },
   "scripts": {
     "prepublish": "npm run clean-build && npm test",

@@ -156,9 +156,10 @@ describe('GenSequence Tests', function() {
             weight: 87,
         }
         const i = sequenceFromObject(person);
-        expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(Object.keys(person).sort());
+        const keys = Object.keys(person) as PersonKeys[];
+        expect(i.map(kvp => kvp[0]).toArray().sort()).to.be.deep.equal(keys.sort());
         const j = sequenceFromObject(person);
-        expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(Object.keys(person).map((k: PersonKeys) => person[k]).sort());
+        expect(j.map(kvp => kvp[1]).toArray().sort()).to.be.deep.equal(keys.map((k: PersonKeys) => person[k]).sort());
         expect([...GS.objectToSequence(person)]).to.be.deep.equal([...sequenceFromObject(person)]);
     });
 

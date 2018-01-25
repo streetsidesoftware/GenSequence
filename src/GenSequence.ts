@@ -102,11 +102,11 @@ export function genSequence<T>(i: (() => GenIterable<T>) | GenIterable<T>): Sequ
         },
 
         //// Mappers
-        combine: <U, V>(fn: (t: T, u: U) => V, j: Iterable<U>) =>  {
+        combine: <U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>) =>  {
             return genSequence(() => combine(fn, createIterable(), j));
         },
         map: <U>(fn: (t: T) => U) => genSequence(() => map(fn, createIterable())),
-        scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) => {
+        scan: <U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U) => {
             return genSequence(() => scan(createIterable(), fnReduce, initValue));
         },
 
@@ -242,6 +242,8 @@ export function map<T, U>(fnMap: (t: T) => U, i?: Iterable<T>): IterableIterator
     };
 }
 
+export function scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T): IterableIterator<T>;
+export function scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue: T): IterableIterator<T>;
 export function scan<T, U>(i: Iterable<T>, fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): IterableIterator<U>;
 export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue?: T): IterableIterator<T> {
     let index = 0;
@@ -286,8 +288,8 @@ export function count<T>(i: Iterable<T>): number {
     return reduce<T, number>(p => p + 1, 0, i);
 }
 
-export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
-export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>): T {
+export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: Iterable<T>): T;
+export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
     fn = fn || (() => true);
     for (const t of i) {
         if (fn(t)) {
@@ -316,6 +318,8 @@ export function min<T>(selector: (t: T) => T = (t => t), i: Iterable<T>): Maybe<
 }
 
 export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: Iterable<T>): U;
+export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T, i: Iterable<T>): T;
+export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
     let index = 0;
     if (initialValue === undefined) {
