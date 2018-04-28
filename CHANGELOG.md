@@ -1,5 +1,8 @@
 # Release Notes
 
+## [unreleased]
+* Update dev packages to address issues with code coverage generation in Node 10
+
 ## 2.1.1
 * Update dev packages
 * add `forEach` function
