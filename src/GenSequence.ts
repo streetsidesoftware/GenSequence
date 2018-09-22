@@ -1,9 +1,7 @@
+export * from './types';
 
-export type Maybe<T> = T | undefined;
-
-export interface IterableLike<T> {
-    [Symbol.iterator](): Iterator<T> | IterableIterator<T>;
-}
+import {IterableLike, Maybe} from './types';
+import * as iop from './internal/operators';
 
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
@@ -160,53 +158,29 @@ export const GenSequence = {
 };
 
 //// Filters
-export function* filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
-    for (const v of i) {
-        if (fnFilter(v)) {
-            yield v;
-        }
-    }
+export function filter<T>(fnFilter: (t: T) => boolean, i: Iterable<T>) {
+    return iop.filter(i, fnFilter);
 }
 
-export function* skip<T>(n: number, i: Iterable<T>): IterableIterator<T> {
-    let a = 0;
-    for (const t of i) {
-        if (a >= n) {
-            yield t;
-        }
-        a += 1;
-    }
+export function skip<T>(n: number, i: Iterable<T>): IterableIterator<T> {
+    return iop.skip(i, n);
 }
 
 
-export function* take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
-    let a = 0;
-    if (n) {
-        for (const t of i) {
-            if (a >= n) {
-                break;
-            }
-            yield t;
-            a += 1;
-        }
-    }
+export function take<T>(n: number, i: Iterable<T>): IterableIterator<T> {
+    return iop.take(i, n);
 }
 
 //// Extenders
 /**
  * Concat two iterables together
  */
-export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
-    yield *i;
-    yield *j;
+export function concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> {
+    return iop.concat(i, j);
 }
 
-export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
-    for (const t of i) {
-        for (const u of fn(t)) {
-            yield u;
-        }
-    }
+export function concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
+    return iop.concatMap(i, fn);
 }
 
 //// Mappers
@@ -321,19 +295,7 @@ export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: num
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T, i: Iterable<T>): T;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: Iterable<T>): Maybe<T> {
-    let index = 0;
-    if (initialValue === undefined) {
-        index = 1;
-        const r = i[Symbol.iterator]().next();
-        initialValue = r.value;
-    }
-    let prevValue = initialValue;
-    for (const t of i) {
-        const nextValue = fnReduce(prevValue, t, index);
-        prevValue = nextValue;
-        index += 1;
-    }
-    return prevValue;
+    return iop.reduce(i, fnReduce, initialValue);
 }
 
 //// Cast

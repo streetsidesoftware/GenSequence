@@ -14,11 +14,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 100);
         const rExp = measure(fnExp, 100);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.deep.equal(rBase.result);
         console.log('Simple Generator to an array' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1.2);
     });
 
     it('filter filter reduce', () => {
@@ -38,11 +36,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 10);
         const rExp = measure(fnExp, 10);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.equal(rBase.result);
         console.log('filter filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1.4);
     });
 
     it('filter slice filter reduce', () => {
@@ -66,11 +62,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 10);
         const rExp = measure(fnExp, 10);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.equal(rBase.result);
         console.log('filter slice filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1);
     });
 
     it('filter slice filter reduce (1000)', () => {
@@ -94,15 +88,13 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 1000);
         const rExp = measure(fnExp, 1000);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.equal(rBase.result);
         console.log('filter slice filter reduce (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(2);
     });
 
     it('filter slice filter first (1000)', () => {
-        const getValues = () => range(0, 1000);
+        const getValues = () => range(0, 2000);
         const fnBase = () => {
             return [...getValues()]
                 .filter(a => !!(a & 1))
@@ -124,11 +116,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 1000);
         const rExp = measure(fnExp, 1000);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.equal(rBase.result);
         console.log('filter slice filter first (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(3);
     });
 
     it('concatMap', () => {
@@ -158,11 +148,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         }
         const rBase = measure(fnBase, 100);
         const rExp = measure(fnExp, 100);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).to.equal(rBase.result);
         console.log('concatMap' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(2);
     });
 });
 
