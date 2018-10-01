@@ -1,6 +1,7 @@
 import * as test from 'tape';
 import * as GS from './GenSequence';
 import {from} from './Seq';
+import * as ops from './operators';
 import {filter, reduce, skip, take, first, concatMap, map} from './operators';
 
 test('Simple Generator to an array', (t) => {
@@ -28,7 +29,6 @@ test('filter filter reduce', (t) => {
             .filter(a => !!(a & 2))
             .reduce((a, b) => a + b);
     };
-
     const fnSeq = () => {
         return from(getValues()).pipe(
             filter(a => !!(a & 1)),
@@ -93,39 +93,46 @@ test('filter slice filter reduce', (t) => {
     t.end();
 });
 
-test('filter slice filter reduce (1000)', (t) => {
-    const testName = 'filter slice filter reduce (1000)';
+test('filter slice filter reduce (2000)', (t) => {
+    const testName = 'filter slice filter reduce (2000)';
+    const count = 2000;
+    const cntSkip = 100;
+    const cntTake = 50;
+    const fn1 = (a: number) => !!(a & 1);
+    const fn2 = (a: number) => !!(a & 2);
+    const fnR = (a: number, b: number) => a + b;
     const getValues = () => range(0, 2000);
     const fnBase = () => {
         return [...getValues()]
-            .filter(a => !!(a & 1))
-            .slice(100)
-            .slice(0,500)
-            .filter(a => !!(a & 2))
-            .reduce((a, b) => a + b);
+            .filter(fn1)
+            .slice(cntSkip)
+            .filter(fn2)
+            .slice(0,cntTake)
+            // .map(a => (console.log('array ' + a), a))
+            .reduce(fnR, 0);
     };
 
-    const fnSeq = () => {
-        return from(getValues()).pipe(
-            filter(a => !!(a & 1)),
-            skip(100),
-            take(500),
-            filter(a => !!(a & 2)),
-            reduce((a, b) => a + b),
-        ).toValue();
-    }
+    const seqPipe = ops.pipe(
+        filter(fn1),
+        skip(cntSkip),
+        filter(fn2),
+        take(cntTake),
+        // ops.tap(a => console.log('seq ' + a)),
+        reduce(fnR, 0),
+    );
+    const fnSeq = () => from(getValues()).pipe(seqPipe).toValue();
     const fnExp = () => {
         return GS.genSequence(getValues())
-            .filter(a => !!(a & 1))
-            .skip(100)
-            .take(500)
-            .filter(a => !!(a & 2))
-            .reduce((a, b) => a + b);
-    }
+            .filter(fn1)
+            .skip(cntSkip)
+            .filter(fn2)
+            .take(cntTake)
+            .reduce(fnR, 0);
+    };
     const measurements = [
-        measure('base', fnBase, 1000),
-        measure('seq', fnSeq, 1000),
-        measure('gen', fnExp, 1000),
+        measure('base', fnBase, count),
+        measure('seq', fnSeq, count),
+        measure('gen', fnExp, count),
     ];
 
     measurements.forEach(m => t.equals(m.result, measurements[0].result));
@@ -134,6 +141,7 @@ test('filter slice filter reduce (1000)', (t) => {
 });
 
 test('filter slice filter first (1000)', (t) => {
+    const count = 1000;
     const testName = 'filter slice filter first (1000)';
     const getValues = () => range(0, 1000);
     const fnBase = () => {
@@ -166,9 +174,9 @@ test('filter slice filter first (1000)', (t) => {
             .first();
     }
     const measurements = [
-        measure('base', fnBase, 1000),
-        measure('seq', fnSeq, 1000),
-        measure('gen', fnExp, 1000),
+        measure('base', fnBase, count),
+        measure('seq', fnSeq, count),
+        measure('gen', fnExp, count),
     ];
 
     measurements.forEach(m => t.equals(m.result, measurements[0].result));

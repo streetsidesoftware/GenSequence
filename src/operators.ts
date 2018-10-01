@@ -30,6 +30,15 @@ export function concatMap<T, U>(fn: (v: T) => IterableLike<U>): OperatorFunction
     return (iter: IterableLike<T>) => iop.concatMap(iter, fn);
 }
 
+export function tap<T>(fn: (v: T) => void): OperatorFunction<T, T> {
+    return function *(iter: IterableLike<T>) {
+        for (const t of iter) {
+            fn(t);
+            yield t;
+        }
+    }
+}
+
 /**
  *
  * Filter Operators
