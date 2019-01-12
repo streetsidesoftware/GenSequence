@@ -45,6 +45,13 @@
     "map",
     "reduce"
   ],
+  "files": [
+    "lib/",
+    "src/",
+    "!**/samples",
+    "!**/*.test.*",
+    "!**/*.perf.*"
+  ],
   "author": "Jason Dent",
   "license": "MIT",
   "bugs": {
