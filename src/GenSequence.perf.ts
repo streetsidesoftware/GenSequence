@@ -1,10 +1,8 @@
 import * as GS from './GenSequence';
-import { expect } from 'chai';
-import {ISuiteCallbackContext} from 'mocha';
 
-describe('Performance Test', function(this: ISuiteCallbackContext) {
-    this.timeout(100000);
-    it('Simple Generator to an array', () => {
+describe('Performance Test', () => {
+    jest.setTimeout(100000);
+    test('Simple Generator to an array', () => {
         const fnBase = () => {
             return [...range(0, 10000)]
         };
@@ -16,12 +14,12 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 100);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.deep.equal(rBase.result);
+        expect(rExp.result).toEqual(rBase.result);
         console.log('Simple Generator to an array' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1.2);
+        expect(ratio).toBeLessThan(1.2);
     });
 
-    it('filter filter reduce', () => {
+    test('filter filter reduce', () => {
         const getValues = () => range(0, 100000);
         const fnBase = () => {
             return [...getValues()]
@@ -40,12 +38,12 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 10);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.equal(rBase.result);
+        expect(rExp.result).toBe(rBase.result);
         console.log('filter filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1.4);
+        expect(ratio).toBeLessThan(1.4);
     });
 
-    it('filter slice filter reduce', () => {
+    test('filter slice filter reduce', () => {
         const getValues = () => range(0, 100000);
         const fnBase = () => {
             return [...getValues()]
@@ -68,12 +66,12 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 10);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.equal(rBase.result);
+        expect(rExp.result).toBe(rBase.result);
         console.log('filter slice filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(1);
+        expect(ratio).toBeLessThan(1);
     });
 
-    it('filter slice filter reduce (1000)', () => {
+    test('filter slice filter reduce (1000)', () => {
         const getValues = () => range(0, 1000);
         const fnBase = () => {
             return [...getValues()]
@@ -96,12 +94,12 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 1000);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.equal(rBase.result);
+        expect(rExp.result).toBe(rBase.result);
         console.log('filter slice filter reduce (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(2);
+        expect(ratio).toBeLessThan(2);
     });
 
-    it('filter slice filter first (1000)', () => {
+    test('filter slice filter first (1000)', () => {
         const getValues = () => range(0, 1000);
         const fnBase = () => {
             return [...getValues()]
@@ -126,12 +124,12 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 1000);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.equal(rBase.result);
+        expect(rExp.result).toBe(rBase.result);
         console.log('filter slice filter first (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(3);
+        expect(ratio).toBeLessThan(3);
     });
 
-    it('concatMap', () => {
+    test('concatMap', () => {
         const getValues = () => range(0, 100);
         const getNested = () => range(0, 1000);
         const fnBase = () => {
@@ -160,9 +158,9 @@ describe('Performance Test', function(this: ISuiteCallbackContext) {
         const rExp = measure(fnExp, 100);
         const ratio = rExp.avg / rBase.avg;
 
-        expect(rExp.result).to.equal(rBase.result);
+        expect(rExp.result).toBe(rBase.result);
         console.log('concatMap' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).to.be.lessThan(2);
+        expect(ratio).toBeLessThan(2);
     });
 });
 
