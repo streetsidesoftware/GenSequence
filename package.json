@@ -23,8 +23,8 @@
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
     "coverage": "jest --coverage",
-    "coverage-coveralls": "npm coverage && cat coverage/lcov.info | coveralls",
-    "travis-coverage": "npm run generate-code-coverage && npm run coverage-coveralls"
+    "coverage-coveralls": "cat coverage/lcov.info | coveralls",
+    "travis-coverage": "npm run coverage &&  npm run coverage-coveralls"
   },
   "repository": {
     "type": "git",
