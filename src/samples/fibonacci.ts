@@ -1,4 +1,4 @@
-import { genSequence, Sequence } from '../src/GenSequence';
+import { genSequence, Sequence } from '..';
 
 export function fibonacci(): Sequence<number> {
     function* fib() {
