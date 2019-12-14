@@ -1,5 +1,5 @@
 
-import { genSequence } from '../src/GenSequence';
+import { genSequence } from '..';
 
 function* execRegEx(reg: RegExp, text: string) {
     const regLocal = new RegExp(reg);

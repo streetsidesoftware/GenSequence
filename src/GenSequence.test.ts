@@ -1,5 +1,5 @@
-import { genSequence, sequenceFromObject, sequenceFromRegExpMatch } from './GenSequence';
-import * as GS from './GenSequence';
+import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence';
+import * as op from './operators/operators';
 
 describe('GenSequence Tests', () => {
 
@@ -159,7 +159,7 @@ describe('GenSequence Tests', () => {
         expect(i.map(kvp => kvp[0]).toArray().sort()).toEqual(keys.sort());
         const j = sequenceFromObject(person);
         expect(j.map(kvp => kvp[1]).toArray().sort()).toEqual(keys.map((k: PersonKeys) => person[k]).sort());
-        expect([...GS.objectToSequence(person)]).toEqual([...sequenceFromObject(person)]);
+        expect([...objectToSequence(person)]).toEqual([...sequenceFromObject(person)]);
     });
 
     test(
@@ -219,7 +219,7 @@ describe('GenSequence Tests', () => {
     test('tests scanMap -- running sum', () => {
         // let only the first occurrence of a value through.
         const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
-        .map(GS.scanMap<number>((acc, value) => acc + value));
+        .map(op.scanMap<number>((acc, value) => acc + value));
         const result = seq.toArray();
         expect(result).toEqual([1, 3, 4, 7, 9, 10, 13]);
     });
@@ -233,28 +233,22 @@ describe('GenSequence Tests', () => {
         expect(result).toEqual([]);
     });
 
-    test('test the curring part of GS.map', () => {
-        const fnMap = GS.map((a: number) => 2 * a);
-        expect(fnMap).toBeInstanceOf(Function);
-        expect([...fnMap([1, 2, 3])]).toEqual([2, 4, 6]);
-    });
-
     test('test getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
-        expect([...GS.makeIterable(genSequence(values)[Symbol.iterator]())]).toEqual(values);
-        expect([...GS.makeIterable(genSequence(values))]).toEqual(values);
+        expect([...op.makeIterable(genSequence(values)[Symbol.iterator]())]).toEqual(values);
+        expect([...op.makeIterable(genSequence(values))]).toEqual(values);
     });
 
     test('test reusing getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
-        const sequence: GS.Sequence<number> = genSequence(values).map(n => n);
+        const sequence: Sequence<number> = genSequence(values).map(n => n);
         // do it twice as an iterable
-        expect([...GS.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
-        expect([...GS.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
+        expect([...op.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
+        expect([...op.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
 
         // do it twice as an iterator
-        expect([...GS.makeIterable(genSequence(values))]).toEqual(values);
-        expect([...GS.makeIterable(genSequence(values))]).toEqual(values);
+        expect([...op.makeIterable(genSequence(values))]).toEqual(values);
+        expect([...op.makeIterable(genSequence(values))]).toEqual(values);
     });
 
     test('test any with match', () => {

@@ -11,10 +11,9 @@
 		"strict": true,
 		"noUnusedParameters": true,
 		"strictNullChecks": true,
-		"outDir": "lib"
+		"outDir": "dist"
 	},
-	"exclude": [
-		"node_modules",
-		"lib"
+	"include": [
+		"src"
 	]
 }

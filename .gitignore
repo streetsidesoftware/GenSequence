@@ -37,5 +37,5 @@ jspm_packages
 .node_repl_history
 
 # ignore the output directory
-lib
+dist/
 coverage

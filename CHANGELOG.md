@@ -1,6 +1,10 @@
 # Release Notes
 
-## [unreleased]
+## [2.2.0]
+* Move operator functions out of GenSequence
+* Update to TypeScript
+
+## [2.1.3]
 * Update dev packages to address issues with code coverage generation in Node 10
 
 ## 2.1.1

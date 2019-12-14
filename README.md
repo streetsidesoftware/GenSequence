@@ -140,5 +140,5 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 - `.reduceToSequence(fn, init)` -- return a sequence of values that *fn* creates from looking at all the values and the initial sequence.
 
 ### Cast
-- `.toArray()` -- convert the sequence into an array.  This is the same as [...iterator].
+- `.toArray()` -- convert the sequence into an array.  This is the same as [...iterable].
 - `.toIterable()` -- Casts a Sequence into an IterableIterator - used in cases where type checking is too strict.
