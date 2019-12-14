@@ -19,7 +19,7 @@ describe('Tests Operators', () => {
     test('concat simple arrays', () => {
         const a = [1, 2, 3];
         const b = [4, 5, 6];
-        expect([...op.concat(a, b.values())]).toEqual(a.concat(b));
+        expect([...op.concat(a, new Set(b))]).toEqual(a.concat(b));
     });
 
     test('concat iterables', () => {
@@ -32,7 +32,7 @@ describe('Tests Operators', () => {
 
     test('concat iterables', () => {
         const a = [1, 2, 3];
-        const ia = a.values();
+        const ia = new Set(a).values();
         expect([...op.concat(ia, ia)]).toEqual(a);
         expect([...op.concat(a, a)]).toEqual(a.concat(a));
     });
