@@ -19,8 +19,8 @@ export interface Sequence<T> extends IterableLike<T> {
     concatMap<U>(fn: (t: T) => Iterable<U>): Sequence<U>;
 
     //// Mappers
-    /** map values from type T to type U */
     combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): Sequence<V>;
+    /** map values from type T to type U */
     map<U>(fnMap: (t: T) => U): Sequence<U>;
     scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T, initialValue?: T): Sequence<T>;
     scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): Sequence<U>;
@@ -203,9 +203,7 @@ export function* concat<T>(i: Iterable<T>, j: Iterable<T>): IterableIterator<T> 
 
 export function* concatMap<T, U>(fn: (t: T) => Iterable<U>, i: Iterable<T>): IterableIterator<U> {
     for (const t of i) {
-        for (const u of fn(t)) {
-            yield u;
-        }
+        yield *fn(t);
     }
 }
 
@@ -256,7 +254,7 @@ export function* scan<T>(i: Iterable<T>, fnReduce: (prevValue: T, curValue: T, c
         initValue = r.value;
         i = makeIterable(iter);
     }
-    let prevValue = initValue;
+    let prevValue: T = initValue!;
     for (const t of i) {
         const nextValue = fnReduce(prevValue, t, index);
         yield nextValue;
@@ -327,7 +325,7 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
         const r = i[Symbol.iterator]().next();
         initialValue = r.value;
     }
-    let prevValue = initialValue;
+    let prevValue: T = initialValue!;
     for (const t of i) {
         const nextValue = fnReduce(prevValue, t, index);
         prevValue = nextValue;
