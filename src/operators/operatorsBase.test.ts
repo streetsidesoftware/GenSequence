@@ -1,5 +1,5 @@
-import * as op from './operators';
-import { toIterator } from './util';
+import * as op from './operatorsBase';
+import { toIterator } from '../util/util';
 
 describe('Tests Operators', () => {
 

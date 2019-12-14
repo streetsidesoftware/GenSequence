@@ -12,11 +12,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 100);
         const rExp = measure(fnExp, 100);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toEqual(rBase.result);
-        console.log('Simple Generator to an array' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(1.2);
+        assertExpectedRatio('Simple Generator to an array', rBase, rExp, 1.2);
     });
 
     test('filter filter reduce', () => {
@@ -36,11 +34,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 10);
         const rExp = measure(fnExp, 10);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toBe(rBase.result);
-        console.log('filter filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(1.4);
+        assertExpectedRatio('filter filter reduce', rBase, rExp, 1.4);
     });
 
     test('filter slice filter reduce', () => {
@@ -64,11 +60,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 10);
         const rExp = measure(fnExp, 10);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toBe(rBase.result);
-        console.log('filter slice filter reduce' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(1);
+        assertExpectedRatio('filter slice filter reduce', rBase, rExp, 1);
     });
 
     test('filter slice filter reduce (1000)', () => {
@@ -92,11 +86,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 1000);
         const rExp = measure(fnExp, 1000);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toBe(rBase.result);
-        console.log('filter slice filter reduce (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(2);
+        assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
     });
 
     test('filter slice filter first (1000)', () => {
@@ -122,11 +114,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 1000);
         const rExp = measure(fnExp, 1000);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toBe(rBase.result);
-        console.log('filter slice filter first (1000)' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(3);
+        assertExpectedRatio('filter slice filter first (1000)', rBase, rExp, 0.5);
     });
 
     test('concatMap', () => {
@@ -156,11 +146,9 @@ describe('Performance Test', () => {
         }
         const rBase = measure(fnBase, 100);
         const rExp = measure(fnExp, 100);
-        const ratio = rExp.avg / rBase.avg;
 
         expect(rExp.result).toBe(rBase.result);
-        console.log('concatMap' + compareMeasurementsToString(rBase, rExp));
-        expect(ratio).toBeLessThan(2);
+        assertExpectedRatio('concatMap', rBase, rExp, 1);
     });
 });
 
@@ -209,19 +197,26 @@ function toMs(diff: [number, number]) {
     return diff[0] * 1e3 + diff[1] / 1e6;
 }
 
-function compareMeasurementsToString<T>(base: Measurement<T>, comp: Measurement<T>): string {
+function assertExpectedRatio<T>(testName: string, base: Measurement<T>, comp: Measurement<T>, expectedRatio: number, failRatio?: number) {
+    console.log(testName + compareMeasurementsToString(base, comp, expectedRatio));
+    const ratio = comp.avg / base.avg;
+    expect(ratio).toBeLessThan(failRatio ?? expectedRatio);
+}
+
+function compareMeasurementsToString<T>(base: Measurement<T>, comp: Measurement<T>, expectedRatio: number): string {
     function fix(n: number | undefined) {
         if (n === undefined) {
             return '-';
         }
         return n.toFixed(3);
     }
+    const ratio = (comp.avg || 0) / (base.avg || 1);
     return `
-\tbase\tcomp
+\t\tbase\tcomp
 avg:\t${fix(base.avg)}\t${fix(comp.avg)}
 min:\t${fix(base.min)}\t${fix(comp.min)}
 max:\t${fix(base.max)}\t${fix(comp.max)}
 cnt:\t${base.count}\t${comp.count}
-ratio:\t${fix((comp.avg || 0) / (base.avg || 1))}
+ratio:\t${fix(expectedRatio)}\t${fix(ratio)}\t${ratio <= expectedRatio ? 'PASS' : 'FAIL'}
 `;
 }

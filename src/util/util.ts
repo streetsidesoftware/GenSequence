@@ -11,3 +11,7 @@ export function toIterator<T>(values: Iterable<T> | IterableIterator<T>) {
     };
     return rangeIterator;
 }
+
+export function* toIterableIterator<T>(i: Iterable<T>) {
+    yield* i;
+}

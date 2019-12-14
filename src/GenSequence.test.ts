@@ -1,5 +1,5 @@
 import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence';
-import * as op from './operators/operators';
+import * as op from './operators/operatorsBase';
 
 describe('GenSequence Tests', () => {
 

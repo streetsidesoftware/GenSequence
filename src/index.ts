@@ -1,2 +1,2 @@
 export * from './GenSequence';
-export * from './operators/operators';
+export { Sequence } from './util/types';

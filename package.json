@@ -19,7 +19,7 @@
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf dist",
     "test": "jest src/**/*.test.ts src/*.test.ts",
-    "perf": "jest src/**/*.perf.ts src/*.perf.ts",
+    "perf": "jest src/*.perf.ts",
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
     "coverage": "npm test -- --coverage",
