@@ -540,6 +540,16 @@ describe('GenSequence Tests', () => {
         seq.forEach((v, i) => results.push([i, v]))
         expect(results).toEqual(expected);
     });
+
+    test('tests Sequence.next', () => {
+        const values = [...genSequence(fib()).take(5)];
+        const i = genSequence(values);
+        const result = [];
+        for (let r = i.next(); !r.done; r = i.next() ) {
+            r.done || result.push(r.value);
+        }
+        expect(result).toEqual(values);
+    });
 });
 
 function* fib() {

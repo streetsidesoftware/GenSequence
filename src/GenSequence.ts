@@ -159,6 +159,7 @@ export type KeyValuePair<T> = [keyof T, T[keyof T]];
 export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
     const keys = new Set(Object.keys(t));
     for (const k in t) {
+        // istanbul ignore else
         if (keys.has(k)) {
             yield [k, t[k]] as KeyValuePair<T>;
         }
