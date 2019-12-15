@@ -92,7 +92,7 @@ describe('Performance Test', () => {
         assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
     });
 
-    test('pipe filter slice filter reduce (1000)', () => {
+    test('builder filter slice filter reduce (1000)', () => {
         const getValues = () => range(0, 1000);
         const fnBase = () => {
             return [...getValues()]
@@ -114,7 +114,7 @@ describe('Performance Test', () => {
         const rExp = measure(fnExp, 1000);
 
         expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('pipe filter slice filter reduce (1000)', rBase, rExp, 2, 3);
+        assertExpectedRatio('builder filter slice filter reduce (1000)', rBase, rExp, 2, 3);
     });
 
     test('filter slice filter first (1000)', () => {
