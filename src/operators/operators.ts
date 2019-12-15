@@ -1,10 +1,6 @@
 import * as op from './operatorsBase';
 
-
-import { Maybe, IterableLike } from '../util/types';
-
-type ChainFunction<T, U = T> = (i: IterableLike<T>) => IterableLike<U>;
-type ReduceFunction<T, U = T> = (i: IterableLike<T>) => U;
+import { Maybe, IterableLike, ChainFunction, ReduceFunction } from '../util/types';
 
 /**
  * Operators used by Sequence
@@ -98,4 +94,23 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>> {
     return (i: IterableLike<T>) => op.reduce(fnReduce, initialValue, i);
+}
+
+export type PipeFunction<T, U = T> = ChainFunction<T, U>;
+
+export function pipe<T>(...fns: PipeFunction<T, T>[]): PipeFunction<T, T>;
+export function pipe<T>(): PipeFunction<T>;
+export function pipe<T, T1>(fn0: PipeFunction<T, T1>): PipeFunction<T, T1>;
+export function pipe<T, T1, T2>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>): PipeFunction<T, T2>;
+export function pipe<T, T1, T2, T3>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T2, T3>): PipeFunction<T, T3>;
+export function pipe<T, T1, T2, T3, T4>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>): PipeFunction<T, T4>;
+export function pipe<T, T1, T2, T3, T4, T5>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>, fn4: PipeFunction<T4, T5>): PipeFunction<T, T5>;
+export function pipe<T, T1, T2, T3, T4, T5, T6>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>, fn4: PipeFunction<T4, T5>, fn5: PipeFunction<T5, T6>): PipeFunction<T, T6>;
+export function pipe<T>(...fns: PipeFunction<T, T>[]): PipeFunction<T, T>  {
+    return (i: IterableLike<T>) => {
+        for (const fn of fns) {
+            i = fn(i);
+        }
+        return i;
+    }
 }

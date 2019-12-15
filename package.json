@@ -1,9 +1,12 @@
 {
   "name": "gensequence",
-  "version": "2.3.0",
+  "version": "3.0.0",
   "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^24.0.23",

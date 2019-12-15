@@ -6,6 +6,11 @@ export interface IterableLike<T> {
 
 export interface GenIterable<T> extends IterableLike<T> {}
 
+export type LazyIterable<T> = (() => IterableLike<T>) | IterableLike<T>;
+
+export type ChainFunction<T, U = T> = (i: IterableLike<T>) => IterableLike<U>;
+export type ReduceFunction<T, U = T> = (i: IterableLike<T>) => U;
+
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
 
@@ -43,7 +48,34 @@ export interface Sequence<T> extends IterableLike<T> {
     reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
 
+    //// Pipe
+    pipe<U>(fn: ChainFunction<T, U>): Sequence<U>;
+
     //// Cast
     toArray(): T[];
     toIterable(): IterableIterator<T>;
+}
+
+export interface SequenceBuilder<S, T = S> {
+    build(i: LazyIterable<S>): Sequence<T>;
+
+    //// Filters
+    /** keep values where the fnFilter(t) returns true */
+    filter(fnFilter: (t: T) => boolean): SequenceBuilder<S, T>;
+    skip(n: number): SequenceBuilder<S, T>;
+    take(n: number): SequenceBuilder<S, T>;
+
+    //// Extenders
+    concat(j: Iterable<T>): SequenceBuilder<S, T>;
+    concatMap<U>(fn: (t: T) => Iterable<U>): SequenceBuilder<S, U>;
+
+    //// Mappers
+    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): SequenceBuilder<S, V>;
+    /** map values from type T to type U */
+    map<U>(fnMap: (t: T) => U): SequenceBuilder<S, U>;
+    scan(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T, initialValue?: T): SequenceBuilder<S, T>;
+    scan<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): SequenceBuilder<S, U>;
+
+    //// Pipe
+    pipe<U>(fn: ChainFunction<T, U>): SequenceBuilder<S, U>;
 }
