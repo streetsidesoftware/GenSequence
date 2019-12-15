@@ -36,6 +36,8 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+*.tgz
+
 # ignore the output directory
 dist/
-coverage
+coverage/

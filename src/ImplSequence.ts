@@ -1,8 +1,6 @@
-import { Sequence, GenIterable, Maybe } from './util/types';
+import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction } from './util/types';
 import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce } from './operators';
 import { toIterableIterator } from './util/util';
-
-type LazyIterable<T> = (() => GenIterable<T>) | GenIterable<T>;
 
 export class ImplSequence<T> implements Sequence<T> {
     private _iterator: Maybe<Iterator<T>>;
@@ -71,6 +69,10 @@ export class ImplSequence<T> implements Sequence<T> {
 
     scan<U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): ImplSequence<U> {
         return this.chain(scan(fnReduce, initValue));
+    }
+
+    pipe<U>(fn: ChainFunction<T, U>): ImplSequence<U> {
+        return this.chain(fn);
     }
 
     // Reducers

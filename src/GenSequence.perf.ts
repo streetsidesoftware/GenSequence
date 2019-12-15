@@ -1,4 +1,5 @@
 import * as GS from './GenSequence';
+import {builder} from '.';
 
 describe('Performance Test', () => {
     jest.setTimeout(100000);
@@ -89,6 +90,31 @@ describe('Performance Test', () => {
 
         expect(rExp.result).toBe(rBase.result);
         assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
+    });
+
+    test('builder filter slice filter reduce (1000)', () => {
+        const getValues = () => range(0, 1000);
+        const fnBase = () => {
+            return [...getValues()]
+                .filter(a => !!(a & 1))
+                .slice(100)
+                .slice(0,500)
+                .filter(a => !!(a & 2))
+                .reduce((a, b) => a + b);
+        };
+
+        const fnExp = () => builder
+                .filter<number>(a => !!(a & 1))
+                .skip(100)
+                .take(500)
+                .filter(a => !!(a & 2))
+                .build(getValues())
+                .reduce((a, b) => a + b);
+        const rBase = measure(fnBase, 1000);
+        const rExp = measure(fnExp, 1000);
+
+        expect(rExp.result).toBe(rBase.result);
+        assertExpectedRatio('builder filter slice filter reduce (1000)', rBase, rExp, 2, 3);
     });
 
     test('filter slice filter first (1000)', () => {
