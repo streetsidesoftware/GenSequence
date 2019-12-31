@@ -1,8 +1,8 @@
-import { Sequence, GenIterable } from './util/types';
+import { Sequence, GenIterable } from './types';
 import { toIterableIterator } from './util/util';
 import { ImplSequence } from './ImplSequence';
 
-export { Sequence, GenIterable } from './util/types';
+export { Sequence, GenIterable } from './types';
 export { toIterableIterator } from './util/util';
 
 export interface SequenceCreator<T> {

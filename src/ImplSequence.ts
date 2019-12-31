@@ -1,5 +1,5 @@
-import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction } from './util/types';
-import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce } from './operators';
+import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction } from './types';
+import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce, pipe } from './operators';
 import { toIterableIterator } from './util/util';
 
 export class ImplSequence<T> implements Sequence<T> {
@@ -71,8 +71,18 @@ export class ImplSequence<T> implements Sequence<T> {
         return this.chain(scan(fnReduce, initValue));
     }
 
-    pipe<U>(fn: ChainFunction<T, U>): ImplSequence<U> {
-        return this.chain(fn);
+    pipe(): Sequence<T>;
+    pipe<T1>(fn0: ChainFunction<T, T1>): Sequence<T1>;
+    pipe<T1, T2>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>): Sequence<T2>;
+    pipe<T1, T2, T3>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>): Sequence<T3>;
+    pipe<T1, T2, T3, T4>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>): Sequence<T4>;
+    pipe<T1, T2, T3, T4, T5>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>): Sequence<T5>;
+    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>): Sequence<T6>;
+    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>, ...fnRest: ChainFunction<T6, T6>[]): Sequence<T6>;
+    pipe(...fns: ChainFunction<T, T>[]): Sequence<T> {
+        if (!fns.length) return this;
+        // Casting workaround due to the spread operator not working See: https://github.com/microsoft/TypeScript/issues/28010
+        return this.chain<T>(pipe.apply<unknown, any, ChainFunction<T, T>>(null, fns));
     }
 
     // Reducers

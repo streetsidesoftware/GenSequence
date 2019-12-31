@@ -1,4 +1,4 @@
-import { Maybe, IterableLike } from '../util/types';
+import { Maybe, IterableLike } from '../types';
 
 /**
  * Operators used by Sequence
