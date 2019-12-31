@@ -1,4 +1,4 @@
-import { SequenceBuilder, ChainFunction, LazyIterable, Sequence } from './util/types';
+import { SequenceBuilder, ChainFunction, LazyIterable, Sequence } from './types';
 import { pipe, filter, skip, take, concat, concatMap, combine, map, scan } from './operators';
 import { ImplSequence } from './ImplSequence';
 

@@ -49,7 +49,15 @@ export interface Sequence<T> extends IterableLike<T> {
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
 
     //// Pipe
-    pipe<U>(fn: ChainFunction<T, U>): Sequence<U>;
+    pipe(): Sequence<T>;
+    pipe<T1>(fn0: ChainFunction<T, T1>): Sequence<T1>;
+    pipe<T1, T2>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>): Sequence<T2>;
+    pipe<T1, T2, T3>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>): Sequence<T3>;
+    pipe<T1, T2, T3, T4>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>): Sequence<T4>;
+    pipe<T1, T2, T3, T4, T5>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>): Sequence<T5>;
+    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>): Sequence<T6>;
+    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>, ...fnRest: ChainFunction<T6, T6>[]): Sequence<T6>;
+    pipe(...fns: ChainFunction<T, T>[]): Sequence<T>;
 
     //// Cast
     toArray(): T[];

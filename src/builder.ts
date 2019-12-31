@@ -1,4 +1,4 @@
-import { ChainFunction, SequenceBuilder } from './util/types';
+import { ChainFunction, SequenceBuilder } from './types';
 import { ImplSequenceBuilder } from './ImplSequenceBuilder';
 import { filter, skip, take, concat, concatMap, combine, map, scan } from './operators';
 

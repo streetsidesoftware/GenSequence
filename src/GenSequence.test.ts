@@ -1,5 +1,6 @@
 import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence';
 import * as op from './operators/operatorsBase';
+import * as o from './operators';
 
 describe('GenSequence Tests', () => {
 
@@ -549,6 +550,18 @@ describe('GenSequence Tests', () => {
             r.done || result.push(r.value);
         }
         expect(result).toEqual(values);
+    });
+
+    test('pipe', () => {
+        const values = [...genSequence(fib()).take(5)];
+        expect([...genSequence(values).pipe()]).toEqual(values);
+        const seq = genSequence(values).pipe(
+            o.map(n => n * 2),
+            o.map(n => n.toString()),
+            o.map(s => s + '0'),
+            o.map(s => parseInt(s)),
+        );
+        expect([...seq]).toEqual(values.map(v => v * 20));
     });
 });
 
