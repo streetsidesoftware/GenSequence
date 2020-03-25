@@ -123,6 +123,7 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter(a => a.length =
 ### Mappers
 - `.combine(fnCombiner, iterable)` -- is used to combine values from two different lists.
 - `.map(fn)` -- just like array.map, allows you to convert the values in a sequence.
+- `.pipe(...operatorFns)` -- pipe any amount of operators in sequence.
 - `.scan(fn, init?)` -- similar to reduce, but returns a sequence of all the results of fn.
 
 ### Reducers

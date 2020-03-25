@@ -2,7 +2,6 @@ import * as op from './operatorsBase';
 import { toIterator } from '../util/util';
 
 describe('Tests Operators', () => {
-
     test('test the curring part of GS.map', () => {
         const fnMap = op.map((a: number) => 2 * a);
         expect(fnMap).toBeInstanceOf(Function);

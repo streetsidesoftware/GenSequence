@@ -86,4 +86,13 @@ export interface SequenceBuilder<S, T = S> {
 
     //// Pipe
     pipe<U>(fn: ChainFunction<T, U>): SequenceBuilder<S, U>;
+
+
+    pipe<U>(fn0: ChainFunction<T, U>): SequenceBuilder<S, U>;
+    pipe<T1, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, T4, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, T4, T5, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, U>): SequenceBuilder<S, U>;
+    pipe<U>(...fns: ChainFunction<T, U>[]): SequenceBuilder<S, U>;
 }

@@ -1,5 +1,5 @@
 import { ImplSequenceBuilder } from './ImplSequenceBuilder';
-import { map } from './operators';
+import { map, filter } from './operators';
 import { scanMap } from './operators/operatorsBase';
 import { builder } from './builder';
 
@@ -32,10 +32,12 @@ describe('Verify ImplSequenceBuilder', () => {
 
     test('Test pipe', () => {
         const fn = (a: number) => a * 2;
-        const a = [1, 2, 3];
-        const b = getBuilder().pipe(map(fn));
+        const fn2 = (a: number) => a > 10;
+        const fn3 = (a: number) => a > 12;
+        const a = [1, 2, 3, 4];
+        const b = getBuilder().pipe(map(fn), map(fn), filter(fn2), filter(fn3));
         const i = b.build(a);
-        expect([...i]).toEqual(a.map(fn));
+        expect([...i]).toEqual([16]);
     });
 
     test('Test filter', () => {

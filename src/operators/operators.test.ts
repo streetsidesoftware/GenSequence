@@ -89,4 +89,19 @@ describe('Validate Operators', () => {
         const samples = [1, 2, 3, 4, 5];
         expect([...fn(samples)]).toEqual(samples.map(n => n * 100 + 101));
     });
+
+    test('pipe returns the item if a function is falsy', () => {
+        // as types is just runtime sometimes the function can be null
+        const fn = pipe(
+            0 as any,
+            null as any,
+            undefined as any,
+            false as any,
+            NaN as any,
+            fnAddOne,
+        );
+        const samples = [1, 2];
+
+        expect([...fn(samples)]).toEqual([2, 3]);
+    })
 });

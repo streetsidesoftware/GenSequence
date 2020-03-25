@@ -13,8 +13,8 @@ export class ImplSequenceBuilder<S, T = S> implements SequenceBuilder<S, T> {
         return new ImplSequence(i).pipe(pipe.apply<unknown, any, ChainFunction<S, T>>(null, this.operators));
     }
 
-    pipe<U>(fn: ChainFunction<T, U>): SequenceBuilder<S, U> {
-        return new ImplSequenceBuilder<S, U>([...this.operators, fn] as any[]);
+    pipe<U>(...fns: ChainFunction<T, U>[]): SequenceBuilder<S, U> {
+        return new ImplSequenceBuilder<S, U>([...this.operators, ...fns] as any[]);
     }
 
     //// Filters
