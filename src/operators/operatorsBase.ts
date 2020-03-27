@@ -1,4 +1,4 @@
-import { Maybe, IterableLike } from '../types';
+import { Maybe, IterableLike, ThenArg } from '../types';
 
 /**
  * Operators used by Sequence
@@ -184,6 +184,25 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
         index += 1;
     }
     return prevValue;
+}
+
+export async function reduceAsync<T, U>(fnReduceAsync: (previosValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<U>): Promise<ThenArg<U>>;
+export async function reduceAsync<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>>;
+export async function reduceAsync<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>> {
+    let index = 0;
+    if (initialValue === undefined) {
+        index = 1;
+        const r = await i[Symbol.iterator]().next();
+        initialValue = r.value;
+    }
+    let previosValue = await initialValue as ThenArg<T>;
+
+    for await (const t of i) {
+        const nextValue = await fnReduceAsync(previosValue, t, index);
+        previosValue = nextValue;
+        index += 1;
+    }
+    return previosValue;
 }
 
 //// Utilities

@@ -58,6 +58,20 @@ describe('GenSequence Tests', () => {
         expect(result).toEqual(values);
     });
 
+    test('tests reducing asynchronously a sequence w/o init', async () => {
+        const values = [1, 2, 3, 4, 5].map(x => Promise.resolve<number>(x));
+        const gs = genSequence(values[Symbol.iterator]());
+        const result = await gs.reduceAsync((a, v) => a + v);
+        expect(result).toEqual(15);
+    });
+
+    test('tests reducing asynchronously a sequence with init', async () => {
+        const values = [1, 2, 3, 4, 5].map(x => Promise.resolve<number>(x));
+        const gs = genSequence(values[Symbol.iterator]());
+        const result = await gs.reduceAsync(async (a, v) => a + v, Promise.resolve(10));
+        expect(result).toEqual(25);
+    });
+
     test('tests reducing a sequence to a sequence', () => {
         const values = [1, 2, 3, 4, 5];
         const gs = genSequence(values);
