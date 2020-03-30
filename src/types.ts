@@ -5,13 +5,20 @@ export interface IterableLike<T> {
     [Symbol.iterator](): Iterator<T> | IterableIterator<T>;
 }
 
+export interface AsyncIterableLike<T> {
+    [Symbol.asyncIterator](): AsyncIterableIterator<T>;
+}
+
 export interface GenIterable<T> extends IterableLike<T> {}
+export interface AsyncGenIterable<T> extends AsyncIterableLike<T> {}
 
 export type LazyIterable<T> = (() => IterableLike<T>) | IterableLike<T>;
+export type AsyncLazyIterable<T> = (() => AsyncIterableLike<T>) | AsyncIterableLike<T>;
 
 export type ChainFunction<T, U = T> = (i: IterableLike<T>) => IterableLike<U>;
 export type ReduceFunction<T, U = T> = (i: IterableLike<T>) => U;
 export type ReduceAsyncFunction<T, U = T> = (i: IterableLike<ThenArg<T>>) => U;
+export type ReduceAsyncFunctionForAsyncIterator<T, U = T> = (i: AsyncIterableLike<ThenArg<T>>) => U;
 
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
@@ -68,6 +75,13 @@ export interface Sequence<T> extends IterableLike<T> {
     //// Cast
     toArray(): T[];
     toIterable(): IterableIterator<T>;
+}
+
+export interface AsyncSequence<T> extends AsyncIterableLike<T> {
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
 }
 
 export interface SequenceBuilder<S, T = S> {
