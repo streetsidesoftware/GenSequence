@@ -10,7 +10,7 @@
   "dependencies": {},
   "devDependencies": {
     "@types/jest": "^25.1.4",
-    "@types/node": "^10.17.9",
+    "@types/node": "^10.17.18",
     "coveralls": "^3.0.11",
     "jest": "^25.1.0",
     "rimraf": "^3.0.2",
