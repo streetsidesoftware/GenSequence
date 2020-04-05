@@ -20,15 +20,9 @@ strategy:
     mac:
       imageName: 'macos-latest'
       nodeVersion: '12.x'
-    windows:
-      imageName: 'vs2017-win2016'
-      nodeVersion: '12.x'
     windows-latest:
-      imageName: 'vs2019-win2019'
-      nodeVersion: '12.x'
-    windows-only:
       imageName: 'windows-latest'
-      nodeVersion: '12.x'
+      nodeVersion: 'latest'
 
 pool:
   vmImage: $(imageName)
