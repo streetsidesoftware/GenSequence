@@ -62,7 +62,7 @@ describe('GenSequence Tests', () => {
         const values = [1, 2, 3, 4, 5].map(x => Promise.resolve<number>(x));
         const gs = genSequence(values);
         const result = await gs.reduceAsync((a, v) => a + v);
-        expect(result).toEqual(16);
+        expect(result).toEqual(15);
     });
 
     test('tests reducing asynchronously a sequence with init', async () => {
