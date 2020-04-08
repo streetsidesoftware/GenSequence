@@ -1,4 +1,5 @@
 export * from './GenSequence';
+export * from './AsyncGenSequence';
 export { Sequence, LazyIterable, IterableLike, SequenceBuilder } from './types';
 export * from './builder';
 

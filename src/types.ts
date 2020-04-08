@@ -1,15 +1,24 @@
 export type Maybe<T> = T | undefined;
+export type ThenArg<T> = T extends Promise<infer U> ? U : T
 
 export interface IterableLike<T> {
     [Symbol.iterator](): Iterator<T> | IterableIterator<T>;
 }
 
+export interface AsyncIterableLike<T> {
+    [Symbol.asyncIterator](): AsyncIterableIterator<T>;
+}
+
 export interface GenIterable<T> extends IterableLike<T> {}
+export interface AsyncGenIterable<T> extends AsyncIterableLike<T> {}
 
 export type LazyIterable<T> = (() => IterableLike<T>) | IterableLike<T>;
+export type AsyncLazyIterable<T> = (() => AsyncIterableLike<T>) | AsyncIterableLike<T>;
 
 export type ChainFunction<T, U = T> = (i: IterableLike<T>) => IterableLike<U>;
 export type ReduceFunction<T, U = T> = (i: IterableLike<T>) => U;
+export type ReduceAsyncFunction<T, U = T> = (i: IterableLike<ThenArg<T>>) => U;
+export type ReduceAsyncFunctionForAsyncIterator<T, U = T> = (i: AsyncIterableLike<ThenArg<T>>) => U;
 
 export interface Sequence<T> extends IterableLike<T> {
     next(): IteratorResult<T>;
@@ -45,6 +54,10 @@ export interface Sequence<T> extends IterableLike<T> {
     /** reduce function see Array.reduce */
     reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
     reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
     reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
 
@@ -62,6 +75,13 @@ export interface Sequence<T> extends IterableLike<T> {
     //// Cast
     toArray(): T[];
     toIterable(): IterableIterator<T>;
+}
+
+export interface AsyncSequence<T> extends AsyncIterableLike<T> {
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
+    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
 }
 
 export interface SequenceBuilder<S, T = S> {
@@ -86,4 +106,13 @@ export interface SequenceBuilder<S, T = S> {
 
     //// Pipe
     pipe<U>(fn: ChainFunction<T, U>): SequenceBuilder<S, U>;
+
+
+    pipe<U>(fn0: ChainFunction<T, U>): SequenceBuilder<S, U>;
+    pipe<T1, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, T4, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, U>): SequenceBuilder<S, U>;
+    pipe<T1, T2, T3, T4, T5, U>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, U>): SequenceBuilder<S, U>;
+    pipe<U>(...fns: ChainFunction<T, U>[]): SequenceBuilder<S, U>;
 }

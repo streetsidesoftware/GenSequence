@@ -19,5 +19,6 @@ module.exports = {
         "node"
     ],
     "moduleNameMapper": {
-    }
+    },
+    "coverageReporters": ["json", "lcov", "text", "clover", "html"]
 }

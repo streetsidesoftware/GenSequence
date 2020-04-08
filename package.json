@@ -56,24 +56,5 @@
   "bugs": {
     "url": "https://github.com/Jason3S/GenSequence/issues"
   },
-  "nyc": {
-    "include": [
-      "src/**/*.ts"
-    ],
-    "exclude": [
-      "src/**/*.test.ts",
-      "src/**/*.perf.ts"
-    ],
-    "extension": [
-      ".ts"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "json",
-      "html"
-    ]
-  },
   "homepage": "https://github.com/Jason3S/GenSequence#readme"
 }

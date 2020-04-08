@@ -1,6 +1,6 @@
 import * as op from './operatorsBase';
 
-import { Maybe, IterableLike, ChainFunction, ReduceFunction } from '../types';
+import { Maybe, IterableLike, ChainFunction, ReduceFunction, ThenArg, ReduceAsyncFunction, AsyncIterableLike, ReduceAsyncFunctionForAsyncIterator } from '../types';
 
 /**
  * Operators used by Sequence
@@ -94,6 +94,18 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>> {
     return (i: IterableLike<T>) => op.reduce(fnReduce, initialValue, i);
+}
+
+export function reduceAsync<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>| Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunction<T, Promise<ThenArg<U>>>;
+export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>>
+export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>> {
+    return (i: IterableLike<ThenArg<T>>) => op.reduceAsync(fnReduceAsync, i, initialValue);
+}
+
+export function reduceAsyncForAsyncIterator<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<U>>>;
+export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>>
+export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>> {
+    return (i: AsyncIterableLike<ThenArg<T>>) => op.reduceAsyncForAsyncIterator(fnReduceAsync, i, initialValue);
 }
 
 export type PipeFunction<T, U = T> = ChainFunction<T, U>;

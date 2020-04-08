@@ -1,5 +1,5 @@
-import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction } from './types';
-import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce, pipe } from './operators';
+import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction, ThenArg, IterableLike } from './types';
+import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce, reduceAsync, pipe } from './operators';
 import { toIterableIterator } from './util/util';
 
 export class ImplSequence<T> implements Sequence<T> {
@@ -118,6 +118,10 @@ export class ImplSequence<T> implements Sequence<T> {
 
     reduce<U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue?: U) {
         return reduce<T, U>(fnReduce, initValue!)(this.iter);
+    }
+
+    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, initialValue?: ThenArg<U>): Promise<ThenArg<U>> {
+        return reduceAsync<T, U>(fnReduceAsync, initialValue)(this.iter as IterableLike<ThenArg<T>>);
     }
 
     reduceToSequence<U>(
