@@ -1,4 +1,4 @@
-import { Maybe, IterableLike, ThenArg, AsyncIterableLike } from '../types';
+import { Maybe, IterableLike, AsyncIterableLike, IterableOfPromise } from '../types';
 
 /**
  * Operators used by Sequence
@@ -171,14 +171,16 @@ export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: num
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T, i: IterableLike<T>): T;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: IterableLike<T>): Maybe<T>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: IterableLike<T>): Maybe<T> {
+    // We need to create a new iterable to prevent for...of from restarting an array.
+    const iter = makeIterable(i[Symbol.iterator]());
     let index = 0;
     if (initialValue === undefined) {
         index = 1;
-        const r = i[Symbol.iterator]().next();
+        const r = iter.next();
         initialValue = r.value;
     }
     let prevValue: T = initialValue!;
-    for (const t of i) {
+    for (const t of iter) {
         const nextValue = fnReduce(prevValue, t, index);
         prevValue = nextValue;
         index += 1;
@@ -186,59 +188,99 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
     return prevValue;
 }
 
-export async function reduceAsync<T, U>(fnReduceAsync: (previosValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<U>): Promise<ThenArg<U>>;
-export async function reduceAsync<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>>;
-export async function reduceAsync<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>, i: IterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>> {
+export async function reduceAsync<T, U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, i: IterableOfPromise<T>, initialValue: U | Promise<U>): Promise<U>;
+export async function reduceAsync<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: IterableOfPromise<T>, initialValue?: T | Promise<T>): Promise<T>;
+export async function reduceAsync<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: IterableOfPromise<T>, initialValue?: T | Promise<T>): Promise<T> {
+    // We need to create a new iterable to prevent for...of from restarting an array.
+    const iter = makeIterable((i as Iterable<Promise<T>>)[Symbol.iterator]());
     let index = 0;
     if (initialValue === undefined) {
         index = 1;
-        const r = await i[Symbol.iterator]().next();
+        const r = iter.next();
         initialValue = r.value;
     }
-    let previosValue = await initialValue as ThenArg<T>;
+    let previousValue = await initialValue;
 
-    for await (const t of i) {
-        const nextValue = await fnReduceAsync(previosValue, t, index);
-        previosValue = nextValue;
+    for (const p of iter) {
+        const t = await p;
+        const nextValue = await fnReduce(previousValue!, t, index);
+        previousValue = nextValue;
         index += 1;
     }
-    return previosValue;
+    return previousValue!;
 }
 
-export async function reduceAsyncForAsyncIterator<T, U>(fnReduceAsync: (previosValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, i: AsyncIterableLike<ThenArg<T>>, initialValue?: ThenArg<U>): Promise<ThenArg<U>>;
-export async function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, i: AsyncIterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>>;
-export async function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previosValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>, i: AsyncIterableLike<ThenArg<T>>, initialValue?: ThenArg<T>): Promise<ThenArg<T>> {
+export async function reduceAsyncForAsyncIterator<T, U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, i: AsyncIterableLike<T>, initialValue?: U | Promise<U>): Promise<U>;
+export async function reduceAsyncForAsyncIterator<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: AsyncIterableLike<T>, initialValue?: T | Promise<T>): Promise<T>;
+export async function reduceAsyncForAsyncIterator<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: AsyncIterableLike<T>, initialValue?: T | Promise<T>): Promise<T> {
+    const iter = makeAsyncIterable(i[Symbol.asyncIterator]());
     let index = 0;
     if (initialValue === undefined) {
         index = 1;
-        const r = await i[Symbol.asyncIterator]().next();
+        const r = await iter.next();
         initialValue = r.value;
     }
-    let previosValue = await initialValue as ThenArg<T>;
+    let previousValue = await initialValue;
 
-    for await (const t of i) {
-        const nextValue = await fnReduceAsync(previosValue, t, index);
-        previosValue = nextValue;
+    for await (const t of iter) {
+        const nextValue = await fnReduce(previousValue!, t, index);
+        previousValue = nextValue;
         index += 1;
     }
-    return previosValue;
+    return previousValue!;
 }
 
 //// Utilities
 /**
  * Convert an Iterator into an IterableIterator
  */
-export function makeIterable<T>(i: Iterator<T> | IterableIterator<T>) {
-    function* iterate() {
+export function makeIterable<T>(i: Iterator<T> | Iterable<T> | IterableIterator<T>): IterableIterator<T> {
+    function* fromIterator(i: Iterator<T>) {
         for (let r = i.next(); ! r.done; r = i.next()) {
             yield r.value;
         }
     }
-    return isIterable(i) ? i : iterate();
+    function* fromIterable(i: Iterable<T>): IterableIterator<T> {
+        yield *i;
+    }
+    return isIterable(i) ? (isIterableIterator(i) ? i : fromIterable(i)) : fromIterator(i);
 }
 
-export function isIterable<T>(i: Iterator<T> | IterableLike<T>): i is IterableLike<T> {
+export function isIterable<T>(i: Iterator<T> | IterableLike<T> | AsyncIterator<T> | AsyncIterableIterator<T>): i is IterableLike<T> {
     return !!(i as IterableIterator<T>)[Symbol.iterator];
+}
+
+export function isIterableIterator<T>(i: IterableLike<T>): i is IterableIterator<T> {
+    return typeof (i as IterableIterator<T>).next == 'function';
+}
+
+export function makeAsyncIterable<T>(i: Iterator<T> | Iterable<T> | IterableIterator<T> | AsyncIterator<T> | AsyncIterable<T> | AsyncIterableIterator<T>): AsyncIterableIterator<T> {
+    async function* fromIterable(i: IterableIterator<T> | Iterable<T>) {
+        for (const v of i) {
+            yield v;
+        }
+    }
+    async function* fromIterator(i: AsyncIterator<T> | Iterator<T>) {
+        for (let r = await i.next(); ! r.done; r = await i.next()) {
+            yield r.value;
+        }
+    }
+
+    async function* fromAsyncIterable(i: AsyncIterable<T>) {
+        yield *i;
+    }
+
+    return isAsyncIterable(i) ? (isAsyncIterableIterator(i) ? i : fromAsyncIterable(i)) :
+        isIterable(i) ? fromIterable(i) :
+        fromIterator(i);
+}
+
+export function isAsyncIterable<T>(i: Iterator<T> | Iterable<T> | AsyncIterator<T> | AsyncIterable<T> | AsyncIterableIterator<T>): i is AsyncIterableLike<T> {
+    return !!(i as AsyncIterableLike<T>)[Symbol.asyncIterator];
+}
+
+export function isAsyncIterableIterator<T>(i: AsyncIterableLike<T>): i is AsyncIterableIterator<T> {
+    return typeof (i as AsyncIterableIterator<T>).next == 'function';
 }
 
 /**

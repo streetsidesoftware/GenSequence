@@ -1,12 +1,17 @@
 export type Maybe<T> = T | undefined;
-export type ThenArg<T> = T extends Promise<infer U> ? U : T
+export type ThenArg<T> = T extends PromiseLike<PromiseLike<PromiseLike<infer U>>> ? U :
+    T extends PromiseLike<PromiseLike<infer U>> ? U :
+    T extends PromiseLike<infer U> ? U :
+    T;
+
+export type IterableOfPromise<T> = IterableLike<Promise<Promise<T>>> | IterableLike<Promise<T>> | IterableLike<T>;
 
 export interface IterableLike<T> {
     [Symbol.iterator](): Iterator<T> | IterableIterator<T>;
 }
 
 export interface AsyncIterableLike<T> {
-    [Symbol.asyncIterator](): AsyncIterableIterator<T>;
+    [Symbol.asyncIterator](): AsyncIterableIterator<T> | AsyncIterator<T>;
 }
 
 export interface GenIterable<T> extends IterableLike<T> {}
@@ -54,10 +59,10 @@ export interface Sequence<T> extends IterableLike<T> {
     /** reduce function see Array.reduce */
     reduce(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T): Maybe<T>;
     reduce<U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue: U): U;
-    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
-    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
-    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
-    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync(fnReduce: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
+    reduceAsync(fnReduce: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
+    reduceAsync<U>(fnReduce: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync<U>(fnReduce: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
     reduceToSequence<U, V extends GenIterable<U>>(fnReduce: (previousValue: V, currentValue: T, currentIndex: number) => V, initialValue: V): Sequence<U>;
     reduceToSequence<U>(fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>, initialValue: GenIterable<U>): Sequence<U>;
 
@@ -78,10 +83,10 @@ export interface Sequence<T> extends IterableLike<T> {
 }
 
 export interface AsyncSequence<T> extends AsyncIterableLike<T> {
-    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
-    reduceAsync(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
-    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
-    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync(fnReduce: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T>): Promise<ThenArg<T>>;
+    reduceAsync(fnReduce: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<T>>): Promise<ThenArg<T>>;
+    reduceAsync<U>(fnReduce: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>, initialValue: U): Promise<ThenArg<U>>;
+    reduceAsync<U>(fnReduce: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => Promise<ThenArg<U>>, initialValue: U): Promise<ThenArg<U>>;
 }
 
 export interface SequenceBuilder<S, T = S> {
