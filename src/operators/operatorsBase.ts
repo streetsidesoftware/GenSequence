@@ -5,7 +5,7 @@ import { Maybe, IterableLike, AsyncIterableLike, IterableOfPromise } from '../ty
  */
 
 //// Filters
-export function* filter<T>(fnFilter: (t: T) => boolean, i: IterableLike<T>): IterableIterator<T> {
+export function* filter<T>(i: IterableLike<T>, fnFilter: (t: T) => boolean): IterableIterator<T> {
     for (const v of i) {
         if (fnFilter(v)) {
             yield v;
@@ -13,7 +13,7 @@ export function* filter<T>(fnFilter: (t: T) => boolean, i: IterableLike<T>): Ite
     }
 }
 
-export function* skip<T>(n: number, i: IterableLike<T>): IterableIterator<T> {
+export function* skip<T>(i: IterableLike<T>, n: number): IterableIterator<T> {
     let a = 0;
     for (const t of i) {
         if (a >= n) {
@@ -24,7 +24,7 @@ export function* skip<T>(n: number, i: IterableLike<T>): IterableIterator<T> {
 }
 
 
-export function* take<T>(n: number, i: IterableLike<T>): IterableIterator<T> {
+export function* take<T>(i: IterableLike<T>, n: number): IterableIterator<T> {
     let a = 0;
     if (n) {
         for (const t of i) {
@@ -46,7 +46,7 @@ export function* concat<T>(i: IterableLike<T>, j: IterableLike<T>): IterableIter
     yield *j;
 }
 
-export function* concatMap<T, U>(fn: (t: T) => IterableLike<U>, i: IterableLike<T>): IterableIterator<U> {
+export function* concatMap<T, U>(i: IterableLike<T>, fn: (t: T) => IterableLike<U>): IterableIterator<U> {
     for (const t of i) {
         yield *fn(t);
     }
@@ -57,9 +57,9 @@ export function* concatMap<T, U>(fn: (t: T) => IterableLike<U>, i: IterableLike<
  * Combine two iterables together using fnMap function.
  */
 export function* combine<T, U, V>(
-    fnMap: (t: T, u?: U) => V,
     i: IterableLike<T>,
-    j: IterableLike<U>
+    j: IterableLike<U>,
+    fnMap: (t: T, u?: U) => V,
 ): IterableIterator<V> {
     const jit = j[Symbol.iterator]();
     for (const r of i) {
@@ -113,7 +113,7 @@ export function* scan<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue: 
 }
 
 //// Reducers
-export function all<T>(fn: (t: T) => boolean, i: IterableLike<T>): boolean {
+export function all<T>(i: IterableLike<T>, fn: (t: T) => boolean): boolean {
     for (const t of i) {
         if (!fn(t)) {
             return false;
@@ -122,7 +122,7 @@ export function all<T>(fn: (t: T) => boolean, i: IterableLike<T>): boolean {
     return true;
 }
 
-export function any<T>(fn: (t: T) => boolean, i: IterableLike<T>): boolean {
+export function any<T>(i: IterableLike<T>, fn: (t: T) => boolean): boolean {
     for (const t of i) {
         if (fn(t)) {
             return true;
@@ -132,12 +132,12 @@ export function any<T>(fn: (t: T) => boolean, i: IterableLike<T>): boolean {
 }
 
 export function count<T>(i: IterableLike<T>): number {
-    return reduce<T, number>(p => p + 1, 0, i);
+    return reduce<T, number>(i, p => p + 1, 0);
 }
 
-export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: IterableLike<T>): Maybe<T>;
-export function first<T>(fn: (t: T) => boolean, defaultValue: T, i: IterableLike<T>): T;
-export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i: IterableLike<T>): Maybe<T> {
+export function first<T>(i: IterableLike<T>, fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, ): Maybe<T>;
+export function first<T>(i: IterableLike<T>, fn: (t: T) => boolean, defaultValue: T): T;
+export function first<T>(i: IterableLike<T>, fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>): Maybe<T> {
     fn = fn || (() => true);
     for (const t of i) {
         if (fn(t)) {
@@ -147,7 +147,7 @@ export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>, i
     return defaultValue;
 }
 
-export function forEach<T>(fn: (t: T, index: number) => void, i: IterableLike<T>) {
+export function forEach<T>(i: IterableLike<T>, fn: (t: T, index: number) => void) {
     let index = 0;
     for (const t of i) {
         fn(t, index);
@@ -155,22 +155,22 @@ export function forEach<T>(fn: (t: T, index: number) => void, i: IterableLike<T>
     }
 }
 
-export function max<T, U>(selector: undefined, i: IterableLike<T>): Maybe<T>;
-export function max<T, U>(selector: ((t: T) => U) | undefined, i: IterableLike<T>): Maybe<T>;
-export function max<T>(selector: ((t: T) => T) | undefined = (t => t), i: IterableLike<T>): Maybe<T> {
-    return reduce((p: T, c: T) => selector(c) > selector(p) ? c : p, undefined, i);
+export function max<T, U>(i: IterableLike<T>, selector: undefined): Maybe<T>;
+export function max<T, U>(i: IterableLike<T>, selector: ((t: T) => U) | undefined): Maybe<T>;
+export function max<T>(i: IterableLike<T>, selector: ((t: T) => T) | undefined = (t => t)): Maybe<T> {
+    return reduce(i, (p: T, c: T) => selector(c) > selector(p) ? c : p, undefined);
 }
 
-export function min<T>(selector: undefined, i: IterableLike<T>): Maybe<T>;
-export function min<T, U>(selector: ((t: T) => U) | undefined, i: IterableLike<T>): Maybe<T>;
-export function min<T>(selector: ((t: T) => T) | undefined = (t => t), i: IterableLike<T>): Maybe<T> {
-    return reduce((p: T, c: T) => selector(c) < selector(p) ? c : p, undefined, i);
+export function min<T>(i: IterableLike<T>, selector: undefined): Maybe<T>;
+export function min<T, U>(i: IterableLike<T>, selector: ((t: T) => U) | undefined): Maybe<T>;
+export function min<T>(i: IterableLike<T>, selector: ((t: T) => T) | undefined = (t => t)): Maybe<T> {
+    return reduce(i, (p: T, c: T) => selector(c) < selector(p) ? c : p, undefined);
 }
 
-export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U, i: IterableLike<T>): U;
-export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T, i: IterableLike<T>): T;
-export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: IterableLike<T>): Maybe<T>;
-export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>, i: IterableLike<T>): Maybe<T> {
+export function reduce<T, U>(i: IterableLike<T>, fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U): U;
+export function reduce<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T): T;
+export function reduce<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): Maybe<T>;
+export function reduce<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): Maybe<T> {
     // We need to create a new iterable to prevent for...of from restarting an array.
     const iter = makeIterable(i[Symbol.iterator]());
     let index = 0;
@@ -188,9 +188,9 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
     return prevValue;
 }
 
-export async function reduceAsync<T, U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, i: IterableOfPromise<T>, initialValue: U | Promise<U>): Promise<U>;
-export async function reduceAsync<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: IterableOfPromise<T>, initialValue?: T | Promise<T>): Promise<T>;
-export async function reduceAsync<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: IterableOfPromise<T>, initialValue?: T | Promise<T>): Promise<T> {
+export async function reduceAsync<T, U>(i: IterableOfPromise<T>, fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, initialValue: U | Promise<U>): Promise<U>;
+export async function reduceAsync<T>(i: IterableOfPromise<T>, fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, initialValue?: T | Promise<T>): Promise<T>;
+export async function reduceAsync<T>(i: IterableOfPromise<T>, fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, initialValue?: T | Promise<T>): Promise<T> {
     // We need to create a new iterable to prevent for...of from restarting an array.
     const iter = makeIterable((i as Iterable<Promise<T>>)[Symbol.iterator]());
     let index = 0;
@@ -210,9 +210,9 @@ export async function reduceAsync<T>(fnReduce: (previousValue: T, currentValue: 
     return previousValue!;
 }
 
-export async function reduceAsyncForAsyncIterator<T, U>(fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, i: AsyncIterableLike<T>, initialValue?: U | Promise<U>): Promise<U>;
-export async function reduceAsyncForAsyncIterator<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: AsyncIterableLike<T>, initialValue?: T | Promise<T>): Promise<T>;
-export async function reduceAsyncForAsyncIterator<T>(fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, i: AsyncIterableLike<T>, initialValue?: T | Promise<T>): Promise<T> {
+export async function reduceAsyncForAsyncIterator<T, U>(i: AsyncIterableLike<T>, fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>, initialValue?: U | Promise<U>): Promise<U>;
+export async function reduceAsyncForAsyncIterator<T>(i: AsyncIterableLike<T>, fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, initialValue?: T | Promise<T>): Promise<T>;
+export async function reduceAsyncForAsyncIterator<T>(i: AsyncIterableLike<T>, fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>, initialValue?: T | Promise<T>): Promise<T> {
     const iter = makeAsyncIterable(i[Symbol.asyncIterator]());
     let index = 0;
     if (initialValue === undefined) {

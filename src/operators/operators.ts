@@ -1,6 +1,16 @@
 import * as op from './operatorsBase';
 
-import { Maybe, IterableLike, ChainFunction, ReduceFunction, ThenArg, ReduceAsyncFunction, AsyncIterableLike, ReduceAsyncFunctionForAsyncIterator } from '../types';
+import {
+    AsyncIterableLike,
+    ChainFunction,
+    IterableLike,
+    IterableOfPromise,
+    Maybe,
+    ReduceAsyncFunction,
+    ReduceAsyncFunctionForAsyncIterator,
+    ReduceFunction,
+    ThenArg,
+} from '../types';
 
 /**
  * Operators used by Sequence
@@ -8,15 +18,15 @@ import { Maybe, IterableLike, ChainFunction, ReduceFunction, ThenArg, ReduceAsyn
 
 //// Filters
 export function filter<T>(fnFilter: (t: T) => boolean): ChainFunction<T> {
-    return (i: IterableLike<T>) => op.filter(fnFilter, i);
+    return (i: IterableLike<T>) => op.filter(i, fnFilter);
 }
 
 export function skip<T>(n: number): ChainFunction<T> {
-    return (i: IterableLike<T>) => op.skip(n, i);
+    return (i: IterableLike<T>) => op.skip(i, n);
 }
 
 export function take<T>(n: number): ChainFunction<T> {
-    return (i: IterableLike<T>) => op.take(n, i);
+    return (i: IterableLike<T>) => op.take(i, n);
 }
 
 //// Extenders
@@ -28,7 +38,7 @@ export function concat<T>(j: IterableLike<T>): ChainFunction<T> {
 }
 
 export function concatMap<T, U>(fn: (t: T) => IterableLike<U>): ChainFunction<T, U> {
-    return (i: IterableLike<T>) => op.concatMap(fn, i);
+    return (i: IterableLike<T>) => op.concatMap(i, fn);
 }
 
 //// Mappers
@@ -39,7 +49,7 @@ export function combine<T, U, V>(
     fnMap: (t: T, u?: U) => V,
     j: IterableLike<U>
 ): ChainFunction<T, V> {
-    return (i: IterableLike<T>) => op.combine(fnMap, i, j);
+    return (i: IterableLike<T>) => op.combine(i, j, fnMap);
 }
 
 /**
@@ -58,11 +68,11 @@ export function scan<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) 
 
 //// Reducers
 export function all<T>(fn: (t: T) => boolean): ReduceFunction<T, boolean> {
-    return (i: IterableLike<T>) => op.all(fn, i);
+    return (i: IterableLike<T>) => op.all(i, fn);
 }
 
 export function any<T>(fn: (t: T) => boolean): ReduceFunction<T, boolean> {
-    return (i: IterableLike<T>) => op.any(fn, i);
+    return (i: IterableLike<T>) => op.any(i, fn);
 }
 
 export function count<T>(): ReduceFunction<T, number> {
@@ -72,40 +82,40 @@ export function count<T>(): ReduceFunction<T, number> {
 export function first<T>(fn: (t: T) => boolean, defaultValue: T): ReduceFunction<T>;
 export function first<T>(fn?: (t: T) => boolean, defaultValue?: T): ReduceFunction<T, Maybe<T>>;
 export function first<T>(fn: Maybe<(t: T) => boolean>, defaultValue: Maybe<T>): ReduceFunction<T, Maybe<T>> {
-    return (i: IterableLike<T>) => op.first(fn, defaultValue, i);
+    return (i: IterableLike<T>) => op.first(i, fn, defaultValue);
 }
 
 export function forEach<T>(fn: (t: T, index: number) => void): ReduceFunction<T, void> {
-    return (i: IterableLike<T>) => op.forEach(fn, i);
+    return (i: IterableLike<T>) => op.forEach(i, fn);
 }
 
 export function max<T, U>(selector: (t: T) => U): ReduceFunction<T, Maybe<T>>;
 export function max<T>(selector?: (t: T) => T): ReduceFunction<T, Maybe<T>> {
-    return (i: IterableLike<T>) => op.max(selector, i);
+    return (i: IterableLike<T>) => op.max(i, selector);
 }
 
 export function min<T, U>(selector: (t: T) => U): ReduceFunction<T, Maybe<T>>;
 export function min<T>(selector?: (t: T) => T): ReduceFunction<T, Maybe<T>> {
-    return (i: IterableLike<T>) => op.min(selector, i);
+    return (i: IterableLike<T>) => op.min(i, selector);
 }
 
 export function reduce<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initialValue: U): ReduceFunction<T, U>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: T): ReduceFunction<T>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>>;
 export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initialValue: Maybe<T>): ReduceFunction<T, Maybe<T>> {
-    return (i: IterableLike<T>) => op.reduce(fnReduce, initialValue, i);
+    return (i: IterableLike<T>) => op.reduce(i, fnReduce, initialValue);
 }
 
 export function reduceAsync<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>| Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunction<T, Promise<ThenArg<U>>>;
 export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>>
 export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>> {
-    return (i: IterableLike<ThenArg<T>>) => op.reduceAsync(fnReduceAsync, i, initialValue);
+    return (i: IterableOfPromise<ThenArg<T>>) => op.reduceAsync(i, fnReduceAsync, initialValue);
 }
 
 export function reduceAsyncForAsyncIterator<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<U>>>;
 export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>>
 export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>> {
-    return (i: AsyncIterableLike<ThenArg<T>>) => op.reduceAsyncForAsyncIterator(fnReduceAsync, i, initialValue);
+    return (i: AsyncIterableLike<ThenArg<T>>) => op.reduceAsyncForAsyncIterator(i, fnReduceAsync, initialValue);
 }
 
 export type PipeFunction<T, U = T> = ChainFunction<T, U>;
