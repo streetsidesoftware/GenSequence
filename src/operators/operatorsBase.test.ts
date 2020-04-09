@@ -37,8 +37,8 @@ describe('Tests Operators', () => {
     });
 
     test('concat fib same iterable', () => {
-        const v = [...op.take(5, fib())];
-        const a = op.take(5, fib());
+        const v = [...op.take(fib(), 5)];
+        const a = op.take(fib(), 5);
         expect([...op.concat(a, a)]).toEqual(v);
     });
 
@@ -87,29 +87,29 @@ describe('Tests Operators', () => {
     test('reduce', () => {
         const fn = (a: number, b: number) => a + b;
         const a = [1, 2, 3];
-        expect(op.reduce(fn, undefined, a)).toBe(6);
-        expect(op.reduce(fn, 10, a)).toBe(16);
-        expect(op.reduce(fn, undefined, toIterable(a))).toBe(6);
-        expect(op.reduce(fn, 10, toIterable(a))).toBe(16);
+        expect(op.reduce(a, fn, undefined)).toBe(6);
+        expect(op.reduce(a, fn, 10)).toBe(16);
+        expect(op.reduce(toIterable(a), fn, undefined)).toBe(6);
+        expect(op.reduce(toIterable(a), fn, 10)).toBe(16);
     });
 
     test('reduceAsync', async () => {
         const fn = (a: number, b: number) => a + b;
         const a = [1, 2, 3];
-        expect(await op.reduceAsync(fn, a, undefined)).toBe(6);
-        expect(await op.reduceAsync(fn, a, 10)).toBe(16);
-        expect(await op.reduceAsync(fn, toIterable(a), undefined)).toBe(6);
-        expect(await op.reduceAsync(fn, toIterable(a), 10)).toBe(16);
+        expect(await op.reduceAsync(a, fn, undefined)).toBe(6);
+        expect(await op.reduceAsync(a, fn, 10)).toBe(16);
+        expect(await op.reduceAsync(toIterable(a), fn, undefined)).toBe(6);
+        expect(await op.reduceAsync(toIterable(a), fn, 10)).toBe(16);
     });
 
     test('reduceAsyncForAsyncIterator', async () => {
         const fn = (a: number, b: number) => a + b;
         const a = [1, 2, 3];
         const b: Iterable<number> = a;
-        expect(await op.reduceAsyncForAsyncIterator(fn, toAsyncIterable(a), undefined)).toBe(6);
-        expect(await op.reduceAsyncForAsyncIterator(fn, toAsyncIterable(a), 10)).toBe(16);
-        expect(await op.reduceAsyncForAsyncIterator(fn, op.makeAsyncIterable(a), undefined)).toBe(6);
-        expect(await op.reduceAsyncForAsyncIterator(fn, op.makeAsyncIterable(b), 10)).toBe(16);
+        expect(await op.reduceAsyncForAsyncIterator(toAsyncIterable(a), fn, undefined)).toBe(6);
+        expect(await op.reduceAsyncForAsyncIterator(toAsyncIterable(a), fn, 10)).toBe(16);
+        expect(await op.reduceAsyncForAsyncIterator(op.makeAsyncIterable(a), fn, undefined)).toBe(6);
+        expect(await op.reduceAsyncForAsyncIterator(op.makeAsyncIterable(b), fn, 10)).toBe(16);
     });
 
     test('reduceAsync nested promise', async () => {
@@ -118,7 +118,7 @@ describe('Tests Operators', () => {
         const a = [1, 2, 3];
         const p = a.map(toPromise);
         const pp = p.map(toPromise);
-        const r = await op.reduceAsync((a, b) => a + b, pp, 1);
+        const r = await op.reduceAsync(pp, (a, b) => a + b, 1);
         expect(r).toBe(7);
     });
 });
