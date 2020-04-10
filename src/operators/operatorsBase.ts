@@ -71,22 +71,14 @@ export function* combine<T, U, V>(
 /**
  * apply a mapping function to an Iterable.
  */
-export function map<T, U>(fnMap: (t: T) => U): (i: IterableLike<T>) => IterableIterator<U>;
-export function map<T, U>(fnMap: (t: T) => U, i: IterableLike<T>): IterableIterator<U>;
-export function map<T, U>(fnMap: (t: T) => U, i?: IterableLike<T>): IterableIterator<U> | ((i: IterableLike<T>) => IterableIterator<U>) {
-    function* fn<T, U>(fnMap: (t: T) => U, i: IterableLike<T>): IterableIterator<U> {
+export function map<T, U>(i: IterableLike<T>, fnMap: (t: T) => U): IterableIterator<U> {
+    function* fn<T, U>(i: IterableLike<T>, fnMap: (t: T) => U): IterableIterator<U> {
         for (const v of i) {
             yield fnMap(v);
         }
     }
 
-    if (i !== undefined) {
-        return fn(fnMap, i);
-    }
-
-    return function(i: IterableLike<T>) {
-        return fn(fnMap, i);
-    };
+    return fn(i, fnMap);
 }
 
 export function scan<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue: T, curIndex: number) => T): IterableIterator<T>;

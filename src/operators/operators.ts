@@ -56,7 +56,7 @@ export function combine<T, U, V>(
  * apply a mapping function to an Iterable.
  */
 export function map<T, U>(fnMap: (t: T) => U): ChainFunction<T, U> {
-    return (i: IterableLike<T>) => op.map(fnMap, i);
+    return (i: IterableLike<T>) => op.map(i, fnMap);
 }
 
 export function scan<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T): ChainFunction<T>;
