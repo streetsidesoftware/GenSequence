@@ -2,12 +2,6 @@ import * as op from './operatorsBase';
 import { toIterator } from '../util/util';
 
 describe('Tests Operators', () => {
-    test('test the curring part of GS.map', () => {
-        const fnMap = op.map((a: number) => 2 * a);
-        expect(fnMap).toBeInstanceOf(Function);
-        expect([...fnMap([1, 2, 3])]).toEqual([2, 4, 6]);
-    });
-
     test('tests scanMap -- running sum', () => {
         // let only the first occurrence of a value through.
         const result = [1, 2, 1, 3, 2, 1, 3]
