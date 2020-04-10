@@ -18,7 +18,8 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "prepublish": "npm run clean-build && npm test",
+    "prepublish": "npm run clean-build",
+    "prepublishOnly": "npm test",
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf dist",
     "test": "jest --testMatch '**/*.test.ts'",
