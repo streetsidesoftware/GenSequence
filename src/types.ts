@@ -1,6 +1,5 @@
 export type Maybe<T> = T | undefined;
-export type ThenArg<T> = T extends PromiseLike<PromiseLike<PromiseLike<infer U>>> ? U :
-    T extends PromiseLike<PromiseLike<infer U>> ? U :
+export type ThenArg<T> =
     T extends PromiseLike<infer U> ? U :
     T;
 
