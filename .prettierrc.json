@@ -1,0 +1,12 @@
+{
+    "printWidth": 160,
+    "singleQuote": true,
+    "overrides": [
+        {
+            "files": "**/*.{yaml,yml}",
+            "options": {
+                "singleQuote": false
+            }
+        }
+    ]
+}
