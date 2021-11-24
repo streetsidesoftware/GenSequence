@@ -1,7 +1,9 @@
 name: "build-test"
-on: # rebuild any PRs and main branch changes
+on:
   pull_request:
   push:
+    branches:
+      - main
 
 jobs:
   test-node-versions:
