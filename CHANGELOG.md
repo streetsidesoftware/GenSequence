@@ -1,5 +1,21 @@
 # Release Notes
 
+## [4.0.1](https://github.com/Jason3S/GenSequence/compare/1.2.0...v4.0.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* clean up the async reducers ([#21](https://github.com/Jason3S/GenSequence/issues/21)) ([0bf7525](https://github.com/Jason3S/GenSequence/commit/0bf75256eabeae936aeda32ad86a822a1d5bafcb))
+* correctly handle `undefined` initial value. ([0bf7525](https://github.com/Jason3S/GenSequence/commit/0bf75256eabeae936aeda32ad86a822a1d5bafcb))
+* Sequence<T extends S> is type compatible with Sequence<S> ([#25](https://github.com/Jason3S/GenSequence/issues/25)) ([2834953](https://github.com/Jason3S/GenSequence/commit/2834953e20539edbaa41fb8323f61d81b717b0a6))
+* Update Publication Process ([483732c](https://github.com/Jason3S/GenSequence/commit/483732c03abe8da434f71666b6f57eb46a727135))
+* Update Typescript ([#228](https://github.com/Jason3S/GenSequence/issues/228)) ([ae21653](https://github.com/Jason3S/GenSequence/commit/ae216534a6c0977f58d4f6389748aa0f2d387f41))
+
+
+### Miscellaneous Chores
+
+* release 4.0.1 ([391dc6d](https://github.com/Jason3S/GenSequence/commit/391dc6dd026a39986ffbd3a1ed7fc1a17e37889d))
+
 ## [4.0.0]
 
 - Drop support for Node 10 and 12.
