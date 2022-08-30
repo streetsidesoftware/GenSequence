@@ -30,7 +30,7 @@ export const toIterator = toIterableIterator;
 
 export type KeyValuePair<T> = [keyof T, T[keyof T]];
 
-export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
+export function* objectIterator<T extends {}>(t: T): IterableIterator<KeyValuePair<T>> {
     const keys = new Set(Object.keys(t));
     for (const k in t) {
         // istanbul ignore else
@@ -40,12 +40,11 @@ export function* objectIterator<T>(t: T): IterableIterator<KeyValuePair<T>> {
     }
 }
 
-export function objectToSequence<T>(t: T): Sequence<KeyValuePair<T>> {
+export function objectToSequence<T extends {}>(t: T): Sequence<KeyValuePair<T>> {
     return sequenceFromObject<T>(t);
 }
 
-
-export function sequenceFromObject<T>(t: T): Sequence<KeyValuePair<T>> {
+export function sequenceFromObject<T extends {}>(t: T): Sequence<KeyValuePair<T>> {
     return genSequence(() => objectIterator(t));
 }
 
@@ -54,7 +53,7 @@ export function sequenceFromRegExpMatch(pattern: RegExp, text: string): Sequence
         const regex = new RegExp(pattern);
         let match: RegExpExecArray | null;
         let lastIndex: number | undefined = undefined;
-        while ( match = regex.exec(text) ) {
+        while ((match = regex.exec(text))) {
             // Make sure it stops if the index does not move forward.
             if (match.index === lastIndex) {
                 break;
