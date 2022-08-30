@@ -1,5 +1,12 @@
 # Release Notes
 
+## [4.0.2](https://github.com/Jason3S/GenSequence/compare/v4.0.1...v4.0.2) (2022-08-30)
+
+
+### Bug Fixes
+
+* Fix Release ([82328ec](https://github.com/Jason3S/GenSequence/commit/82328ecd09c59b4a6a9512f4236d55cf459861ea))
+
 ## [4.0.1](https://github.com/Jason3S/GenSequence/compare/1.2.0...v4.0.1) (2022-08-30)
 
 
