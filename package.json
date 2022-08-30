@@ -21,7 +21,7 @@
     "prepublishOnly": "npm test",
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf dist",
-    "test": "jest --testMatch '**/*.test.ts'",
+    "test": "jest",
     "perf": "jest --testMatch '**/*.perf.ts'",
     "test-all": "jest",
     "build": "tsc -p .",
