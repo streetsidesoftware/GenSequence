@@ -1,5 +1,12 @@
 # Release Notes
 
+## [4.0.3](https://github.com/Jason3S/GenSequence/compare/v4.0.2...v4.0.3) (2022-12-08)
+
+
+### Bug Fixes
+
+* Update TypeScript ([#257](https://github.com/Jason3S/GenSequence/issues/257)) ([d7abd48](https://github.com/Jason3S/GenSequence/commit/d7abd4872d4e5665bfc01d3650ae8bfde455d407))
+
 ## [4.0.2](https://github.com/Jason3S/GenSequence/compare/v4.0.1...v4.0.2) (2022-08-30)
 
 
