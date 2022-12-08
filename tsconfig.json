@@ -1,19 +1,18 @@
 {
-	"compilerOptions": {
-		"target": "ES6",
-		"module": "commonjs",
-		"moduleResolution": "node",
-		"sourceMap": true,
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "@tsconfig/node14/tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true,
         "declaration": true,
-		"noImplicitAny": true,
-		"noImplicitThis": true,
-		"noUnusedLocals": true,
-		"strict": true,
-		"noUnusedParameters": true,
-		"strictNullChecks": true,
-		"outDir": "dist"
-	},
-	"include": [
-		"src"
-	]
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "strict": true,
+        "noUnusedParameters": true,
+        "strictNullChecks": true,
+        "outDir": "dist"
+    },
+    "include": ["src"]
 }
