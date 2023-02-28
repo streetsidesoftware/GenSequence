@@ -1,5 +1,5 @@
-import { AsyncSequence, AsyncGenIterable } from './types';
-import { ImplAsyncSequence } from './ImplAsyncSequence';
+import { AsyncSequence, AsyncGenIterable } from './types.js';
+import { ImplAsyncSequence } from './ImplAsyncSequence.js';
 
 export function asyncGenSequence<T>(i: AsyncGenIterable<T>): AsyncSequence<T>;
 export function asyncGenSequence<T>(i: () => AsyncGenIterable<T>): AsyncSequence<T>;

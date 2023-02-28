@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import { asyncGenSequence } from './AsyncGenSequence';
+import { asyncGenSequence } from './AsyncGenSequence.js';
 
 describe('AsyncGenSequence Tests', () => {
     test('tests reducing asynchronously a sequence w/o init', async () => {

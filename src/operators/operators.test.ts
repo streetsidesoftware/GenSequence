@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { pipe, map } from './operators';
+import { pipe, map } from './operators.js';
 
 describe('Validate Operators', () => {
     const fnNumToString = map((n: number) => n.toString());

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { Sequence } from '.';
-import genSequence from './GenSequence';
+import { Sequence } from './index.js';
+import genSequence from './GenSequence.js';
 
 interface Base {
     a: string;

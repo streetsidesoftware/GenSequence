@@ -1,4 +1,4 @@
-import { genSequence, Sequence } from '..';
+import { genSequence, Sequence } from '../index.js';
 
 export function fibonacci(): Sequence<number> {
     function* fib() {
@@ -11,11 +11,10 @@ export function fibonacci(): Sequence<number> {
     return genSequence(fib());
 }
 
-
 export function fib(n: number) {
     return fibonacci()
-        .take(n)            // Take n from the fibonacci sequence
-        .toArray();         // Convert it into an array
+        .take(n) // Take n from the fibonacci sequence
+        .toArray(); // Convert it into an array
 }
 
 export const fib5 = fib(5); // [1, 1, 2, 3, 5]

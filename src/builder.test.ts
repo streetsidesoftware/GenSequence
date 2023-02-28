@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import { builder } from './builder';
-import { map } from './operators';
-import { scanMap } from './operators/operatorsBase';
-// import { genSequence } from '.';
+import { builder } from './builder.js';
+import { map } from './operators/index.js';
+import { scanMap } from './operators/operatorsBase.js';
+// import { genSequence } from '..js';
 
 describe('Verify builder', () => {
     test('Test map', () => {

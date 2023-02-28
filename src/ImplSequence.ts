@@ -1,15 +1,33 @@
-import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction, ThenArg, IterableLike } from './types';
-import { filter, skip, take, concat, concatMap, combine, map, scan, all, any, count, first, forEach, max, min, reduce, reduceAsync, pipe } from './operators';
-import { toIterableIterator } from './util/util';
+import { Sequence, GenIterable, Maybe, LazyIterable, ChainFunction, ThenArg, IterableLike } from './types.js';
+import {
+    filter,
+    skip,
+    take,
+    concat,
+    concatMap,
+    combine,
+    map,
+    scan,
+    all,
+    any,
+    count,
+    first,
+    forEach,
+    max,
+    min,
+    reduce,
+    reduceAsync,
+    pipe,
+} from './operators/index.js';
+import { toIterableIterator } from './util/util.js';
 
 export class ImplSequence<T> implements Sequence<T> {
     private _iterator: Maybe<Iterator<T>>;
 
-    constructor(private i: LazyIterable<T>) {
-    }
+    constructor(private i: LazyIterable<T>) {}
 
     private get iter() {
-        return (typeof this.i === "function") ? this.i() : this.i;
+        return typeof this.i === 'function' ? this.i() : this.i;
     }
 
     private get iterator() {
@@ -21,7 +39,7 @@ export class ImplSequence<T> implements Sequence<T> {
 
     private inject<U>(fn: (i: GenIterable<T>) => GenIterable<U>): LazyIterable<U> {
         const iter = this.i;
-        return () => fn(typeof iter === "function" ? iter() : iter);
+        return () => fn(typeof iter === 'function' ? iter() : iter);
     }
 
     private chain<U>(fn: (i: GenIterable<T>) => GenIterable<U>): ImplSequence<U> {
@@ -59,7 +77,7 @@ export class ImplSequence<T> implements Sequence<T> {
     }
 
     //// Mappers
-    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): ImplSequence<V>  {
+    combine<U, V>(fn: (t: T, u?: U) => V, j: Iterable<U>): ImplSequence<V> {
         return this.chain(combine(fn, j));
     }
 
@@ -76,9 +94,30 @@ export class ImplSequence<T> implements Sequence<T> {
     pipe<T1, T2>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>): Sequence<T2>;
     pipe<T1, T2, T3>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>): Sequence<T3>;
     pipe<T1, T2, T3, T4>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>): Sequence<T4>;
-    pipe<T1, T2, T3, T4, T5>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>): Sequence<T5>;
-    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>): Sequence<T6>;
-    pipe<T1, T2, T3, T4, T5, T6>(fn0: ChainFunction<T, T1>, fn1: ChainFunction<T1, T2>, fn2: ChainFunction<T2, T3>, fn3: ChainFunction<T3, T4>, fn4: ChainFunction<T4, T5>, fn5: ChainFunction<T5, T6>, ...fnRest: ChainFunction<T6, T6>[]): Sequence<T6>;
+    pipe<T1, T2, T3, T4, T5>(
+        fn0: ChainFunction<T, T1>,
+        fn1: ChainFunction<T1, T2>,
+        fn2: ChainFunction<T2, T3>,
+        fn3: ChainFunction<T3, T4>,
+        fn4: ChainFunction<T4, T5>
+    ): Sequence<T5>;
+    pipe<T1, T2, T3, T4, T5, T6>(
+        fn0: ChainFunction<T, T1>,
+        fn1: ChainFunction<T1, T2>,
+        fn2: ChainFunction<T2, T3>,
+        fn3: ChainFunction<T3, T4>,
+        fn4: ChainFunction<T4, T5>,
+        fn5: ChainFunction<T5, T6>
+    ): Sequence<T6>;
+    pipe<T1, T2, T3, T4, T5, T6>(
+        fn0: ChainFunction<T, T1>,
+        fn1: ChainFunction<T1, T2>,
+        fn2: ChainFunction<T2, T3>,
+        fn3: ChainFunction<T3, T4>,
+        fn4: ChainFunction<T4, T5>,
+        fn5: ChainFunction<T5, T6>,
+        ...fnRest: ChainFunction<T6, T6>[]
+    ): Sequence<T6>;
     pipe(...fns: ChainFunction<T, T>[]): Sequence<T> {
         if (!fns.length) return this;
         // Casting workaround due to the spread operator not working See: https://github.com/microsoft/TypeScript/issues/28010
@@ -107,11 +146,11 @@ export class ImplSequence<T> implements Sequence<T> {
     }
 
     max(fnSelector?: (t: T) => T): Maybe<T>;
-    max<U>(fnSelector: (t: T) => U): Maybe<T>  {
+    max<U>(fnSelector: (t: T) => U): Maybe<T> {
         return max(fnSelector)(this.iter);
     }
 
-    min(fnSelector?: (t: T) => T): Maybe<T>
+    min(fnSelector?: (t: T) => T): Maybe<T>;
     min<U>(fnSelector: (t: T) => U): Maybe<T> {
         return min(fnSelector)(this.iter);
     }
@@ -120,14 +159,17 @@ export class ImplSequence<T> implements Sequence<T> {
         return reduce<T, U>(fnReduce, initValue!)(this.iter);
     }
 
-    reduceAsync<U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, initialValue?: ThenArg<U>): Promise<ThenArg<U>> {
+    reduceAsync<U>(
+        fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
+        initialValue?: ThenArg<U>
+    ): Promise<ThenArg<U>> {
         return reduceAsync<T, U>(fnReduceAsync, initialValue)(this.iter as IterableLike<ThenArg<T>>);
     }
 
     reduceToSequence<U>(
         fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>,
         initialValue: GenIterable<U>
-    ): ImplSequence<U>  {
+    ): ImplSequence<U> {
         return this.chain(reduce<T, GenIterable<U>>(fnReduce, initialValue!));
     }
 

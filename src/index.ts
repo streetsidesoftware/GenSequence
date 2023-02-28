@@ -1,7 +1,7 @@
-export * from './GenSequence';
-export * from './AsyncGenSequence';
-export { Sequence, LazyIterable, IterableLike, SequenceBuilder } from './types';
-export * from './builder';
+export * from './GenSequence.js';
+export * from './AsyncGenSequence.js';
+export { Sequence, LazyIterable, IterableLike, SequenceBuilder } from './types.js';
+export * from './builder.js';
 
-import * as _operators from './operators';
+import * as _operators from './operators/index.js';
 export const operators = _operators;

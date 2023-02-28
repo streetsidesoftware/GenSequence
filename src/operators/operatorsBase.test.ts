@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
-import * as op from './operatorsBase';
-import { toIterator } from '../util/util';
+import * as op from './operatorsBase.js';
+import { toIterator } from '../util/util.js';
 
 describe('Tests Operators', () => {
     test('tests scanMap -- running sum', () => {

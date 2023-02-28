@@ -1,7 +1,6 @@
-import { ChainFunction, SequenceBuilder } from './types';
-import { ImplSequenceBuilder } from './ImplSequenceBuilder';
-import { filter, skip, take, concat, concatMap, combine, map, scan } from './operators';
-
+import { ChainFunction, SequenceBuilder } from './types.js';
+import { ImplSequenceBuilder } from './ImplSequenceBuilder.js';
+import { filter, skip, take, concat, concatMap, combine, map, scan } from './operators/index.js';
 
 function makeBuilder<T, U = T>(fn: ChainFunction<T, U>): SequenceBuilder<T, U> {
     return new ImplSequenceBuilder([fn]);
