@@ -1,5 +1,12 @@
 # Release Notes
 
+## [5.0.2](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.1...v5.0.2) (2023-02-28)
+
+
+### Bug Fixes
+
+* Do not package redundant `.js` and `.d.ts` files ([cd5afd0](https://github.com/streetsidesoftware/GenSequence/commit/cd5afd05c7c3455e8dfc9bb54907b2656ebdbba5))
+
 ## [5.0.1](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.0...v5.0.1) (2023-02-28)
 
 
