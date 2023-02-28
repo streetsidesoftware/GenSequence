@@ -1,183 +1,213 @@
+import { describe, expect, test } from 'vitest';
 import * as GS from './GenSequence';
-import {builder} from '.';
+import { builder } from '.';
+
+const timeout = 100000;
 
 describe('Performance Test', () => {
-    jest.setTimeout(100000);
-    test('Simple Generator to an array', () => {
-        const fnBase = () => {
-            return [...range(0, 10000)]
-        };
+    test(
+        'Simple Generator to an array',
+        () => {
+            const fnBase = () => {
+                return [...range(0, 10000)];
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(range(0, 10000)).toArray();
-        }
-        const rBase = measure(fnBase, 100);
-        const rExp = measure(fnExp, 100);
+            const fnExp = () => {
+                return GS.genSequence(range(0, 10000)).toArray();
+            };
+            const rBase = measure(fnBase, 100);
+            const rExp = measure(fnExp, 100);
 
-        expect(rExp.result).toEqual(rBase.result);
-        assertExpectedRatio('Simple Generator to an array', rBase, rExp, 1.2);
-    });
+            expect(rExp.result).toEqual(rBase.result);
+            assertExpectedRatio('Simple Generator to an array', rBase, rExp, 1.2);
+        },
+        { timeout }
+    );
 
-    test('filter filter reduce', () => {
-        const getValues = () => range(0, 100000);
-        const fnBase = () => {
-            return [...getValues()]
-                .filter(a => !!(a & 1))
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        };
+    test(
+        'filter filter reduce',
+        () => {
+            const getValues = () => range(0, 100000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .filter((a) => !!(a & 1))
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(getValues())
-                .filter(a => !!(a & 1))
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        }
-        const rBase = measure(fnBase, 10);
-        const rExp = measure(fnExp, 10);
+            const fnExp = () => {
+                return GS.genSequence(getValues())
+                    .filter((a) => !!(a & 1))
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
+            const rBase = measure(fnBase, 10);
+            const rExp = measure(fnExp, 10);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('filter filter reduce', rBase, rExp, 1.4);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('filter filter reduce', rBase, rExp, 1.4);
+        },
+        { timeout }
+    );
 
-    test('filter slice filter reduce', () => {
-        const getValues = () => range(0, 100000);
-        const fnBase = () => {
-            return [...getValues()]
-                .filter(a => !!(a & 1))
-                .slice(1000)
-                .slice(0,10000)
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        };
+    test(
+        'filter slice filter reduce',
+        () => {
+            const getValues = () => range(0, 100000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .filter((a) => !!(a & 1))
+                    .slice(1000)
+                    .slice(0, 10000)
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(getValues())
-                .filter(a => !!(a & 1))
-                .skip(1000)
-                .take(10000)
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        }
-        const rBase = measure(fnBase, 10);
-        const rExp = measure(fnExp, 10);
+            const fnExp = () => {
+                return GS.genSequence(getValues())
+                    .filter((a) => !!(a & 1))
+                    .skip(1000)
+                    .take(10000)
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
+            const rBase = measure(fnBase, 10);
+            const rExp = measure(fnExp, 10);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('filter slice filter reduce', rBase, rExp, 1);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('filter slice filter reduce', rBase, rExp, 1);
+        },
+        { timeout }
+    );
 
-    test('filter slice filter reduce (1000)', () => {
-        const getValues = () => range(0, 1000);
-        const fnBase = () => {
-            return [...getValues()]
-                .filter(a => !!(a & 1))
-                .slice(100)
-                .slice(0,500)
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        };
+    test(
+        'filter slice filter reduce (1000)',
+        () => {
+            const getValues = () => range(0, 1000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .filter((a) => !!(a & 1))
+                    .slice(100)
+                    .slice(0, 500)
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(getValues())
-                .filter(a => !!(a & 1))
-                .skip(100)
-                .take(500)
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        }
-        const rBase = measure(fnBase, 1000);
-        const rExp = measure(fnExp, 1000);
+            const fnExp = () => {
+                return GS.genSequence(getValues())
+                    .filter((a) => !!(a & 1))
+                    .skip(100)
+                    .take(500)
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
+            const rBase = measure(fnBase, 1000);
+            const rExp = measure(fnExp, 1000);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
+        },
+        { timeout }
+    );
 
-    test('builder filter slice filter reduce (1000)', () => {
-        const getValues = () => range(0, 1000);
-        const fnBase = () => {
-            return [...getValues()]
-                .filter(a => !!(a & 1))
-                .slice(100)
-                .slice(0,500)
-                .filter(a => !!(a & 2))
-                .reduce((a, b) => a + b);
-        };
+    test(
+        'builder filter slice filter reduce (1000)',
+        () => {
+            const getValues = () => range(0, 1000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .filter((a) => !!(a & 1))
+                    .slice(100)
+                    .slice(0, 500)
+                    .filter((a) => !!(a & 2))
+                    .reduce((a, b) => a + b);
+            };
 
-        const fnExp = () => builder
-                .filter<number>(a => !!(a & 1))
-                .skip(100)
-                .take(500)
-                .filter(a => !!(a & 2))
-                .build(getValues())
-                .reduce((a, b) => a + b);
-        const rBase = measure(fnBase, 1000);
-        const rExp = measure(fnExp, 1000);
+            const fnExp = () =>
+                builder
+                    .filter<number>((a) => !!(a & 1))
+                    .skip(100)
+                    .take(500)
+                    .filter((a) => !!(a & 2))
+                    .build(getValues())
+                    .reduce((a, b) => a + b);
+            const rBase = measure(fnBase, 1000);
+            const rExp = measure(fnExp, 1000);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('builder filter slice filter reduce (1000)', rBase, rExp, 2, 3);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('builder filter slice filter reduce (1000)', rBase, rExp, 2, 3);
+        },
+        { timeout }
+    );
 
-    test('filter slice filter first (1000)', () => {
-        const getValues = () => range(0, 1000);
-        const fnBase = () => {
-            return [...getValues()]
-                .filter(a => !!(a & 1))
-                .slice(100)
-                .slice(0,500)
-                .filter(a => !!(a & 2))
-                .filter(a => !!(a & 200))
-                .shift();
-        };
+    test(
+        'filter slice filter first (1000)',
+        () => {
+            const getValues = () => range(0, 1000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .filter((a) => !!(a & 1))
+                    .slice(100)
+                    .slice(0, 500)
+                    .filter((a) => !!(a & 2))
+                    .filter((a) => !!(a & 200))
+                    .shift();
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(getValues())
-                .filter(a => !!(a & 1))
-                .skip(100)
-                .take(500)
-                .filter(a => !!(a & 2))
-                .filter(a => !!(a & 200))
-                .first();
-        }
-        const rBase = measure(fnBase, 1000);
-        const rExp = measure(fnExp, 1000);
+            const fnExp = () => {
+                return GS.genSequence(getValues())
+                    .filter((a) => !!(a & 1))
+                    .skip(100)
+                    .take(500)
+                    .filter((a) => !!(a & 2))
+                    .filter((a) => !!(a & 200))
+                    .first();
+            };
+            const rBase = measure(fnBase, 1000);
+            const rExp = measure(fnExp, 1000);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('filter slice filter first (1000)', rBase, rExp, 0.5);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('filter slice filter first (1000)', rBase, rExp, 0.5);
+        },
+        { timeout }
+    );
 
-    test('concatMap', () => {
-        const getValues = () => range(0, 100);
-        const getNested = () => range(0, 1000);
-        const fnBase = () => {
-            return [...getValues()]
-                .map(() => [...getNested()])
-                .reduce((a, b) => a.concat(b))
-                .filter(a => !!(a & 1))
-                .map(a => a + 10)
-                .filter(a => a < 500)
-                .slice(100)
-                .slice(0, 10000)
-                .reduce((a, b) => a + b);
-        };
+    test(
+        'concatMap',
+        () => {
+            const getValues = () => range(0, 100);
+            const getNested = () => range(0, 1000);
+            const fnBase = () => {
+                return [...getValues()]
+                    .map(() => [...getNested()])
+                    .reduce((a, b) => a.concat(b))
+                    .filter((a) => !!(a & 1))
+                    .map((a) => a + 10)
+                    .filter((a) => a < 500)
+                    .slice(100)
+                    .slice(0, 10000)
+                    .reduce((a, b) => a + b);
+            };
 
-        const fnExp = () => {
-            return GS.genSequence(getValues())
-                .concatMap(() => getNested())
-                .filter(a => !!(a & 1))
-                .map(a => a + 10)
-                .filter(a => a < 500)
-                .skip(100)
-                .take(10000)
-                .reduce((a, b) => a + b);
-        }
-        const rBase = measure(fnBase, 100);
-        const rExp = measure(fnExp, 100);
+            const fnExp = () => {
+                return GS.genSequence(getValues())
+                    .concatMap(() => getNested())
+                    .filter((a) => !!(a & 1))
+                    .map((a) => a + 10)
+                    .filter((a) => a < 500)
+                    .skip(100)
+                    .take(10000)
+                    .reduce((a, b) => a + b);
+            };
+            const rBase = measure(fnBase, 100);
+            const rExp = measure(fnExp, 100);
 
-        expect(rExp.result).toBe(rBase.result);
-        assertExpectedRatio('concatMap', rBase, rExp, 1);
-    });
+            expect(rExp.result).toBe(rBase.result);
+            assertExpectedRatio('concatMap', rBase, rExp, 1);
+        },
+        { timeout }
+    );
 });
-
 
 function* range(start: number, stop: number, step?: number) {
     const diff = stop - start;
@@ -187,7 +217,6 @@ function* range(start: number, stop: number, step?: number) {
         yield i;
     }
 }
-
 
 interface Measurement<T> {
     result: T | undefined;
@@ -205,8 +234,8 @@ function measure<T>(fn: () => T, count = 1): Measurement<T> {
         avg: 0,
         min: undefined,
         max: undefined,
-        count
-    }
+        count,
+    };
     for (let i = 0; i < count; ++i) {
         const t = process.hrtime();
         measurement.result = fn();

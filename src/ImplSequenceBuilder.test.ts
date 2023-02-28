@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest';
 import { ImplSequenceBuilder } from './ImplSequenceBuilder';
 import { map, filter } from './operators';
 import { scanMap } from './operators/operatorsBase';
@@ -91,6 +92,6 @@ describe('Verify ImplSequenceBuilder', () => {
         const a = [1, 2, 3];
         const b = getBuilder().combine(fn, a);
         const i = b.build(a);
-        expect([...i]).toEqual(a.map(a => a * 2));
+        expect([...i]).toEqual(a.map((a) => a * 2));
     });
 });
