@@ -1,5 +1,16 @@
 # Release Notes
 
+## [5.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v4.0.3...v5.0.0) (2023-02-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* Support ESM ([#283](https://github.com/streetsidesoftware/GenSequence/issues/283))
+
+### Features
+
+* Support ESM ([#283](https://github.com/streetsidesoftware/GenSequence/issues/283)) ([af15160](https://github.com/streetsidesoftware/GenSequence/commit/af15160385bcde7642cf10d1a0ea2ec3055897c4))
+
 ## [4.0.3](https://github.com/streetsidesoftware/GenSequence/compare/v4.0.2...v4.0.3) (2022-12-08)
 
 ### Bug Fixes
