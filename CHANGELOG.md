@@ -1,5 +1,12 @@
 # Release Notes
 
+## [5.0.1](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.0...v5.0.1) (2023-02-28)
+
+
+### Bug Fixes
+
+* do not package `.tsbuildInfo` ([4ae236f](https://github.com/streetsidesoftware/GenSequence/commit/4ae236fff538ff43ab03ee0070a680969b471694))
+
 ## [5.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v4.0.3...v5.0.0) (2023-02-28)
 
 
