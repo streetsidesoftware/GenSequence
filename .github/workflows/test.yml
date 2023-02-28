@@ -15,6 +15,7 @@ jobs:
           - 14.x
           - 16.x
           - 18.x
+          - 19.x
 
         os:
           - ubuntu-latest
@@ -22,11 +23,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Setup
+        uses: ./.github/actions/setup
         with:
           node-version: ${{ matrix.node-version }}
-      - run: |
+
+      - name: Install / build / test
+        run: |
           npm install
           npm build
           npm test
@@ -36,6 +39,8 @@ jobs:
 
     strategy:
       matrix:
+        node-version:
+          - 18.x
         os:
           # - ubuntu-latest
           - windows-latest
@@ -43,7 +48,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - run: |
+
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install / build / test
+        run: |
           npm install
           npm build
           npm test
