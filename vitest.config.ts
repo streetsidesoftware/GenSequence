@@ -9,7 +9,7 @@ export default defineConfig({
             clean: true,
             all: true,
             reportsDirectory: 'coverage',
-            reporter: ['html', 'text', 'json'],
+            reporter: ['html', 'text', 'json', 'lcov'],
             exclude: ['.coverage/**', 'coverage', '_snapshots_', '.eslint*', 'vitest*', '.prettier*', '**/*.test.*', '**/*.perf.*'],
         },
     },
