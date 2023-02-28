@@ -31,7 +31,7 @@ jobs:
       - name: Install / build / test
         run: |
           npm install
-          npm build
+          npm run build
           npm test
 
   test-os:
@@ -57,5 +57,5 @@ jobs:
       - name: Install / build / test
         run: |
           npm install
-          npm build
+          npm run build
           npm test
