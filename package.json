@@ -18,23 +18,20 @@
     "typescript": "^4.9.4"
   },
   "scripts": {
-    "prepublish": "npm run clean-build",
-    "prepublishOnly": "npm test",
+    "prepublishOnly": "npm run clean-build",
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf dist",
     "test": "jest",
     "perf": "jest --testMatch '**/*.perf.ts'",
-    "test-all": "jest",
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
     "coverage": "npm test -- --coverage",
     "coverage-coveralls": "cat coverage/lcov.info | coveralls",
-    "travis-coverage": "npm run coverage &&  npm run coverage-coveralls",
     "update-packages": "npx npm-check-updates -t minor -u && rimraf node_modules package-lock.json && npm i"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jason3S/GenSequence.git"
+    "url": "git+https://github.com/streetsidesoftware/GenSequence.git"
   },
   "keywords": [
     "generators",
@@ -57,7 +54,7 @@
   "author": "Jason Dent",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Jason3S/GenSequence/issues"
+    "url": "https://github.com/streetsidesoftware/GenSequence/issues"
   },
-  "homepage": "https://github.com/Jason3S/GenSequence#readme"
+  "homepage": "https://github.com/streetsidesoftware/GenSequence#readme"
 }
