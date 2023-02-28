@@ -8,7 +8,7 @@ Javascript [Iterators and Generators](https://developer.mozilla.org/en/docs/Web/
 are very exciting and provide some powerful new ways to solve programming problems.
 
 The purpose of this library is to make using the results of a generator function easier.
-It is not intended as a replacement for arrays and the convenient [...genFn()] notation.
+It is not intended as a replacement for arrays and the convenient `[...genFn()]` notation.
 GenSequence is useful for cases where you might not want an array of all possible values.
 GenSequence deals efficiently with large sequences because only one element at a time is evaluated.
 Intermediate arrays are not created, saving memory and cpu cycles.
@@ -24,19 +24,19 @@ npm install -S gensequence
 ### Javascript
 
 ```
-import genSequence from "gensequence";
+const { genSequence } = require("gensequence");
 ```
 
 or
 
 ```
-import {genSequence} from "gensequence";
+import { genSequence } from "gensequence";
 ```
 
 ### Typescript
 
 ```
-import {genSequence} from 'gensequence';
+import { genSequence } from 'gensequence';
 ```
 
 ## Examples
