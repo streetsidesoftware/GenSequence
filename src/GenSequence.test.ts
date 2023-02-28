@@ -1,14 +1,14 @@
+import { describe, expect, test } from 'vitest';
 import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence';
 import * as op from './operators/operatorsBase';
 import * as o from './operators';
 
 describe('GenSequence Tests', () => {
-
     interface Person {
-        name: string,
-        age: number,
-        height: number,
-        weight: number,
+        name: string;
+        age: number;
+        height: number;
+        weight: number;
     }
     type PersonKeys = keyof Person;
 
@@ -26,15 +26,15 @@ describe('GenSequence Tests', () => {
     test('tests mapping values', () => {
         const values = [1, 2, 3, 4, 5];
         const gs = genSequence(values[Symbol.iterator]());
-        const result = gs.map(a => 2 * a).toArray();
-        expect(result).toEqual(values.map(a => 2 * a));
+        const result = gs.map((a) => 2 * a).toArray();
+        expect(result).toEqual(values.map((a) => 2 * a));
     });
 
     test('tests filtering a sequence', () => {
         const values = [1, 2, 3, 4, 5];
         const gs = genSequence(values[Symbol.iterator]());
-        const result = gs.filter(a => a % 2 === 1).toArray();
-        expect(result).toEqual(values.filter(a => a % 2 === 1));
+        const result = gs.filter((a) => a % 2 === 1).toArray();
+        expect(result).toEqual(values.filter((a) => a % 2 === 1));
     });
 
     test('tests reducing a sequence w/o init', () => {
@@ -59,7 +59,7 @@ describe('GenSequence Tests', () => {
     });
 
     test('tests reducing asynchronously a sequence w/o init', async () => {
-        const values = [1, 2, 3, 4, 5].map(x => Promise.resolve<number>(x));
+        const values = [1, 2, 3, 4, 5].map((x) => Promise.resolve<number>(x));
         const gs = genSequence(values);
         const result = await gs.reduceAsync((a, v) => a + v);
         expect(result).toEqual(15);
@@ -98,13 +98,18 @@ describe('GenSequence Tests', () => {
     test('tests concat', () => {
         const a = [1, 2, 3];
         const b = ['a', 'b', 'c', 'd'];
-        const gs = genSequence(a).map(a => '' + a).concat(b);
+        const gs = genSequence(a)
+            .map((a) => '' + a)
+            .concat(b);
         expect(gs.toArray()).toEqual(['1', '2', '3', 'a', 'b', 'c', 'd']);
     });
 
-
     test('tests with maps', () => {
-        const m = new Map([['a', 1], ['b', 2], ['c', 3]]);
+        const m = new Map([
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+        ]);
         const gs = genSequence(m);
         expect(gs.toArray()).toEqual([...m.entries()]);
         // Try a second time.
@@ -126,8 +131,8 @@ describe('GenSequence Tests', () => {
     test('tests reUsing Sequences', () => {
         const values = [1, 2, 3];
         const gs = genSequence(values);
-        const a = gs.map(a => 2 * a);
-        const b = gs.map(a => 3 + a);
+        const a = gs.map((a) => 2 * a);
+        const b = gs.map((a) => 3 + a);
         expect(gs.toArray()).toEqual(values);
         expect(a.toArray()).toEqual([2, 4, 6]);
         expect(b.toArray()).toEqual([4, 5, 6]);
@@ -135,7 +140,7 @@ describe('GenSequence Tests', () => {
 
     test('test concatMap', () => {
         const values = [1, 2, 3];
-        const gs = genSequence(values).concatMap(a => [a, a, a]);
+        const gs = genSequence(values).concatMap((a) => [a, a, a]);
         expect(gs.toArray()).toEqual([1, 1, 1, 2, 2, 2, 3, 3, 3]);
     });
 
@@ -157,9 +162,9 @@ describe('GenSequence Tests', () => {
         const values = [1, 2, 3, 4, 5];
         expect(genSequence(values).first()).toBe(1);
         expect(genSequence(values).skip(2).first()).toBe(3);
-        expect(genSequence(values).first(a => a > 3.5)).toBe(4);
-        expect(genSequence(values).first(a => a > 100)).toBeUndefined();
-        expect(genSequence(values).first(a => a > 100, -1)).toBe(-1);
+        expect(genSequence(values).first((a) => a > 3.5)).toBe(4);
+        expect(genSequence(values).first((a) => a > 100)).toBeUndefined();
+        expect(genSequence(values).first((a) => a > 100, -1)).toBe(-1);
     });
 
     test('tests object to sequence', () => {
@@ -168,23 +173,30 @@ describe('GenSequence Tests', () => {
             age: 22,
             height: 185,
             weight: 87,
-        }
+        };
         const i = sequenceFromObject(person);
         const keys = Object.keys(person) as PersonKeys[];
-        expect(i.map(kvp => kvp[0]).toArray().sort()).toEqual(keys.sort());
+        expect(
+            i
+                .map((kvp) => kvp[0])
+                .toArray()
+                .sort()
+        ).toEqual(keys.sort());
         const j = sequenceFromObject(person);
-        expect(j.map(kvp => kvp[1]).toArray().sort()).toEqual(keys.map((k: PersonKeys) => person[k]).sort());
+        expect(
+            j
+                .map((kvp) => kvp[1])
+                .toArray()
+                .sort()
+        ).toEqual(keys.map((k: PersonKeys) => person[k]).sort());
         expect([...objectToSequence(person)]).toEqual([...sequenceFromObject(person)]);
     });
 
-    test(
-        'tests that a sequence can be reused if it is based upon an array',
-        () => {
-            const values = [1,2,3,4,5];
-            const i = genSequence(values);
-            expect(i.toArray()).toEqual(i.toArray());
-        }
-    );
+    test('tests that a sequence can be reused if it is based upon an array', () => {
+        const values = [1, 2, 3, 4, 5];
+        const i = genSequence(values);
+        expect(i.toArray()).toEqual(i.toArray());
+    });
 
     test('tests sequenceFromRegExpMatch', () => {
         const tests: [RegExp, string, string[]][] = [
@@ -194,10 +206,12 @@ describe('GenSequence Tests', () => {
             [/a/gi, 'AAAA', ['A', 'A', 'A', 'A']],
             [/a/gi, 'AB\nA\nCA\nDA\n', ['A', 'A', 'A', 'A']],
             [/^.?a.?$/gim, 'AB\nA\nCA\nDA\n', ['AB', 'A', 'CA', 'DA']],
-        ]
-        tests.forEach(test => {
+        ];
+        tests.forEach((test) => {
             const [reg, str, expected] = test;
-            const result = sequenceFromRegExpMatch(reg, str).map(a => a[0]).toArray();
+            const result = sequenceFromRegExpMatch(reg, str)
+                .map((a) => a[0])
+                .toArray();
             // test.toString()
             expect(result).toEqual(expected);
         });
@@ -212,29 +226,30 @@ describe('GenSequence Tests', () => {
     test('tests scan', () => {
         // let only the first occurrence of a value through.
         const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
-            .scan((acc, value) => {
-                const duplicate = acc.s.has(value);
-                acc.s.add(value);
-                return {value, duplicate, s: acc.s};
-            }, {value: 0, s: new Set<number>(), duplicate: true})
-            .filter(acc => !acc.duplicate)
-            .map(acc => acc.value);
+            .scan(
+                (acc, value) => {
+                    const duplicate = acc.s.has(value);
+                    acc.s.add(value);
+                    return { value, duplicate, s: acc.s };
+                },
+                { value: 0, s: new Set<number>(), duplicate: true }
+            )
+            .filter((acc) => !acc.duplicate)
+            .map((acc) => acc.value);
         const result = seq.toArray();
         expect(result).toEqual([1, 2, 3]);
     });
 
     test('tests scan -- running sum', () => {
         // let only the first occurrence of a value through.
-        const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
-            .scan((acc, value) => acc + value);
+        const seq = genSequence([1, 2, 1, 3, 2, 1, 3]).scan((acc, value) => acc + value);
         const result = seq.toArray();
         expect(result).toEqual([1, 3, 4, 7, 9, 10, 13]);
     });
 
     test('tests scanMap -- running sum', () => {
         // let only the first occurrence of a value through.
-        const seq = genSequence([1, 2, 1, 3, 2, 1, 3])
-        .map(op.scanMap<number>((acc, value) => acc + value));
+        const seq = genSequence([1, 2, 1, 3, 2, 1, 3]).map(op.scanMap<number>((acc, value) => acc + value));
         const result = seq.toArray();
         expect(result).toEqual([1, 3, 4, 7, 9, 10, 13]);
     });
@@ -242,8 +257,7 @@ describe('GenSequence Tests', () => {
     test('tests scan with no values', () => {
         // let only the first occurrence of a value through.
         const values: number[] = [];
-        const seq = genSequence(values)
-            .scan((acc, value) => acc + value);
+        const seq = genSequence(values).scan((acc, value) => acc + value);
         const result = seq.toArray();
         expect(result).toEqual([]);
     });
@@ -256,7 +270,7 @@ describe('GenSequence Tests', () => {
 
     test('test reusing getting the iterator from a sequence', () => {
         const values = [1, 2, 3, 4];
-        const sequence: Sequence<number> = genSequence(values).map(n => n);
+        const sequence: Sequence<number> = genSequence(values).map((n) => n);
         // do it twice as an iterable
         expect([...op.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
         expect([...op.makeIterable(sequence[Symbol.iterator]())]).toEqual(values);
@@ -268,23 +282,23 @@ describe('GenSequence Tests', () => {
 
     test('test any with match', () => {
         const values = [1, 2, 3, 4];
-        expect(genSequence(values).any(a => a > 3)).toBe(true);
+        expect(genSequence(values).any((a) => a > 3)).toBe(true);
     });
 
     test('test any with no match', () => {
         const values = [0, 1, 2, 3];
-        expect(genSequence(values).any(a => a > 3)).toBe(false);
+        expect(genSequence(values).any((a) => a > 3)).toBe(false);
     });
 
     test('test any with empty set', () => {
         const values: number[] = [];
-        expect(genSequence(values).any(a => a > 3)).toBe(false);
+        expect(genSequence(values).any((a) => a > 3)).toBe(false);
     });
 
     test('test any exits early', () => {
         const values = [1, 2, 3, 4];
         let count: number = 0;
-        genSequence(values).any(a => {
+        genSequence(values).any((a) => {
             count++;
             return a == 3;
         });
@@ -293,23 +307,23 @@ describe('GenSequence Tests', () => {
 
     test('test all where all values match', () => {
         const values = [1, 2, 3, 4];
-        expect(genSequence(values).all(a => a >= 0)).toBe(true);
+        expect(genSequence(values).all((a) => a >= 0)).toBe(true);
     });
 
     test('test all with one value that does not match', () => {
         const values = [0, 1];
-        expect(genSequence(values).all(a => a != 1)).toBe(false);
+        expect(genSequence(values).all((a) => a != 1)).toBe(false);
     });
 
     test('test all with empty set', () => {
         const values: number[] = [];
-        expect(genSequence(values).all(a => a > 3)).toBe(true);
+        expect(genSequence(values).all((a) => a > 3)).toBe(true);
     });
 
     test('test all exits early', () => {
         const values = [1, 2, 3, 4];
         let count: number = 0;
-        genSequence(values).all(a => {
+        genSequence(values).all((a) => {
             count++;
             return a < 3;
         });
@@ -338,20 +352,24 @@ describe('GenSequence Tests', () => {
 
     test('test max on empty set returns undefined', () => {
         const values: number[] = [];
-        expect(genSequence(values).max()).toBeUndefined()
+        expect(genSequence(values).max()).toBeUndefined();
     });
 
     test('test max on string values', () => {
-        const values = ["one", "two"];
-        expect(genSequence(values).max()).toBe("two");
+        const values = ['one', 'two'];
+        expect(genSequence(values).max()).toBe('two');
     });
 
     test('test max on object values', () => {
         const smaller: any = {
-            valueOf: function() { return 1; }
+            valueOf: function () {
+                return 1;
+            },
         };
         const bigger: any = {
-            valueOf: function() { return 2; }
+            valueOf: function () {
+                return 2;
+            },
         };
         const values = [smaller, bigger];
         expect(genSequence(values).max()).toBe(bigger);
@@ -400,11 +418,11 @@ describe('GenSequence Tests', () => {
     test('test max with selector', () => {
         const one: any = {
             age: 1,
-            animal: "zebra"
+            animal: 'zebra',
         };
         const two: any = {
             age: 2,
-            animal: "alligator"
+            animal: 'alligator',
         };
         const values = [one, two];
         expect(genSequence(values).max((v) => v.age)).toBe(two);
@@ -433,20 +451,24 @@ describe('GenSequence Tests', () => {
 
     test('test min on empty set returns undefined', () => {
         const values: number[] = [];
-        expect(genSequence(values).min()).toBeUndefined()
+        expect(genSequence(values).min()).toBeUndefined();
     });
 
     test('test min on string values', () => {
-        const values = ["one", "two"];
-        expect(genSequence(values).min()).toBe("one");
+        const values = ['one', 'two'];
+        expect(genSequence(values).min()).toBe('one');
     });
 
     test('test min on object values', () => {
         const smaller: any = {
-            valueOf: function() { return 1; }
+            valueOf: function () {
+                return 1;
+            },
         };
         const bigger: any = {
-            valueOf: function() { return 2; }
+            valueOf: function () {
+                return 2;
+            },
         };
         const values = [smaller, bigger];
         expect(genSequence(values).min()).toBe(smaller);
@@ -495,11 +517,11 @@ describe('GenSequence Tests', () => {
     test('test min with selector', () => {
         const one: any = {
             age: 1,
-            animal: "zebra"
+            animal: 'zebra',
         };
         const two: any = {
             age: 2,
-            animal: "alligator"
+            animal: 'alligator',
         };
         const values = [one, two];
         expect(genSequence(values).min((v) => v.age)).toBe(one);
@@ -531,7 +553,7 @@ describe('GenSequence Tests', () => {
 
     test('count twice on same generated sequence', () => {
         const values = [1, 2, 3, 4, 5, 6];
-        const filteredSequence = genSequence(values).filter(a => !!(a % 2));
+        const filteredSequence = genSequence(values).filter((a) => !!(a % 2));
         const firstCount = filteredSequence.count();
         const secondCount = filteredSequence.count();
         expect(firstCount).toBe(secondCount);
@@ -549,10 +571,17 @@ describe('GenSequence Tests', () => {
 
     test('tests forEach', () => {
         const values = [1, 2, 3, 4, 5, 60];
-        const seq = genSequence(values)
-        const expected = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 60]];
+        const seq = genSequence(values);
+        const expected = [
+            [0, 1],
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 5],
+            [5, 60],
+        ];
         let results: [number, number][] = [];
-        seq.forEach((v, i) => results.push([i, v]))
+        seq.forEach((v, i) => results.push([i, v]));
         expect(results).toEqual(expected);
     });
 
@@ -560,7 +589,7 @@ describe('GenSequence Tests', () => {
         const values = [...genSequence(fib()).take(5)];
         const i = genSequence(values);
         const result = [];
-        for (let r = i.next(); !r.done; r = i.next() ) {
+        for (let r = i.next(); !r.done; r = i.next()) {
             r.done || result.push(r.value);
         }
         expect(result).toEqual(values);
@@ -570,12 +599,12 @@ describe('GenSequence Tests', () => {
         const values = [...genSequence(fib()).take(5)];
         expect([...genSequence(values).pipe()]).toEqual(values);
         const seq = genSequence(values).pipe(
-            o.map(n => n * 2),
-            o.map(n => n.toString()),
-            o.map(s => s + '0'),
-            o.map(s => parseInt(s)),
+            o.map((n) => n * 2),
+            o.map((n) => n.toString()),
+            o.map((s) => s + '0'),
+            o.map((s) => parseInt(s))
         );
-        expect([...seq]).toEqual(values.map(v => v * 20));
+        expect([...seq]).toEqual(values.map((v) => v * 20));
     });
 });
 

@@ -1,11 +1,12 @@
+import { describe, expect, test } from 'vitest';
+
 import * as op from './operatorsBase';
 import { toIterator } from '../util/util';
 
 describe('Tests Operators', () => {
     test('tests scanMap -- running sum', () => {
         // let only the first occurrence of a value through.
-        const result = [1, 2, 1, 3, 2, 1, 3]
-        .map(op.scanMap<number>((acc, value) => acc + value));
+        const result = [1, 2, 1, 3, 2, 1, 3].map(op.scanMap<number>((acc, value) => acc + value));
         expect(result).toEqual([1, 3, 4, 7, 9, 10, 13]);
     });
 
@@ -18,8 +19,8 @@ describe('Tests Operators', () => {
     test('concat iterables', () => {
         const a = [1, 2, 3];
         const b = [4, 5, 6];
-        const ia = forceIterable(a)
-        const ib = forceIterable(b)
+        const ia = forceIterable(a);
+        const ib = forceIterable(b);
         expect([...op.concat(ia, ib)]).toEqual(a.concat(b));
     });
 
@@ -39,13 +40,13 @@ describe('Tests Operators', () => {
     test('makeIterable from Iterable', () => {
         const a = [1, 2, 3];
         const i = op.makeIterable(toIterable(a));
-        expect([...i,...i]).toEqual(a);
+        expect([...i, ...i]).toEqual(a);
     });
 
     test('makeIterable from Iterator', () => {
         const a = [1, 2, 3];
         const i = op.makeIterable(toIterator(a));
-        expect([...i,...i]).toEqual(a);
+        expect([...i, ...i]).toEqual(a);
     });
 
     test('makeAsyncIterable from Iterable', async () => {
@@ -107,7 +108,7 @@ describe('Tests Operators', () => {
     });
 
     test('reduceAsync nested promise', async () => {
-        const timeout = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
+        const timeout = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
         const toPromise = <T>(i: T) => timeout(0).then(() => i);
         const a = [1, 2, 3];
         const p = a.map(toPromise);
@@ -117,8 +118,8 @@ describe('Tests Operators', () => {
     });
 });
 
-function *forceIterable<T>(i: Iterable<T> | IterableIterator<T>): IterableIterator<T> {
-    yield *i;
+function* forceIterable<T>(i: Iterable<T> | IterableIterator<T>): IterableIterator<T> {
+    yield* i;
 }
 
 function* fib() {
@@ -134,35 +135,36 @@ function toIterable<T>(a: T[]): Iterable<T> {
     let used = false;
     const next = () => ({
         done: i >= a.length,
-        value: a[i++]
-    })
+        value: a[i++],
+    });
     const iterator = () => {
         if (used) {
-            throw 'Iterator Retry Error'
+            throw 'Iterator Retry Error';
         }
         used = true;
         return { next };
     };
     return {
-        [Symbol.iterator]: iterator
-    }
+        [Symbol.iterator]: iterator,
+    };
 }
 
 function toAsyncIterable<T>(a: T[]): AsyncIterable<T> {
     let i = 0;
     let used = false;
-    const next = () => Promise.resolve({
-        done: i >= a.length,
-        value: a[i++]
-    });
+    const next = () =>
+        Promise.resolve({
+            done: i >= a.length,
+            value: a[i++],
+        });
     const iterator = () => {
         if (used) {
-            throw 'Iterator Retry Error'
+            throw 'Iterator Retry Error';
         }
         used = true;
         return { next };
     };
     return {
-        [Symbol.asyncIterator]: iterator
-    }
+        [Symbol.asyncIterator]: iterator,
+    };
 }
