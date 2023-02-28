@@ -1,4 +1,4 @@
-import * as op from './operatorsBase';
+import * as op from './operatorsBase.js';
 
 import {
     AsyncIterableLike,
@@ -10,7 +10,7 @@ import {
     ReduceAsyncFunctionForAsyncIterator,
     ReduceFunction,
     ThenArg,
-} from '../types';
+} from '../types.js';
 
 /**
  * Operators used by Sequence
@@ -45,10 +45,7 @@ export function concatMap<T, U>(fn: (t: T) => IterableLike<U>): ChainFunction<T,
 /**
  * Combine two iterables together using fnMap function.
  */
-export function combine<T, U, V>(
-    fnMap: (t: T, u?: U) => V,
-    j: IterableLike<U>
-): ChainFunction<T, V> {
+export function combine<T, U, V>(fnMap: (t: T, u?: U) => V, j: IterableLike<U>): ChainFunction<T, V> {
     return (i: IterableLike<T>) => op.combine(i, j, fnMap);
 }
 
@@ -61,7 +58,7 @@ export function map<T, U>(fnMap: (t: T) => U): ChainFunction<T, U> {
 
 export function scan<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T): ChainFunction<T>;
 export function scan<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue: T): ChainFunction<T>;
-export function scan<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): ChainFunction<T, U>
+export function scan<T, U>(fnReduce: (prevValue: U, curValue: T, curIndex: number) => U, initValue: U): ChainFunction<T, U>;
 export function scan<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number) => T, initValue?: T): ChainFunction<T> {
     return (i: IterableLike<T>) => op.scan(i, fnReduce, initValue!);
 }
@@ -106,15 +103,33 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
     return (i: IterableLike<T>) => op.reduce(i, fnReduce, initialValue);
 }
 
-export function reduceAsync<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U>| Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunction<T, Promise<ThenArg<U>>>;
-export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>>
-export function reduceAsync<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunction<T, Promise<ThenArg<T>>> {
+export function reduceAsync<T, U>(
+    fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
+    initialValue?: ThenArg<U>
+): ReduceAsyncFunction<T, Promise<ThenArg<U>>>;
+export function reduceAsync<T>(
+    fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
+    initialValue?: ThenArg<T>
+): ReduceAsyncFunction<T, Promise<ThenArg<T>>>;
+export function reduceAsync<T>(
+    fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
+    initialValue?: ThenArg<T>
+): ReduceAsyncFunction<T, Promise<ThenArg<T>>> {
     return (i: IterableOfPromise<ThenArg<T>>) => op.reduceAsync(i, fnReduceAsync, initialValue);
 }
 
-export function reduceAsyncForAsyncIterator<T, U>(fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>, initialValue?: ThenArg<U>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<U>>>;
-export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>>
-export function reduceAsyncForAsyncIterator<T>(fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>, initialValue?: ThenArg<T>): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>> {
+export function reduceAsyncForAsyncIterator<T, U>(
+    fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
+    initialValue?: ThenArg<U>
+): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<U>>>;
+export function reduceAsyncForAsyncIterator<T>(
+    fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
+    initialValue?: ThenArg<T>
+): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>>;
+export function reduceAsyncForAsyncIterator<T>(
+    fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
+    initialValue?: ThenArg<T>
+): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>> {
     return (i: AsyncIterableLike<ThenArg<T>>) => op.reduceAsyncForAsyncIterator(i, fnReduceAsync, initialValue);
 }
 
@@ -124,15 +139,41 @@ export function pipe<T>(): PipeFunction<T>;
 export function pipe<T, T1>(fn0: PipeFunction<T, T1>): PipeFunction<T, T1>;
 export function pipe<T, T1, T2>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>): PipeFunction<T, T2>;
 export function pipe<T, T1, T2, T3>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>): PipeFunction<T, T3>;
-export function pipe<T, T1, T2, T3, T4>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>): PipeFunction<T, T4>;
-export function pipe<T, T1, T2, T3, T4, T5>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>, fn4: PipeFunction<T4, T5>): PipeFunction<T, T5>;
-export function pipe<T, T1, T2, T3, T4, T5, T6>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>, fn4: PipeFunction<T4, T5>, fn5: PipeFunction<T5, T6>): PipeFunction<T, T6>;
-export function pipe<T, T1, T2, T3, T4, T5, T6>(fn0: PipeFunction<T, T1>, fn1: PipeFunction<T1, T2>, fn2: PipeFunction<T2, T3>, fn3: PipeFunction<T3, T4>, fn4: PipeFunction<T4, T5>, fn5: PipeFunction<T5, T6>, ...fnRest: PipeFunction<T6, T6>[]): PipeFunction<T, T6>;
-export function pipe<T>(...fns: PipeFunction<T, T>[]): PipeFunction<T, T>  {
+export function pipe<T, T1, T2, T3, T4>(
+    fn0: PipeFunction<T, T1>,
+    fn1: PipeFunction<T1, T2>,
+    fn2: PipeFunction<T2, T3>,
+    fn3: PipeFunction<T3, T4>
+): PipeFunction<T, T4>;
+export function pipe<T, T1, T2, T3, T4, T5>(
+    fn0: PipeFunction<T, T1>,
+    fn1: PipeFunction<T1, T2>,
+    fn2: PipeFunction<T2, T3>,
+    fn3: PipeFunction<T3, T4>,
+    fn4: PipeFunction<T4, T5>
+): PipeFunction<T, T5>;
+export function pipe<T, T1, T2, T3, T4, T5, T6>(
+    fn0: PipeFunction<T, T1>,
+    fn1: PipeFunction<T1, T2>,
+    fn2: PipeFunction<T2, T3>,
+    fn3: PipeFunction<T3, T4>,
+    fn4: PipeFunction<T4, T5>,
+    fn5: PipeFunction<T5, T6>
+): PipeFunction<T, T6>;
+export function pipe<T, T1, T2, T3, T4, T5, T6>(
+    fn0: PipeFunction<T, T1>,
+    fn1: PipeFunction<T1, T2>,
+    fn2: PipeFunction<T2, T3>,
+    fn3: PipeFunction<T3, T4>,
+    fn4: PipeFunction<T4, T5>,
+    fn5: PipeFunction<T5, T6>,
+    ...fnRest: PipeFunction<T6, T6>[]
+): PipeFunction<T, T6>;
+export function pipe<T>(...fns: PipeFunction<T, T>[]): PipeFunction<T, T> {
     return (i: IterableLike<T>) => {
         for (const fn of fns) {
             i = fn ? fn(i) : i;
         }
         return i;
-    }
+    };
 }

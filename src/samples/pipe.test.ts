@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import { builder } from '..';
-import { pipe, map } from '../operators';
+import { builder } from '../builder.js';
+import { pipe, map } from '../operators/index.js';
 
 describe('Various usages of builder', () => {
     test('', () => {

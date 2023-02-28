@@ -1,9 +1,9 @@
-import { Sequence, GenIterable } from './types';
-import { toIterableIterator } from './util/util';
-import { ImplSequence } from './ImplSequence';
+import { Sequence, GenIterable } from './types.js';
+import { toIterableIterator } from './util/util.js';
+import { ImplSequence } from './ImplSequence.js';
 
-export { Sequence, GenIterable, AsyncGenIterable } from './types';
-export { toIterableIterator } from './util/util';
+export { Sequence, GenIterable, AsyncGenIterable } from './types.js';
+export { toIterableIterator } from './util/util.js';
 
 export interface SequenceCreator<T> {
     (i: GenIterable<T>): Sequence<T>;

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 
-import * as match from './match';
+import * as match from './match.js';
 
 describe('validate match', () => {
     test('tests the set of words', () => {

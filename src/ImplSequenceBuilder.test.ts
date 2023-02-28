@@ -1,8 +1,8 @@
 import { describe, expect, test } from 'vitest';
-import { ImplSequenceBuilder } from './ImplSequenceBuilder';
-import { map, filter } from './operators';
-import { scanMap } from './operators/operatorsBase';
-import { builder } from './builder';
+import { ImplSequenceBuilder } from './ImplSequenceBuilder.js';
+import { map, filter } from './operators/index.js';
+import { scanMap } from './operators/operatorsBase.js';
+import { builder } from './builder.js';
 
 describe('Verify ImplSequenceBuilder', () => {
     function getBuilder() {

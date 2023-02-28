@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
-import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence';
-import * as op from './operators/operatorsBase';
-import * as o from './operators';
+import { genSequence, sequenceFromObject, sequenceFromRegExpMatch, objectToSequence, Sequence } from './GenSequence.js';
+import * as op from './operators/operatorsBase.js';
+import * as o from './operators/index.js';
 
 describe('GenSequence Tests', () => {
     interface Person {

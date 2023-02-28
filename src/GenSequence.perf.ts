@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
-import * as GS from './GenSequence';
-import { builder } from '.';
+import * as GS from './GenSequence.js';
+import { builder } from './index.js';
 
 const timeout = 100000;
 

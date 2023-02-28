@@ -1,6 +1,6 @@
-import { SequenceBuilder, ChainFunction, LazyIterable, Sequence } from './types';
-import { pipe, filter, skip, take, concat, concatMap, combine, map, scan } from './operators';
-import { ImplSequence } from './ImplSequence';
+import { SequenceBuilder, ChainFunction, LazyIterable, Sequence } from './types.js';
+import { pipe, filter, skip, take, concat, concatMap, combine, map, scan } from './operators/index.js';
+import { ImplSequence } from './ImplSequence.js';
 
 export class ImplSequenceBuilder<S, T = S> implements SequenceBuilder<S, T> {
     private operators: ChainFunction<S, T>[] = [];
