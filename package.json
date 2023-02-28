@@ -77,6 +77,8 @@
   "files": [
     "dist/",
     "!**/*.tsbuildInfo",
+    "!dist/esm/**/*.js",
+    "!dist/esm/**/*.ts",
     "!**/samples",
     "!**/*.map",
     "!**/*.test.*",
