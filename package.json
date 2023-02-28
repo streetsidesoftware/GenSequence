@@ -39,6 +39,7 @@
     "@tsconfig/node14": "^1.0.3",
     "@types/node": "^18.11.11",
     "@vitest/coverage-istanbul": "^0.29.1",
+    "prettier": "^2.8.4",
     "rimraf": "^4.1.1",
     "ts2mjs": "^1.1.1",
     "typescript": "^4.9.5",
@@ -53,6 +54,8 @@
     "build": "tsc -b . && ts2mjs dist/esm",
     "build:esm": "tsc -p tsconfig.esm.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
+    "lint": "npm run lint:prettier",
+    "lint:prettier": "prettier . -w",
     "watch": "tsc -w -p .",
     "coverage": "npm test -- --coverage",
     "update-packages": "npx npm-check-updates -t minor -u && rimraf node_modules package-lock.json && npm i"
@@ -73,7 +76,6 @@
   ],
   "files": [
     "dist/",
-    "operators.js",
     "!**/samples",
     "!**/*.map",
     "!**/*.test.*",
