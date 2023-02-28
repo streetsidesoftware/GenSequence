@@ -1,7 +1,6 @@
 # GenSequence
 
-[![Build Status](https://travis-ci.org/streetsidesoftware/GenSequence.svg?branch=master)](https://travis-ci.org/streetsidesoftware/GenSequence)
-[![Coverage Status](https://coveralls.io/repos/github/streetsidesoftware/GenSequence/badge.svg?branch=master)](https://coveralls.io/github/streetsidesoftware/GenSequence?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/streetsidesoftware/GenSequence/badge.svg?branch=main)](https://coveralls.io/github/streetsidesoftware/GenSequence?branch=main)
 
 Small library to simplify working with Generators and Iterators in Javascript / Typescript
 
