@@ -43,7 +43,7 @@
     "rimraf": "^4.1.1",
     "ts2mjs": "^1.1.1",
     "typescript": "^5.1.3",
-    "vitest": "^0.29.1"
+    "vitest": "^0.31.4"
   },
   "scripts": {
     "prepublishOnly": "npm run clean-build",
