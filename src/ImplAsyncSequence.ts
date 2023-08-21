@@ -14,7 +14,7 @@ export class ImplAsyncSequence<T> implements AsyncSequence<T> {
 
     reduceAsync<U>(
         fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
-        initialValue?: ThenArg<U>
+        initialValue?: ThenArg<U>,
     ): Promise<ThenArg<U>> {
         return reduceAsyncForAsyncIterator<T, U>(fnReduceAsync, initialValue)(this.iter as AsyncIterableLike<ThenArg<T>>);
     }

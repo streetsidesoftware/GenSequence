@@ -180,14 +180,14 @@ describe('GenSequence Tests', () => {
             i
                 .map((kvp) => kvp[0])
                 .toArray()
-                .sort()
+                .sort(),
         ).toEqual(keys.sort());
         const j = sequenceFromObject(person);
         expect(
             j
                 .map((kvp) => kvp[1])
                 .toArray()
-                .sort()
+                .sort(),
         ).toEqual(keys.map((k: PersonKeys) => person[k]).sort());
         expect([...objectToSequence(person)]).toEqual([...sequenceFromObject(person)]);
     });
@@ -232,7 +232,7 @@ describe('GenSequence Tests', () => {
                     acc.s.add(value);
                     return { value, duplicate, s: acc.s };
                 },
-                { value: 0, s: new Set<number>(), duplicate: true }
+                { value: 0, s: new Set<number>(), duplicate: true },
             )
             .filter((acc) => !acc.duplicate)
             .map((acc) => acc.value);
@@ -602,7 +602,7 @@ describe('GenSequence Tests', () => {
             o.map((n) => n * 2),
             o.map((n) => n.toString()),
             o.map((s) => s + '0'),
-            o.map((s) => parseInt(s))
+            o.map((s) => parseInt(s)),
         );
         expect([...seq]).toEqual(values.map((v) => v * 20));
     });
