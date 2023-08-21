@@ -178,17 +178,17 @@ export function reduce<T>(i: IterableLike<T>, fnReduce: (prevValue: T, curValue:
 export async function reduceAsync<T, U>(
     i: IterableOfPromise<T>,
     fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>,
-    initialValue: U | Promise<U>
+    initialValue: U | Promise<U>,
 ): Promise<U>;
 export async function reduceAsync<T>(
     i: IterableOfPromise<T>,
     fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>,
-    initialValue?: T | Promise<T>
+    initialValue?: T | Promise<T>,
 ): Promise<T>;
 export async function reduceAsync<T>(
     i: IterableOfPromise<T>,
     fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>,
-    initialValue?: T | Promise<T>
+    initialValue?: T | Promise<T>,
 ): Promise<T> {
     // We need to create a new iterable to prevent for...of from restarting an array.
     const iter = makeIterable((i as Iterable<Promise<T>>)[Symbol.iterator]());
@@ -212,17 +212,17 @@ export async function reduceAsync<T>(
 export async function reduceAsyncForAsyncIterator<T, U>(
     i: AsyncIterableLike<T>,
     fnReduce: (previousValue: U, currentValue: T, currentIndex: number) => U | Promise<U>,
-    initialValue?: U | Promise<U>
+    initialValue?: U | Promise<U>,
 ): Promise<U>;
 export async function reduceAsyncForAsyncIterator<T>(
     i: AsyncIterableLike<T>,
     fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>,
-    initialValue?: T | Promise<T>
+    initialValue?: T | Promise<T>,
 ): Promise<T>;
 export async function reduceAsyncForAsyncIterator<T>(
     i: AsyncIterableLike<T>,
     fnReduce: (previousValue: T, currentValue: T, currentIndex: number) => T | Promise<T>,
-    initialValue?: T | Promise<T>
+    initialValue?: T | Promise<T>,
 ): Promise<T> {
     const iter = makeAsyncIterable(i[Symbol.asyncIterator]());
     let index = 0;
@@ -266,7 +266,7 @@ export function isIterableIterator<T>(i: IterableLike<T>): i is IterableIterator
 }
 
 export function makeAsyncIterable<T>(
-    i: Iterator<T> | Iterable<T> | IterableIterator<T> | AsyncIterator<T> | AsyncIterable<T> | AsyncIterableIterator<T>
+    i: Iterator<T> | Iterable<T> | IterableIterator<T> | AsyncIterator<T> | AsyncIterable<T> | AsyncIterableIterator<T>,
 ): AsyncIterableIterator<T> {
     async function* fromIterable(i: IterableIterator<T> | Iterable<T>) {
         for (const v of i) {

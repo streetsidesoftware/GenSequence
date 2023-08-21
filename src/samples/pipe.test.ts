@@ -8,8 +8,8 @@ describe('Various usages of builder', () => {
         const b = builder.pipe(
             pipe(
                 map((a: number) => a),
-                map((a) => a.toString(16))
-            )
+                map((a) => a.toString(16)),
+            ),
         );
         const v = [1, 2, 3, 4];
         expect([...b.build(v)]).toEqual(v.map(fn));

@@ -99,7 +99,7 @@ export class ImplSequence<T> implements Sequence<T> {
         fn1: ChainFunction<T1, T2>,
         fn2: ChainFunction<T2, T3>,
         fn3: ChainFunction<T3, T4>,
-        fn4: ChainFunction<T4, T5>
+        fn4: ChainFunction<T4, T5>,
     ): Sequence<T5>;
     pipe<T1, T2, T3, T4, T5, T6>(
         fn0: ChainFunction<T, T1>,
@@ -107,7 +107,7 @@ export class ImplSequence<T> implements Sequence<T> {
         fn2: ChainFunction<T2, T3>,
         fn3: ChainFunction<T3, T4>,
         fn4: ChainFunction<T4, T5>,
-        fn5: ChainFunction<T5, T6>
+        fn5: ChainFunction<T5, T6>,
     ): Sequence<T6>;
     pipe<T1, T2, T3, T4, T5, T6>(
         fn0: ChainFunction<T, T1>,
@@ -161,14 +161,14 @@ export class ImplSequence<T> implements Sequence<T> {
 
     reduceAsync<U>(
         fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
-        initialValue?: ThenArg<U>
+        initialValue?: ThenArg<U>,
     ): Promise<ThenArg<U>> {
         return reduceAsync<T, U>(fnReduceAsync, initialValue)(this.iter as IterableLike<ThenArg<T>>);
     }
 
     reduceToSequence<U>(
         fnReduce: (previousValue: GenIterable<U>, currentValue: T, currentIndex: number) => GenIterable<U>,
-        initialValue: GenIterable<U>
+        initialValue: GenIterable<U>,
     ): ImplSequence<U> {
         return this.chain(reduce<T, GenIterable<U>>(fnReduce, initialValue!));
     }

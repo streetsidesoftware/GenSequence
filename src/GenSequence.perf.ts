@@ -21,7 +21,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toEqual(rBase.result);
             assertExpectedRatio('Simple Generator to an array', rBase, rExp, 1.2);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -47,7 +47,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('filter filter reduce', rBase, rExp, 1.4);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -77,7 +77,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('filter slice filter reduce', rBase, rExp, 1);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -107,7 +107,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('filter slice filter reduce (1000)', rBase, rExp, 2, 3);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -137,7 +137,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('builder filter slice filter reduce (1000)', rBase, rExp, 2, 3);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -169,7 +169,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('filter slice filter first (1000)', rBase, rExp, 0.5);
         },
-        { timeout }
+        { timeout },
     );
 
     test(
@@ -205,7 +205,7 @@ describe('Performance Test', () => {
             expect(rExp.result).toBe(rBase.result);
             assertExpectedRatio('concatMap', rBase, rExp, 1);
         },
-        { timeout }
+        { timeout },
     );
 });
 

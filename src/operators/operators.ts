@@ -105,30 +105,30 @@ export function reduce<T>(fnReduce: (prevValue: T, curValue: T, curIndex: number
 
 export function reduceAsync<T, U>(
     fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
-    initialValue?: ThenArg<U>
+    initialValue?: ThenArg<U>,
 ): ReduceAsyncFunction<T, Promise<ThenArg<U>>>;
 export function reduceAsync<T>(
     fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
-    initialValue?: ThenArg<T>
+    initialValue?: ThenArg<T>,
 ): ReduceAsyncFunction<T, Promise<ThenArg<T>>>;
 export function reduceAsync<T>(
     fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
-    initialValue?: ThenArg<T>
+    initialValue?: ThenArg<T>,
 ): ReduceAsyncFunction<T, Promise<ThenArg<T>>> {
     return (i: IterableOfPromise<ThenArg<T>>) => op.reduceAsync(i, fnReduceAsync, initialValue);
 }
 
 export function reduceAsyncForAsyncIterator<T, U>(
     fnReduceAsync: (previousValue: ThenArg<U>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<U> | Promise<ThenArg<U>>,
-    initialValue?: ThenArg<U>
+    initialValue?: ThenArg<U>,
 ): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<U>>>;
 export function reduceAsyncForAsyncIterator<T>(
     fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
-    initialValue?: ThenArg<T>
+    initialValue?: ThenArg<T>,
 ): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>>;
 export function reduceAsyncForAsyncIterator<T>(
     fnReduceAsync: (previousValue: ThenArg<T>, currentValue: ThenArg<T>, currentIndex: number) => ThenArg<T> | Promise<ThenArg<T>>,
-    initialValue?: ThenArg<T>
+    initialValue?: ThenArg<T>,
 ): ReduceAsyncFunctionForAsyncIterator<T, Promise<ThenArg<T>>> {
     return (i: AsyncIterableLike<ThenArg<T>>) => op.reduceAsyncForAsyncIterator(i, fnReduceAsync, initialValue);
 }
@@ -143,14 +143,14 @@ export function pipe<T, T1, T2, T3, T4>(
     fn0: PipeFunction<T, T1>,
     fn1: PipeFunction<T1, T2>,
     fn2: PipeFunction<T2, T3>,
-    fn3: PipeFunction<T3, T4>
+    fn3: PipeFunction<T3, T4>,
 ): PipeFunction<T, T4>;
 export function pipe<T, T1, T2, T3, T4, T5>(
     fn0: PipeFunction<T, T1>,
     fn1: PipeFunction<T1, T2>,
     fn2: PipeFunction<T2, T3>,
     fn3: PipeFunction<T3, T4>,
-    fn4: PipeFunction<T4, T5>
+    fn4: PipeFunction<T4, T5>,
 ): PipeFunction<T, T5>;
 export function pipe<T, T1, T2, T3, T4, T5, T6>(
     fn0: PipeFunction<T, T1>,
@@ -158,7 +158,7 @@ export function pipe<T, T1, T2, T3, T4, T5, T6>(
     fn2: PipeFunction<T2, T3>,
     fn3: PipeFunction<T3, T4>,
     fn4: PipeFunction<T4, T5>,
-    fn5: PipeFunction<T5, T6>
+    fn5: PipeFunction<T5, T6>,
 ): PipeFunction<T, T6>;
 export function pipe<T, T1, T2, T3, T4, T5, T6>(
     fn0: PipeFunction<T, T1>,
