@@ -1,5 +1,16 @@
 # Release Notes
 
+## [6.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.2...v6.0.0) (2023-08-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for Node 14 ([#380](https://github.com/streetsidesoftware/GenSequence/issues/380))
+
+### Features
+
+* Drop support for Node 14 ([#380](https://github.com/streetsidesoftware/GenSequence/issues/380)) ([6139f5f](https://github.com/streetsidesoftware/GenSequence/commit/6139f5f2fe772f329f104bc81cafed7d5d4896a2))
+
 ## [5.0.2](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.1...v5.0.2) (2023-02-28)
 
 
