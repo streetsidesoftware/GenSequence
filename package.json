@@ -33,10 +33,10 @@
     }
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "devDependencies": {
-    "@tsconfig/node14": "^14.1.0",
+    "@tsconfig/node16": "^16.1.1",
     "@types/node": "^18.17.6",
     "@vitest/coverage-istanbul": "^0.34.2",
     "prettier": "^3.0.2",
