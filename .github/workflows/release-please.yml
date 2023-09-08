@@ -1,8 +1,9 @@
+name: " 🚀 Generate Release Please"
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-name: release-please
 
 permissions:
   actions: read

@@ -1,5 +1,6 @@
-name: "build-test"
+name: " 🧪 Build and Test"
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches:
