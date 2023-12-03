@@ -37,12 +37,12 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^16.1.1",
-    "@types/node": "^18.18.7",
+    "@types/node": "^18.19.1",
     "@vitest/coverage-istanbul": "^0.34.6",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "rimraf": "^5.0.5",
     "ts2mjs": "^2.1.1",
-    "typescript": "^5.2.2",
+    "typescript": "^5.3.2",
     "vitest": "^0.34.6"
   },
   "scripts": {
