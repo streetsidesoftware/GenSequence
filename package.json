@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^16.1.1",
-    "@types/node": "^18.19.10",
+    "@types/node": "^18.19.13",
     "@vitest/coverage-istanbul": "^1.2.2",
     "prettier": "^3.2.4",
     "rimraf": "^5.0.5",
