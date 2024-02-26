@@ -58,7 +58,7 @@
     "lint:prettier": "prettier . -w",
     "watch": "tsc -w -p .",
     "coverage": "npm test -- --coverage",
-    "update-packages": "npx npm-check-updates -t minor -u && rimraf node_modules package-lock.json && npm i"
+    "update-packages": "npx npm-check-updates -t semver -u && rimraf node_modules package-lock.json && npm i"
   },
   "repository": {
     "type": "git",
