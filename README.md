@@ -21,20 +21,6 @@ npm install -S gensequence
 
 ## Usage
 
-### Javascript
-
-```
-const { genSequence } = require("gensequence");
-```
-
-or
-
-```
-import { genSequence } from "gensequence";
-```
-
-### Typescript
-
 ```
 import { genSequence } from 'gensequence';
 ```
