@@ -2,34 +2,15 @@
   "name": "gensequence",
   "version": "6.0.0",
   "description": "Small library to simplify working with Generators and Iterators in Javascript / Typescript",
-  "type": "commonjs",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "type": "module",
+  "module": "dist/index.js",
+  "sideEffects": false,
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/esm/index.mjs"
+      "import": "./dist/index.js"
     },
     "./operators": {
-      "require": "./dist/operators/index.js",
-      "import": "./dist/esm/operators/index.mjs"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "dist/index.d.ts": [
-        "dist/index.d.ts"
-      ],
-      "index.d.ts": [
-        "dist/index.d.ts"
-      ],
-      "operators": [
-        "dist/operators/index.d.ts"
-      ],
-      "*": [
-        "dist/*.d.ts",
-        "dist/*/index.d.ts"
-      ]
+      "import": "./dist/operators/index.js"
     }
   },
   "engines": {
@@ -50,10 +31,7 @@
     "clean-build": "npm run clean && npm run build",
     "clean": "rimraf dist coverage",
     "test": "vitest run",
-    "perf": "jest --testMatch '**/*.perf.ts'",
-    "build": "tsc -b . && ts2mjs dist/esm",
-    "build:esm": "tsc -p tsconfig.esm.json",
-    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build": "tsc -p .",
     "lint": "npm run lint:prettier",
     "lint:prettier": "prettier . -w",
     "watch": "tsc -w -p .",
@@ -77,8 +55,6 @@
   "files": [
     "dist/",
     "!**/*.tsbuildInfo",
-    "!dist/esm/**/*.js",
-    "!dist/esm/**/*.ts",
     "!**/samples",
     "!**/*.map",
     "!**/*.test.*",
