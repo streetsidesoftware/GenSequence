@@ -1,5 +1,18 @@
 # Release Notes
 
+## [7.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v6.0.0...v7.0.0) (2024-02-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop support for CommonJS ([#487](https://github.com/streetsidesoftware/GenSequence/issues/487))
+* Drop support for Node 16 ([#485](https://github.com/streetsidesoftware/GenSequence/issues/485))
+
+### Features
+
+* Drop support for CommonJS ([#487](https://github.com/streetsidesoftware/GenSequence/issues/487)) ([e0060d3](https://github.com/streetsidesoftware/GenSequence/commit/e0060d349daf23af74be1d7224ad715e6e89390c))
+* Drop support for Node 16 ([#485](https://github.com/streetsidesoftware/GenSequence/issues/485)) ([333a3e9](https://github.com/streetsidesoftware/GenSequence/commit/333a3e991524d1737efcfddd7e728e44cb66f2b0))
+
 ## [6.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v5.0.2...v6.0.0) (2023-08-24)
 
 
