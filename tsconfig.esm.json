@@ -3,7 +3,7 @@
     "compilerOptions": {
         "composite": true,
         "tsBuildInfoFile": "dist/compile.esm.tsbuildInfo",
-        "module": "ES2020",
+        "module": "ES2022",
         "moduleResolution": "Node",
         "rootDir": "src",
         "outDir": "dist/esm",

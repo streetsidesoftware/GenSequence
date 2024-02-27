@@ -3,8 +3,8 @@
     "compilerOptions": {
         "composite": true,
         "tsBuildInfoFile": "dist/compile.cjs.tsbuildInfo",
-        "module": "Node16",
-        "moduleResolution": "Node16",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "rootDir": "src",
         "outDir": "dist",
         "types": ["node"]
