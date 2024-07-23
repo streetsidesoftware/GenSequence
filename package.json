@@ -21,7 +21,7 @@
     "@types/node": "^18.19.41",
     "@vitest/coverage-istanbul": "^2.0.3",
     "prettier": "^3.3.3",
-    "rimraf": "^5.0.9",
+    "shx": "^0.3.4",
     "ts2mjs": "^3.0.0",
     "typescript": "^5.5.3",
     "vitest": "^2.0.3"
@@ -29,14 +29,14 @@
   "scripts": {
     "prepublishOnly": "npm run clean-build",
     "clean-build": "npm run clean && npm run build",
-    "clean": "rimraf dist coverage",
+    "clean": "shx rm -rf dist coverage",
     "test": "vitest run",
     "build": "tsc -p .",
     "lint": "npm run lint:prettier",
     "lint:prettier": "prettier . -w",
     "watch": "tsc -w -p .",
     "coverage": "npm test -- --coverage",
-    "update-packages": "npx npm-check-updates -t semver -u && rimraf node_modules package-lock.json && npm i"
+    "update-packages": "npx npm-check-updates -t semver -u && shx rm -rf node_modules package-lock.json && npm i"
   },
   "repository": {
     "type": "git",
