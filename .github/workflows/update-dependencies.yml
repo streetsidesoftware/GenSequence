@@ -1,4 +1,4 @@
-name: " 🔗 Update Dependencies"
+name: ' 🔗 Update Dependencies'
 
 on:
   push:
@@ -11,11 +11,10 @@ on:
         default: main
         required: false
   schedule:
-    - cron: "0 12 * * 0"
+    - cron: '0 12 * * 0'
 
 permissions:
   contents: read
-
 
 jobs:
   update-dependencies:
@@ -38,42 +37,26 @@ jobs:
           npm install
           npm run update-packages
 
-      - name: Gen Diff
+      - name: Lint
         run: |
-          echo "git_diff<<DIFF" >> $GITHUB_ENV
-          git --no-pager diff package.json  >> $GITHUB_ENV
-          echo "DIFF" >> $GITHUB_ENV
+          npm run lint
 
-      - name: Gen Diff Summary
-        run: |
-          echo "git_summary<<DIFF" >> $GITHUB_ENV
-          git --no-pager diff --stat  >> $GITHUB_ENV
-          echo "DIFF" >> $GITHUB_ENV
-
-      - name: Gen Body
-        id: gen-body
-        uses: streetsidesoftware/actions/public/output@v1
+      - name: PR Body
+        id: body
+        uses: streetsidesoftware/actions/public/pr-body@v1
         with:
-          value: |
-            ### Workflow Bot -- Update ALL Dependencies
-
-            #### `package.json`
-
-            ```diff
-            ${{ env.git_diff }}
-            ```
-
-            #### Summary
-
-            ${{ env.git_summary }}
+          title: 'Update ALL Dependencies'
+          path: >-
+            package.json
+            README.md
 
       - name: PR
         uses: streetsidesoftware/actions/.github/actions/pr@v1
         with:
-          commit-message: "ci: Update ALL Dependencies -- Workflow Bot"
+          commit-message: 'ci: Update ALL Dependencies -- Workflow Bot'
           branch: ${{ env.NEW_BRANCH }}
           base: ${{ env.REF_BRANCH }}
-          title: "ci: Update ALL Dependencies (${{ env.REF_BRANCH }}) -- Workflow Bot"
-          body: ${{ steps.gen-body.outputs.value }}
+          title: 'ci: Update ALL Dependencies (${{ env.REF_BRANCH }})'
+          body: ${{ steps.body.outputs.body }}
           app_id: ${{ secrets.AUTOMATION_APP_ID }}
           app_private_key: ${{ secrets.AUTOMATION_PRIVATE_KEY }}

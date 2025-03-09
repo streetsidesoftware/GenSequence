@@ -1,4 +1,4 @@
-name: " 🧪 Build and Test"
+name: ' 🧪 Build and Test'
 on:
   workflow_dispatch:
   pull_request:
@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-
 
 jobs:
   test-node-versions:

@@ -1,5 +1,5 @@
 ---
 dictionaries:
-  - typescript
+  - "typescript"
 ignoreWords:
   - lcov
