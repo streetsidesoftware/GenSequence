@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
+
 jobs:
   test-node-versions:
     runs-on: ${{ matrix.os }}
