@@ -21,7 +21,7 @@
     "@types/node": "^18.19.80",
     "@vitest/coverage-istanbul": "^3.0.8",
     "prettier": "^3.5.3",
-    "shx": "^0.3.4",
+    "shx": "^0.4.0",
     "ts2mjs": "^3.0.0",
     "typescript": "^5.8.2",
     "vitest": "^3.0.8"
