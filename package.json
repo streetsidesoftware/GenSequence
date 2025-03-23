@@ -18,13 +18,13 @@
   },
   "devDependencies": {
     "@tsconfig/node18": "^18.2.4",
-    "@types/node": "^18.19.80",
-    "@vitest/coverage-istanbul": "^3.0.8",
+    "@types/node": "^18.19.81",
+    "@vitest/coverage-istanbul": "^3.0.9",
     "prettier": "^3.5.3",
     "shx": "^0.3.4",
     "ts2mjs": "^3.0.0",
     "typescript": "^5.8.2",
-    "vitest": "^3.0.8"
+    "vitest": "^3.0.9"
   },
   "scripts": {
     "prepublishOnly": "npm run clean-build",
