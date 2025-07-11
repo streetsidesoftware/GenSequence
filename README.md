@@ -15,13 +15,13 @@ Intermediate arrays are not created, saving memory and cpu cycles.
 
 ## Installation
 
-```
+```sh
 npm install -S gensequence
 ```
 
 ## Usage
 
-```
+```ts
 import { genSequence } from 'gensequence';
 ```
 
@@ -32,8 +32,12 @@ import { genSequence } from 'gensequence';
 The Fibonacci sequence can be very simply expressed using a generator. Yet using the result of a generator can be a bit convoluted.
 GenSequence provides a wrapper to add familiar functionality similar to arrays.
 
-```javascript
-function fibonacci() {
+<!--- @@inject: ./src/samples/fibonacci.ts --->
+
+```ts
+import { genSequence, Sequence } from '../index.js';
+
+export function fibonacci(): Sequence<number> {
   function* fib() {
     let [a, b] = [0, 1];
     while (true) {
@@ -41,61 +45,44 @@ function fibonacci() {
       [a, b] = [b, a + b];
     }
   }
-  // Wrapper the Iterator result from calling the generator.
-  return genSequence(fib);
+  return genSequence(fib());
 }
 
-let fib5 = fibonacci()
-  .take(5) // Take the first 5 from the fibonacci sequence
-  .toArray(); // Convert it into an array
-// fib5 == [1, 1, 2, 3, 5]
+export function fib(n: number) {
+  return fibonacci()
+    .take(n) // Take n from the fibonacci sequence
+    .toArray(); // Convert it into an array
+}
 
-let fib6n7seq = fibonacci().skip(5).take(2);
-let fib6n7arr = [...fib6n7seq]; // GenSequence are easily converted into arrays.
-
-let fib5th = fibonacci()
-  .skip(4) // Skip the first 4
-  .first(); // Return the next one.
+export const fib5 = fib(5); // [1, 1, 2, 3, 5]
 ```
+
+<!--- @@inject-end: ./src/samples/fibonacci.ts --->
 
 ### RegEx Match
 
 Regular expressions are wonderfully powerful. Yet, working with the results can sometimes be a bit of a pain.
 
-```javascript
-function* execRegEx(reg: RegExp, text: string) {
-  const regLocal = new RegExp(reg);
-  let r;
-  while ((r = regLocal.exec(text))) {
-    yield r;
-  }
-}
+<!--- @@inject: ./src/samples/match.ts --->
 
-/* return a sequence of matched text */
-function match(reg: RegExp, text: string) {
-  return (
-    genSequence(execRegEx(reg, text))
-      // extract the full match
-      .map((a) => a[0])
-  );
-}
+```ts
+import { genSequence } from '../GenSequence.js';
 
-/* extract words out of a string of text */
 function matchWords(text: string) {
-  return genSequence(match(/\w+/g, text));
+  return genSequence(text.matchAll(/\w+/g)).map((a) => a[0]);
 }
 
-/* convert some text into a set of unique words */
-function toSetOfWords(text: string) {
-  // Sequence can be used directly with a Set or Match
+export function toSetOfWords(text: string) {
   return new Set(matchWords(text));
 }
 
-const text = 'Some long bit of text with many words, duplicate words...';
-const setOfWords = toSetOfWords(text);
+export const text = 'Some long bit of text with many words, duplicate words...';
+export const setOfWords = toSetOfWords(text);
 // Walk through the set of words and pull out the 4 letter one.
-const setOf4LetterWords = new Set(genSequence(setOfWords).filter((a) => a.length === 4));
+export const setOf4LetterWords = new Set(genSequence(setOfWords).filter((a) => a.length === 4));
 ```
+
+<!--- @@inject-end: ./src/samples/match.ts --->
 
 ## Reference
 
@@ -137,5 +124,5 @@ const setOf4LetterWords = new Set(genSequence(setOfWords).filter((a) => a.length
 
 ### Cast
 
-- `.toArray()` -- convert the sequence into an array. This is the same as [...iterable].
+- `.toArray()` -- convert the sequence into an array. This is the same as `[...iterable]`.
 - `.toIterable()` -- Casts a Sequence into an IterableIterator - used in cases where type checking is too strict.
