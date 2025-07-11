@@ -1,5 +1,16 @@
 # Release Notes
 
+## [8.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v7.0.0...v8.0.0) (2025-07-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node 18 ([#717](https://github.com/streetsidesoftware/GenSequence/issues/717))
+
+### Features
+
+* drop support for Node 18 ([#717](https://github.com/streetsidesoftware/GenSequence/issues/717)) ([132a479](https://github.com/streetsidesoftware/GenSequence/commit/132a47910641f409a4b827a63c61426313384047))
+
 ## [7.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v6.0.0...v7.0.0) (2024-02-27)
 
 
