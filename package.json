@@ -18,11 +18,11 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.6",
-    "@types/node": "^20.19.7",
+    "@types/node": "^24.0.13",
     "@vitest/coverage-istanbul": "^3.2.4",
     "prettier": "^3.6.2",
     "shx": "^0.4.0",
-    "ts2mjs": "^3.0.0",
+    "ts2mjs": "^4.0.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4"
   },
