@@ -1,15 +1,41 @@
 # Release Notes
 
-## [8.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v7.0.0...v8.0.0) (2025-07-11)
+## [4.0.1](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.0...v4.0.1) (2025-07-11)
 
 
 ### ⚠ BREAKING CHANGES
 
 * drop support for Node 18 ([#717](https://github.com/streetsidesoftware/GenSequence/issues/717))
+* Drop support for CommonJS ([#487](https://github.com/streetsidesoftware/GenSequence/issues/487))
+* Drop support for Node 16 ([#485](https://github.com/streetsidesoftware/GenSequence/issues/485))
+* Drop support for Node 14 ([#380](https://github.com/streetsidesoftware/GenSequence/issues/380))
+* Support ESM ([#283](https://github.com/streetsidesoftware/GenSequence/issues/283))
 
 ### Features
 
+* Drop support for CommonJS ([#487](https://github.com/streetsidesoftware/GenSequence/issues/487)) ([e0060d3](https://github.com/streetsidesoftware/GenSequence/commit/e0060d349daf23af74be1d7224ad715e6e89390c))
+* Drop support for Node 14 ([#380](https://github.com/streetsidesoftware/GenSequence/issues/380)) ([6139f5f](https://github.com/streetsidesoftware/GenSequence/commit/6139f5f2fe772f329f104bc81cafed7d5d4896a2))
+* Drop support for Node 16 ([#485](https://github.com/streetsidesoftware/GenSequence/issues/485)) ([333a3e9](https://github.com/streetsidesoftware/GenSequence/commit/333a3e991524d1737efcfddd7e728e44cb66f2b0))
 * drop support for Node 18 ([#717](https://github.com/streetsidesoftware/GenSequence/issues/717)) ([132a479](https://github.com/streetsidesoftware/GenSequence/commit/132a47910641f409a4b827a63c61426313384047))
+* Support ESM ([#283](https://github.com/streetsidesoftware/GenSequence/issues/283)) ([af15160](https://github.com/streetsidesoftware/GenSequence/commit/af15160385bcde7642cf10d1a0ea2ec3055897c4))
+
+
+### Bug Fixes
+
+* clean up the async reducers ([#21](https://github.com/streetsidesoftware/GenSequence/issues/21)) ([0bf7525](https://github.com/streetsidesoftware/GenSequence/commit/0bf75256eabeae936aeda32ad86a822a1d5bafcb))
+* correctly handle `undefined` initial value. ([0bf7525](https://github.com/streetsidesoftware/GenSequence/commit/0bf75256eabeae936aeda32ad86a822a1d5bafcb))
+* do not package `.tsbuildInfo` ([4ae236f](https://github.com/streetsidesoftware/GenSequence/commit/4ae236fff538ff43ab03ee0070a680969b471694))
+* Do not package redundant `.js` and `.d.ts` files ([cd5afd0](https://github.com/streetsidesoftware/GenSequence/commit/cd5afd05c7c3455e8dfc9bb54907b2656ebdbba5))
+* Fix Release ([82328ec](https://github.com/streetsidesoftware/GenSequence/commit/82328ecd09c59b4a6a9512f4236d55cf459861ea))
+* Sequence&lt;T extends S&gt; is type compatible with Sequence&lt;S&gt; ([#25](https://github.com/streetsidesoftware/GenSequence/issues/25)) ([2834953](https://github.com/streetsidesoftware/GenSequence/commit/2834953e20539edbaa41fb8323f61d81b717b0a6))
+* Update Publication Process ([483732c](https://github.com/streetsidesoftware/GenSequence/commit/483732c03abe8da434f71666b6f57eb46a727135))
+* Update Typescript ([#228](https://github.com/streetsidesoftware/GenSequence/issues/228)) ([ae21653](https://github.com/streetsidesoftware/GenSequence/commit/ae216534a6c0977f58d4f6389748aa0f2d387f41))
+* Update TypeScript ([#257](https://github.com/streetsidesoftware/GenSequence/issues/257)) ([d7abd48](https://github.com/streetsidesoftware/GenSequence/commit/d7abd4872d4e5665bfc01d3650ae8bfde455d407))
+
+
+### Miscellaneous Chores
+
+* release 4.0.1 ([391dc6d](https://github.com/streetsidesoftware/GenSequence/commit/391dc6dd026a39986ffbd3a1ed7fc1a17e37889d))
 
 ## [7.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v6.0.0...v7.0.0) (2024-02-27)
 
