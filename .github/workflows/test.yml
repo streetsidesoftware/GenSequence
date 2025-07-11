@@ -16,39 +16,16 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 18.x
           - 20.x
           - 22.x
-          - 23.x
+          - 24.x
 
         os:
           - ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup
-        uses: ./.github/actions/setup
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Install / build / test
-        run: |
-          npm install
-          npm run build
-          npm test
-
-  test-os:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        node-version:
-          - 22.x
-        os:
-          # - ubuntu-latest
-          - windows-latest
-          # - macos-latest
+        include:
+          - os: windows-latest
+            node-version: 24.x
 
     steps:
       - uses: actions/checkout@v4
