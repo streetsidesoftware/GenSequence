@@ -31,4 +31,6 @@ jobs:
 
       - name: Publish to NPM
         uses: ./.github/workflows/publish.yml
+        with:
+          ref: ${{ steps.release.outputs.tag_name }}
         if: ${{ steps.release.outputs.release_created }}

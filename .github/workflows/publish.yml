@@ -2,7 +2,16 @@ name: ' 🚀 Publish: Publish to NPM (automatic)'
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        type: string
+        description: 'The git ref (branch or tag) to publish'
+        required: false
   workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -13,8 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        # these if statements ensure that a publication only occurs when
-        # a new release is created:
+        with:
+          ref: ${{ inputs.ref || 'main' }}
       - uses: actions/setup-node@v6
         with:
           node-version: 24
