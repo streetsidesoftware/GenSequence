@@ -1,5 +1,13 @@
 # Release Notes
 
+## [8.0.6](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.5...v8.0.6) (2025-11-06)
+
+
+### Bug Fixes
+
+* correct permissions ([1247bfa](https://github.com/streetsidesoftware/GenSequence/commit/1247bfad9bb062b0834bcfda8678cbec7a8aa28c))
+* Fix release please to use publish workflow ([cec39c3](https://github.com/streetsidesoftware/GenSequence/commit/cec39c3dc5c9b13e7a58c96f6749437cf9f8a0fd))
+
 ## [8.0.5](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.4...v8.0.5) (2025-11-06)
 
 
