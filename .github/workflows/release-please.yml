@@ -26,6 +26,8 @@ jobs:
           release-type: node
 
       # The logic below handles the npm publication:
+      - uses: actions/checkout@v5
+        if: ${{ steps.release.outputs.release_created }}
       - name: Publish to NPM
         uses: ./.github/workflows/publish.yml
         if: ${{ steps.release.outputs.release_created }}
