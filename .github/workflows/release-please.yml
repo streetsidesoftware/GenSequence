@@ -28,12 +28,12 @@ jobs:
         with:
           release-type: node
 
-  publish:
-    uses: ./.github/workflows/publish.yml
-    needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
-    permissions:
-      contents: read
-      id-token: write
-    with:
-      ref: ${{ needs.release-please.outputs.tag_name }}
+  # publish:
+  #   uses: ./.github/workflows/publish.yml
+  #   needs: release-please
+  #   if: ${{ needs.release-please.outputs.release_created }}
+  #   permissions:
+  #     contents: read
+  #     id-token: write
+  #   with:
+  #     ref: ${{ needs.release-please.outputs.tag_name }}
