@@ -1,5 +1,12 @@
 # Release Notes
 
+## [8.0.3](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.2...v8.0.3) (2025-11-06)
+
+
+### Bug Fixes
+
+* Fix publish flow ([61d4ce4](https://github.com/streetsidesoftware/GenSequence/commit/61d4ce4cca132d02b7901589341c2e5823654fb3))
+
 ## [8.0.2](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.1...v8.0.2) (2025-11-06)
 
 
