@@ -1,0 +1,26 @@
+name: ' 🚀 Publish: Publish to NPM (automatic)'
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        # these if statements ensure that a publication only occurs when
+        # a new release is created:
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - name: Publish Package
+        run: npm publish
+        env:
+          NPM_CONFIG_PROVENANCE: true
