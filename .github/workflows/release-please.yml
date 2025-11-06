@@ -18,6 +18,9 @@ permissions:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
     steps:
       - name: Release Please
         id: release
@@ -25,12 +28,9 @@ jobs:
         with:
           release-type: node
 
-      # The logic below handles the npm publication:
-      - uses: actions/checkout@v5
-        if: ${{ steps.release.outputs.release_created }}
-
-      - name: Publish to NPM
-        uses: ./.github/workflows/publish.yml
-        with:
-          ref: ${{ steps.release.outputs.tag_name }}
-        if: ${{ steps.release.outputs.release_created }}
+  publish:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    uses: ./.github/workflows/publish.yml
+    with:
+      ref: ${{ needs.release-please.outputs.tag_name }}
