@@ -1,5 +1,12 @@
 # Release Notes
 
+## [8.0.7](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.6...v8.0.7) (2025-11-06)
+
+
+### Bug Fixes
+
+* Use release published to trigger publish to NPM ([1b63e5a](https://github.com/streetsidesoftware/GenSequence/commit/1b63e5a95b0a0a269ab044440f01a2980509f538))
+
 ## [8.0.6](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.5...v8.0.6) (2025-11-06)
 
 
