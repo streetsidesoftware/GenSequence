@@ -29,8 +29,11 @@ jobs:
           release-type: node
 
   publish:
+    uses: ./.github/workflows/publish.yml
     needs: release-please
     if: ${{ needs.release-please.outputs.release_created }}
-    uses: ./.github/workflows/publish.yml
+    permissions:
+      contents: read
+      id-token: write
     with:
       ref: ${{ needs.release-please.outputs.tag_name }}
