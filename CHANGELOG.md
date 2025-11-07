@@ -1,5 +1,12 @@
 # Release Notes
 
+## [8.0.8](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.7...v8.0.8) (2025-11-07)
+
+
+### Bug Fixes
+
+* Try to fix trigger when a release is created ([33d2ee2](https://github.com/streetsidesoftware/GenSequence/commit/33d2ee273cbc76f169af280b4b3fa56c7e13b986))
+
 ## [8.0.7](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.6...v8.0.7) (2025-11-06)
 
 
