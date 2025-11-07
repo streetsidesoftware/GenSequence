@@ -10,6 +10,14 @@ on:
         type: string
         description: 'The git ref (branch or tag) to publish'
         required: false
+  workflow_call:
+    # note this flow won't work until NPM adds support for reusable workflows
+    # https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-with-reusable-workflows
+    inputs:
+      ref:
+        type: string
+        description: 'The git ref (branch or tag) to publish'
+        required: true
 
 permissions:
   contents: read
