@@ -19,13 +19,13 @@
   "devDependencies": {
     "@tsconfig/node20": "^20.1.8",
     "@types/node": "^24.10.1",
-    "@vitest/coverage-istanbul": "^4.0.13",
+    "@vitest/coverage-istanbul": "^4.0.14",
     "inject-markdown": "^4.0.0",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.3",
     "shx": "^0.4.0",
     "ts2mjs": "^4.0.0",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.14"
   },
   "scripts": {
     "prepublishOnly": "npm run clean-build",
