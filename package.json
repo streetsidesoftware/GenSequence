@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "^20.1.8",
-    "@types/node": "^24.10.1",
+    "@types/node": "^25.0.8",
     "@vitest/coverage-istanbul": "^4.0.15",
     "inject-markdown": "^4.0.0",
     "prettier": "^3.7.4",
