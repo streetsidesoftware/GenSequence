@@ -12,7 +12,9 @@
         "strict": true,
         "noUnusedParameters": true,
         "strictNullChecks": true,
-        "outDir": "dist"
+        "outDir": "dist",
+        "types": ["node"],
+        "rootDir": "./src"
     },
     "include": ["src"]
 }
