@@ -142,7 +142,7 @@ export function forEach<T>(i: IterableLike<T>, fn: (t: T, index: number) => void
     }
 }
 
-export function max<T, U>(i: IterableLike<T>, selector: undefined): Maybe<T>;
+export function max<T>(i: IterableLike<T>, selector: undefined): Maybe<T>;
 export function max<T, U>(i: IterableLike<T>, selector: ((t: T) => U) | undefined): Maybe<T>;
 export function max<T>(i: IterableLike<T>, selector: ((t: T) => T) | undefined = (t) => t): Maybe<T> {
     return reduce(i, (p: T, c: T) => (selector(c) > selector(p) ? c : p), undefined);
