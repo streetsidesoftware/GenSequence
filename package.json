@@ -17,15 +17,15 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.9",
+    "@tsconfig/node20": "^20.1.10",
     "@types/node": "^24.13.3",
-    "@vitest/coverage-istanbul": "^4.1.10",
+    "@vitest/coverage-istanbul": "^4.1.11",
     "inject-markdown": "^4.0.0",
     "prettier": "^3.9.6",
     "shx": "^0.4.0",
     "ts2mjs": "^4.0.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.11"
   },
   "scripts": {
     "prepublishOnly": "npm run clean-build",
