@@ -25,7 +25,7 @@
     "shx": "^0.4.0",
     "ts2mjs": "^4.0.0",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^5.0.0"
   },
   "scripts": {
     "prepublishOnly": "npm run clean-build",
