@@ -31,6 +31,9 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+        with:
+          # npm 10, bundled with Node 22, crashes in the fresh install that `update-packages` runs.
+          node-version: '24.x'
 
       - name: Update
         run: |
