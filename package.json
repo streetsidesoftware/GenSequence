@@ -14,10 +14,10 @@
     }
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "devDependencies": {
-    "@tsconfig/node20": "^20.1.10",
+    "@tsconfig/node22": "^22.0.6",
     "@types/node": "^24.19.2",
     "@vitest/coverage-istanbul": "^4.1.12",
     "inject-markdown": "^4.0.0",
