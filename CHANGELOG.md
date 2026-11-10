@@ -1,5 +1,21 @@
 # Release Notes
 
+## [9.0.0](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.8...v9.0.0) (2026-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node 20 ([#827](https://github.com/streetsidesoftware/GenSequence/issues/827))
+
+### Features
+
+* drop support for Node 20 ([#827](https://github.com/streetsidesoftware/GenSequence/issues/827)) ([cf8cfba](https://github.com/streetsidesoftware/GenSequence/commit/cf8cfba5143f00bffdf57cb5512008ff9d417f9f))
+
+
+### Bug Fixes
+
+* remove unused type parameter from max overload ([#831](https://github.com/streetsidesoftware/GenSequence/issues/831)) ([2406ea5](https://github.com/streetsidesoftware/GenSequence/commit/2406ea580f0e18999ca89ec605e83e755d274389))
+
 ## [8.0.8](https://github.com/streetsidesoftware/GenSequence/compare/v8.0.7...v8.0.8) (2025-11-07)
 
 
