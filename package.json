@@ -17,11 +17,11 @@
     "node": ">=22"
   },
   "devDependencies": {
-    "@tsconfig/node22": "^22.0.6",
+    "@tsconfig/node22": "^22.0.7",
     "@types/node": "^24.19.2",
     "@vitest/coverage-istanbul": "^5.1.0",
     "inject-markdown": "^6.3.0",
-    "prettier": "^3.9.10",
+    "prettier": "^3.10.1",
     "shx": "^0.4.0",
     "ts2mjs": "^4.0.0",
     "typescript": "^7.0.2",
